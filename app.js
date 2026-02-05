@@ -75,6 +75,16 @@ function showScreen(screenId) {
             topRightControls.style.display = 'flex';
         }
     }
+
+    // Hide/show home icon based on screen
+    const topLeftControls = document.querySelector('.fixed.top-4.left-4');
+    if (topLeftControls) {
+        if (screenId === 'welcomeScreen' || screenId === 'dashboardScreen') {
+            topLeftControls.style.display = 'none';
+        } else {
+            topLeftControls.style.display = 'block';
+        }
+    }
 }
 
 function startSurvey() {
@@ -122,22 +132,36 @@ function showSignIn() {
     showScreen('signInScreen');
 }
 
-function attemptSignIn() {
-    const username = document.getElementById('adminUsername').value.trim();
+async function attemptSignIn() {
+    const email = document.getElementById('adminUsername').value.trim();
     const password = document.getElementById('adminPassword').value.trim();
     const errorDiv = document.getElementById('signInError');
 
-    // Simple authentication (in production, this would be server-side)
-    // Default credentials: username: manager, password: 2026
-    console.log('=== SIGN IN ATTEMPT ===');
-    console.log(`Username entered: "${username}"`);
-    console.log(`Password entered: "${password}"`);
+    if (!email || !password) {
+        errorDiv.textContent = 'Please enter both email and password.';
+        errorDiv.classList.remove('hidden');
+        return;
+    }
 
-    if (username === 'manager' && password === '2026') {
+    console.log('=== SIGN IN ATTEMPT ===');
+    console.log(`Email entered: "${email}"`);
+
+    try {
+        // Sign in with Supabase
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: password,
+        });
+
+        if (error) {
+            console.log('✗ Authentication failed:', error.message);
+            errorDiv.textContent = 'Invalid email or password. Please try again.';
+            errorDiv.classList.remove('hidden');
+            document.getElementById('adminPassword').value = '';
+            return;
+        }
+
         console.log('✓ Authentication successful!');
-        // Store authentication in session
-        sessionStorage.setItem('isAuthenticated', 'true');
-        sessionStorage.setItem('authTime', new Date().getTime().toString());
 
         // Clear form
         document.getElementById('adminUsername').value = '';
@@ -148,44 +172,32 @@ function attemptSignIn() {
 
         // Go to dashboard
         viewDashboard();
-    } else {
-        console.log('✗ Authentication failed');
-        // Show error
-        errorDiv.textContent = 'Invalid username or password. Please try again.';
+    } catch (err) {
+        console.error('Sign in error:', err);
+        errorDiv.textContent = 'An error occurred. Please try again.';
         errorDiv.classList.remove('hidden');
-
-        // Clear password field
-        document.getElementById('adminPassword').value = '';
     }
 }
 
-function checkAuthentication() {
-    const isAuth = sessionStorage.getItem('isAuthenticated');
-    const authTime = sessionStorage.getItem('authTime');
-
-    // Check if authenticated and session hasn't expired (24 hours)
-    if (isAuth === 'true' && authTime) {
-        const currentTime = new Date().getTime();
-        const timeDiff = currentTime - parseInt(authTime);
-        const hoursDiff = timeDiff / (1000 * 60 * 60);
-
-        if (hoursDiff < 24) {
-            return true;
-        } else {
-            // Session expired
-            sessionStorage.removeItem('isAuthenticated');
-            sessionStorage.removeItem('authTime');
-            return false;
-        }
+async function checkAuthentication() {
+    try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        return session !== null;
+    } catch (error) {
+        console.error('Auth check error:', error);
+        return false;
     }
-    return false;
 }
 
-function signOut() {
-    sessionStorage.removeItem('isAuthenticated');
-    sessionStorage.removeItem('authTime');
-    alert('You have been signed out successfully.');
-    returnHome();
+async function signOut() {
+    try {
+        await supabaseClient.auth.signOut();
+        alert('You have been signed out successfully.');
+        returnHome();
+    } catch (error) {
+        console.error('Sign out error:', error);
+        alert('Error signing out. Please try again.');
+    }
 }
 
 // Survey Logic
@@ -433,73 +445,115 @@ function skipGoals() {
 }
 
 // Data Management
-function saveSurveyData() {
-    const surveyResults = JSON.parse(localStorage.getItem('surveyResults') || '[]');
-
-    // Check if user already has a response
-    const existingIndex = surveyResults.findIndex(r => r.name === surveyState.name);
-
-    const surveyData = {
-        name: surveyState.name,
-        role: surveyState.role,
-        responses: surveyState.responses,
-        goals: surveyState.goals || {},
-        startTime: surveyState.startTime,
-        completionTime: surveyState.completionTime
-    };
-
-    if (existingIndex >= 0) {
-        // Merge with existing data, preserving goals if not updated
-        surveyResults[existingIndex] = {
-            ...surveyResults[existingIndex],
-            ...surveyData,
-            goals: Object.keys(surveyState.goals || {}).length > 0 ? surveyState.goals : surveyResults[existingIndex].goals || {}
+async function saveSurveyData() {
+    try {
+        const surveyData = {
+            designer_name: surveyState.name,
+            role: surveyState.role,
+            responses: surveyState.responses,
+            goals: surveyState.goals || {},
+            start_time: surveyState.startTime,
+            completion_time: surveyState.completionTime
         };
-    } else {
-        surveyResults.push(surveyData);
+
+        // Check if survey already exists for this designer
+        const { data: existing, error: fetchError } = await supabaseClient
+            .from('survey_responses')
+            .select('id')
+            .eq('designer_name', surveyState.name)
+            .single();
+
+        if (fetchError && fetchError.code !== 'PGRST116') {
+            // PGRST116 is "no rows returned" which is fine
+            throw fetchError;
+        }
+
+        if (existing) {
+            // Update existing survey
+            const { error: updateError } = await supabaseClient
+                .from('survey_responses')
+                .update(surveyData)
+                .eq('id', existing.id);
+
+            if (updateError) throw updateError;
+        } else {
+            // Insert new survey
+            const { error: insertError } = await supabaseClient
+                .from('survey_responses')
+                .insert([surveyData]);
+
+            if (insertError) throw insertError;
+        }
+
+        console.log('Survey data saved successfully to Supabase');
+    } catch (error) {
+        console.error('Error saving survey data:', error);
+        alert('Error saving survey data. Please try again.');
     }
-
-    localStorage.setItem('surveyResults', JSON.stringify(surveyResults));
 }
 
-function loadSurveyData() {
-    const surveyResults = JSON.parse(localStorage.getItem('surveyResults') || '[]');
-    return surveyResults;
+async function loadSurveyData() {
+    try {
+        const { data, error } = await supabaseClient
+            .from('survey_responses')
+            .select('*')
+            .order('completion_time', { ascending: false });
+
+        if (error) throw error;
+
+        // Transform data to match the old localStorage format
+        return data.map(record => ({
+            name: record.designer_name,
+            role: record.role,
+            responses: record.responses,
+            goals: record.goals || {},
+            startTime: record.start_time,
+            completionTime: record.completion_time
+        }));
+    } catch (error) {
+        console.error('Error loading survey data:', error);
+        return [];
+    }
 }
 
-function deleteSurvey(designerName) {
+async function deleteSurvey(designerName) {
     // Confirm deletion
     if (!confirm(`Are you sure you want to delete the survey for ${designerName}? This action cannot be undone.`)) {
         return;
     }
 
-    // Load current data
-    const surveyResults = loadSurveyData();
+    try {
+        // Delete from Supabase
+        const { error } = await supabaseClient
+            .from('survey_responses')
+            .delete()
+            .eq('designer_name', designerName);
 
-    // Filter out the survey to delete
-    const updatedResults = surveyResults.filter(r => r.name !== designerName);
+        if (error) throw error;
 
-    // Save back to localStorage
-    localStorage.setItem('surveyResults', JSON.stringify(updatedResults));
+        // Reload dashboard
+        const allResults = await loadSurveyData();
+        renderDashboard(allResults);
 
-    // Reload dashboard
-    const allResults = loadSurveyData();
-    renderDashboard(allResults);
-
-    // Show success message
-    alert(`Survey for ${designerName} has been deleted successfully.`);
+        // Show success message
+        alert(`Survey for ${designerName} has been deleted successfully.`);
+    } catch (error) {
+        console.error('Error deleting survey:', error);
+        alert('Error deleting survey. Please try again.');
+    }
 }
 
 // Dashboard Functions
-function viewDashboard() {
+async function viewDashboard() {
     // Check authentication first
-    if (!checkAuthentication()) {
+    const isAuthenticated = await checkAuthentication();
+    if (!isAuthenticated) {
         alert('Please sign in to view the dashboard.');
         showSignIn();
         return;
     }
 
-    const surveyResults = loadSurveyData();
+    const surveyResults = await loadSurveyData();
 
     if (surveyResults.length === 0) {
         alert('No survey responses yet. Please complete a survey first or load demo data.');
@@ -535,9 +589,9 @@ function renderDashboard(surveyResults) {
     renderDetailedResults(surveyResults);
 }
 
-function filterDashboard() {
+async function filterDashboard() {
     const selectedDesigner = document.getElementById('designerFilter').value;
-    const allResults = loadSurveyData();
+    const allResults = await loadSurveyData();
 
     let filteredResults = allResults;
     if (selectedDesigner !== 'all') {
@@ -808,8 +862,8 @@ function renderGoalsSection(surveyResults) {
 }
 
 // Export Functions
-function exportToCSV() {
-    const surveyResults = loadSurveyData();
+async function exportToCSV() {
+    const surveyResults = await loadSurveyData();
 
     if (surveyResults.length === 0) {
         alert('No survey data to export');
@@ -843,8 +897,8 @@ function exportToCSV() {
     URL.revokeObjectURL(url);
 }
 
-function exportToPDF() {
-    const surveyResults = loadSurveyData();
+async function exportToPDF() {
+    const surveyResults = await loadSurveyData();
 
     if (surveyResults.length === 0) {
         alert('No survey data to export');
@@ -960,14 +1014,14 @@ function exportToPDF() {
 }
 
 // Demo Data
-function loadDemoData() {
+async function loadDemoData() {
     if (!confirm('This will load sample survey data. Any existing data will be preserved. Continue?')) {
         return;
     }
 
     const demoData = [
         {
-            name: "Sarah Chen",
+            designer_name: "Sarah Chen",
             role: "ux4",
             responses: {
                 "ux4_product_strategy": 5,
@@ -986,11 +1040,11 @@ function loadDemoData() {
                 goal3: "Drive AI integration strategy for UX org",
                 goal3Description: "Define how we leverage AI tools to enhance designer productivity while maintaining quality standards."
             },
-            startTime: "2026-01-15T09:00:00.000Z",
-            completionTime: "2026-01-15T09:25:00.000Z"
+            start_time: "2026-01-15T09:00:00.000Z",
+            completion_time: "2026-01-15T09:25:00.000Z"
         },
         {
-            name: "Marcus Rodriguez",
+            designer_name: "Marcus Rodriguez",
             role: "ux4",
             responses: {
                 "ux4_product_strategy": 4,
@@ -1009,11 +1063,11 @@ function loadDemoData() {
                 goal3: "Establish outcome-based metrics framework",
                 goal3Description: "Work with leadership to shift from output to outcome metrics. Define standard KPIs for all design initiatives."
             },
-            startTime: "2026-01-16T10:30:00.000Z",
-            completionTime: "2026-01-16T10:52:00.000Z"
+            start_time: "2026-01-16T10:30:00.000Z",
+            completion_time: "2026-01-16T10:52:00.000Z"
         },
         {
-            name: "Aisha Patel",
+            designer_name: "Aisha Patel",
             role: "ux2",
             responses: {
                 "ux2_product_strategy": 3,
@@ -1032,32 +1086,46 @@ function loadDemoData() {
                 goal3: "Present at 5 design critiques",
                 goal3Description: "Build presentation skills and comfort receiving feedback. Present work-in-progress designs and incorporate feedback iterations."
             },
-            startTime: "2026-01-18T14:15:00.000Z",
-            completionTime: "2026-01-18T14:38:00.000Z"
+            start_time: "2026-01-18T14:15:00.000Z",
+            completion_time: "2026-01-18T14:38:00.000Z"
         }
     ];
 
-    // Merge with existing data
-    const existingData = loadSurveyData();
-    const mergedData = [...existingData];
+    try {
+        // Insert demo data into Supabase
+        for (const demo of demoData) {
+            // Check if already exists
+            const { data: existing } = await supabaseClient
+                .from('survey_responses')
+                .select('id')
+                .eq('designer_name', demo.designer_name)
+                .single();
 
-    demoData.forEach(demo => {
-        const existingIndex = mergedData.findIndex(r => r.name === demo.name);
-        if (existingIndex >= 0) {
-            mergedData[existingIndex] = demo;
-        } else {
-            mergedData.push(demo);
+            if (existing) {
+                // Update existing
+                await supabaseClient
+                    .from('survey_responses')
+                    .update(demo)
+                    .eq('id', existing.id);
+            } else {
+                // Insert new
+                await supabaseClient
+                    .from('survey_responses')
+                    .insert([demo]);
+            }
         }
-    });
 
-    localStorage.setItem('surveyResults', JSON.stringify(mergedData));
-    alert('Demo data loaded successfully!');
-    viewDashboard();
+        alert('Demo data loaded successfully!');
+        viewDashboard();
+    } catch (error) {
+        console.error('Error loading demo data:', error);
+        alert('Error loading demo data. Please try again.');
+    }
 }
 
 // Export/Download Functions (Optional Enhancement)
-function exportResults() {
-    const surveyResults = loadSurveyData();
+async function exportResults() {
+    const surveyResults = await loadSurveyData();
     const dataStr = JSON.stringify(surveyResults, null, 2);
     const dataBlob = new Blob([dataStr], {type: 'application/json'});
 
@@ -1069,10 +1137,21 @@ function exportResults() {
 }
 
 // Clear all data (for testing)
-function clearAllData() {
+async function clearAllData() {
     if (confirm('Are you sure you want to delete all survey data? This cannot be undone.')) {
-        localStorage.removeItem('surveyResults');
-        alert('All survey data has been cleared.');
-        returnHome();
+        try {
+            const { error } = await supabaseClient
+                .from('survey_responses')
+                .delete()
+                .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all records
+
+            if (error) throw error;
+
+            alert('All survey data has been cleared.');
+            returnHome();
+        } catch (error) {
+            console.error('Error clearing data:', error);
+            alert('Error clearing data. Please try again.');
+        }
     }
 }
