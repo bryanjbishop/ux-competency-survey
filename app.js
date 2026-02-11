@@ -217,16 +217,42 @@ function renderQuestion() {
     // Update question content
     document.getElementById('questionTitle').textContent = currentQuestion.title;
 
-    // Build subtitle with description and bullets
+    // Build subtitle with description and sub-competencies or bullets
     let subtitleHTML = `<p class="mb-4">${currentQuestion.description}</p>`;
-    if (currentQuestion.bullets && currentQuestion.bullets.length > 0) {
+
+    // Check if using new subCompetencies structure or old bullets structure
+    if (currentQuestion.subCompetencies && currentQuestion.subCompetencies.length > 0) {
+        // New detailed sub-competency format
+        subtitleHTML += '<div class="space-y-6 mb-6">';
+        currentQuestion.subCompetencies.forEach((subComp, index) => {
+            subtitleHTML += `
+                <div class="border border-input rounded-lg p-5 bg-card">
+                    <div class="mb-3">
+                        <p class="font-medium text-sm text-primary mb-1">${subComp.shortText}</p>
+                        <p class="text-sm leading-relaxed">${subComp.fullText}</p>
+                    </div>
+                    ${subComp.improvementResources && subComp.improvementResources.length > 0 ? `
+                        <details class="mt-3">
+                            <summary class="cursor-pointer text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors">
+                                💡 Improvement Resources
+                            </summary>
+                            <ul class="list-decimal ml-6 mt-2 space-y-1 text-xs text-muted-foreground">
+                                ${subComp.improvementResources.map(resource => `<li class="leading-relaxed">${resource}</li>`).join('')}
+                            </ul>
+                        </details>
+                    ` : ''}
+                </div>
+            `;
+        });
+        subtitleHTML += '</div>';
+    } else if (currentQuestion.bullets && currentQuestion.bullets.length > 0) {
+        // Old simple bullet format (backward compatibility)
         subtitleHTML += '<ul class="list-disc ml-5 mb-4 space-y-2">';
         currentQuestion.bullets.forEach(bullet => {
             subtitleHTML += `<li>${bullet}</li>`;
         });
         subtitleHTML += '</ul>';
     }
-    subtitleHTML += '<p class="font-semibold mt-5">How would you rate yourself on this competency?</p>';
 
     document.getElementById('questionSubtitle').innerHTML = subtitleHTML;
 

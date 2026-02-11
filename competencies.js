@@ -20,11 +20,47 @@ const competencies = {
                 competency: "Product Strategy",
                 title: "Product Strategy (Before you work)",
                 description: "At this stage, you're developing your strategic thinking by understanding user needs and how design decisions connect to broader organizational goals. You're learning to ask the right questions, conduct basic research, and understand the difference between outputs (features we build) and outcomes (impact we create).",
-                bullets: [
-                    "You ask good questions to clarify project objectives and partner with senior leaders to stay on track before getting too deep into a project",
-                    "You understand simple research methods (interviews, feedback sessions) and participate in weekly user touchpoints to learn Continuous Discovery Habits",
-                    "You're learning the difference between outputs (shipping features) and outcomes (creating user and business value)",
-                    "You recognize how design solutions further organizational goals and ensure designs adhere to Church standards and branding guidelines"
+                subCompetencies: [
+                    {
+                        id: "intern-ps-01",
+                        fullText: "You ask good questions to clarify project objectives and partner with senior leaders to stay on track before getting too deep into a project",
+                        shortText: "Asks clarifying questions early",
+                        improvementResources: [
+                            "Shadow 3 senior designer project kickoffs; document the top 5 questions they ask before starting work",
+                            "Create a \"Pre-flight Checklist\" with your mentor: What's the user problem? What does success look like? Who are the stakeholders? Use it before every project for 1 month",
+                            "Practice \"Question, Don't Assume\" rule: Before making any design decision, write down 1 question you need answered first"
+                        ]
+                    },
+                    {
+                        id: "intern-ps-02",
+                        fullText: "You understand simple research methods (interviews, feedback sessions) and participate in weekly user touchpoints to learn Continuous Discovery Habits",
+                        shortText: "Participates in basic research",
+                        improvementResources: [
+                            "Attend 5 user research sessions with note-taking template: What they said | What they did | What surprised you. Review notes with mentor after each session",
+                            "Complete \"Research Basics\" internal course, then conduct 2 supervised feedback sessions with mentor observing and coaching",
+                            "Read \"Just Enough Research\" by Erika Hall (chapters 1-3), then practice asking open-ended questions: Replace 3 yes/no questions with \"Tell me about...\" versions"
+                        ]
+                    },
+                    {
+                        id: "intern-ps-03",
+                        fullText: "You're learning the difference between outputs (shipping features) and outcomes (creating user and business value)",
+                        shortText: "Distinguishes outputs from outcomes",
+                        improvementResources: [
+                            "For your next 3 projects, complete this exercise with PM: \"We're building [feature]. The outcome we want is [user behavior change]. We'll measure it with [metric].\"",
+                            "Attend \"Outcomes vs Outputs\" training module, then review 3 past projects with mentor—identify what was measured (features shipped? user behavior changed?)",
+                            "Create a \"So What?\" habit: Every time you propose a solution, ask \"So what will users be able to do that they couldn't before?\" Write down your answers"
+                        ]
+                    },
+                    {
+                        id: "intern-ps-04",
+                        fullText: "You recognize how design solutions further organizational goals and ensure designs adhere to Church standards and branding guidelines",
+                        shortText: "Connects designs to goals",
+                        improvementResources: [
+                            "Read FamilySearch's mission statement and product strategy docs for your area. For your next 3 designs, write 1 sentence explaining how your work supports organizational mission",
+                            "Complete Church branding guidelines training, then audit 3 of your designs with mentor to identify any guideline violations before handoff",
+                            "Attend 3 product strategy presentations with your PM. After each one, write: \"How does my current project support this strategy?\""
+                        ]
+                    }
                 ]
             },
             {
@@ -32,11 +68,47 @@ const competencies = {
                 competency: "Craft and Quality",
                 title: "Craft and Quality (While you work)",
                 description: "Your focus here is building foundational skills and developing an eye for quality work. You're learning established patterns, how to execute clean, thoughtful designs, and how to prototype for learning, not just for visual polish.",
-                bullets: [
-                    "You're familiar with layout, typography, color basics, and common design patterns, with a rudimentary understanding of HTML/CSS/JavaScript for feasible handoffs",
-                    "You use Zion UI components and understand basic accessibility requirements (WCAG standards)",
-                    "Your work demonstrates awareness of existing patterns and strives for simplicity with clear hierarchy",
-                    "You seek feedback from seasoned team members and prototype quickly to refine solutions based on user or mentor feedback"
+                subCompetencies: [
+                    {
+                        id: "intern-cq-01",
+                        fullText: "You're familiar with layout, typography, color basics, and common design patterns, with a rudimentary understanding of HTML/CSS/JavaScript for feasible handoffs",
+                        shortText: "Knows design and code basics",
+                        improvementResources: [
+                            "Complete \"Design Fundamentals\" internal course, then recreate 5 existing Zion UI components to understand their construction principles",
+                            "Study HTML/CSS basics through freeCodeCamp's Responsive Web Design certification (first 3 sections), then pair with an engineer to understand 1 handoff",
+                            "Daily practice for 2 weeks: Analyze 1 well-designed interface, note typography choices, layout grid, and color usage"
+                        ]
+                    },
+                    {
+                        id: "intern-cq-02",
+                        fullText: "You use Zion UI components and understand basic accessibility requirements (WCAG standards)",
+                        shortText: "Uses system components accessibly",
+                        improvementResources: [
+                            "Complete \"Accessibility 101\" training, then use screen reader for 2 hours to experience your designs as blind users would",
+                            "Review WCAG 2.1 AA guidelines (Levels A and AA), then conduct accessibility audit of 3 designs with mentor providing feedback",
+                            "Study Zion UI accessibility documentation thoroughly, then audit 3 of your designs to ensure proper component usage and color contrast"
+                        ]
+                    },
+                    {
+                        id: "intern-cq-03",
+                        fullText: "Your work demonstrates awareness of existing patterns and strives for simplicity with clear hierarchy",
+                        shortText: "Applies patterns with hierarchy",
+                        improvementResources: [
+                            "Study 10 production designs from senior designers, document the patterns used (navigation, forms, cards, etc.) and when each pattern is appropriate",
+                            "For your next 3 designs, create 3 visual hierarchy versions (using size, color, weight), get feedback from mentor on which communicates most clearly",
+                            "Complete Zion UI pattern library review, recreate 5 common patterns to build muscle memory, then apply patterns to next design project"
+                        ]
+                    },
+                    {
+                        id: "intern-cq-04",
+                        fullText: "You seek feedback from seasoned team members and prototype quickly to refine solutions based on user or mentor feedback",
+                        shortText: "Seeks feedback and iterates",
+                        improvementResources: [
+                            "Present work-in-progress to UX 2+ designer twice per week for 1 month before designs are \"complete,\" document changes made based on feedback",
+                            "Learn rapid prototyping in Figma (clickable prototypes with basic interactions), create 5 quick prototypes for next project, test with 3 users",
+                            "Create feedback loop habit: After receiving critique, write \"What I'll change\" and \"Why\" before next iteration, review with mentor weekly"
+                        ]
+                    }
                 ]
             },
             {
@@ -44,10 +116,37 @@ const competencies = {
                 competency: "Communication and Collaboration",
                 title: "Communication and Collaboration (Working together)",
                 description: "Building strong working relationships is essential at every level. You're learning how to share your work, accept feedback graciously, work effectively with cross-functional partners, and participate meaningfully in product trio discussions.",
-                bullets: [
-                    "You share your work regularly (once a week) in design critique and take feedback graciously",
-                    "You can explain the intent and goals of your design solutions clearly in both verbal and written form",
-                    "You actively listen to engineers and PMs in trio meetings, engaging constructively with respect and an open mind, and share user insights from research sessions"
+                subCompetencies: [
+                    {
+                        id: "intern-cc-01",
+                        fullText: "You share your work regularly (once a week) in design critique and take feedback graciously",
+                        shortText: "Shares work and accepts feedback",
+                        improvementResources: [
+                            "Attend design critique 2x per week for 1 month, present work-in-progress (not finished work) to practice receiving feedback early",
+                            "Read \"Discussing Design\" by Adam Connor & Aaron Irizarry (chapters 1-3), then practice: After receiving feedback, say \"Thank you, let me think about that\" instead of defending",
+                            "Complete \"Growth Mindset\" training module, then keep a feedback journal: What feedback did you get? What will you apply? How did it improve your work?"
+                        ]
+                    },
+                    {
+                        id: "intern-cc-02",
+                        fullText: "You can explain the intent and goals of your design solutions clearly in both verbal and written form",
+                        shortText: "Explains design intent clearly",
+                        improvementResources: [
+                            "Use presentation template for next 5 projects: Context (problem) → Solution (design) → Rationale (why this works). Practice with mentor before stakeholder presentation",
+                            "Watch 5 excellent design presentations from senior designers, note their structure, pacing, and how they explain decisions",
+                            "Read \"Articulating Design Decisions\" by Tom Greever (chapters 1-4), then practice explaining 1 design decision daily to mentor using the book's framework"
+                        ]
+                    },
+                    {
+                        id: "intern-cc-03",
+                        fullText: "You actively listen to engineers and PMs in trio meetings, engaging constructively with respect and an open mind, and share user insights from research sessions",
+                        shortText: "Listens and engages constructively",
+                        improvementResources: [
+                            "Schedule weekly 30-minute chats with your PM and engineering partners for 1 month to understand their perspectives and constraints",
+                            "Shadow PM for 1 day and engineer for 1 day, document what they prioritize and how they make decisions, share learnings with mentor",
+                            "Read \"Inspired\" by Marty Cagan (Part I), then practice active listening in trio meetings: Take notes on others' concerns, ask 1 clarifying question before responding"
+                        ]
+                    }
                 ]
             },
             {
@@ -55,11 +154,47 @@ const competencies = {
                 competency: "Action and Impact",
                 title: "Action and Impact (Shipping)",
                 description: "Learning to ship work and understand its real-world impact is a critical skill. You're developing your ability to frame problems, work iteratively, see projects through to completion, and understand that shipping is about learning what works, not just delivering features.",
-                bullets: [
-                    "You meet project deadlines without holding up engineering, checking in with PM/Eng to keep projects on track",
-                    "You use basic problem-framing skills and transfer user insights into workable solutions that ship",
-                    "Your work ships into the world, and you ask questions to understand its impact on users and business outcomes",
-                    "You're learning that failure is part of learning; when something doesn't work, you're curious about why"
+                subCompetencies: [
+                    {
+                        id: "intern-ai-01",
+                        fullText: "You meet project deadlines without holding up engineering, checking in with PM/Eng to keep projects on track",
+                        shortText: "Meets deadlines reliably",
+                        improvementResources: [
+                            "Use project management tool to track all tasks with deadlines, break work into 1-day chunks, check off completed items daily",
+                            "Daily standup with mentor for 2 weeks to build accountability: What did you finish yesterday? What will you finish today? Any blockers?",
+                            "Practice: Set personal deadlines 1 day before real deadline for next 3 projects, create buffer for unexpected feedback or changes"
+                        ]
+                    },
+                    {
+                        id: "intern-ai-02",
+                        fullText: "You use basic problem-framing skills and transfer user insights into workable solutions that ship",
+                        shortText: "Frames problems into solutions",
+                        improvementResources: [
+                            "Complete \"Problem Framing Workshop\" (internal 2-hour session), then practice \"5 Whys\" technique on 3 recent projects with mentor guidance",
+                            "Use problem statement template for next 3 projects: \"[User] needs [need] because [insight].\" Get PM/mentor approval before designing solutions",
+                            "Study 3 project briefs that show strong vs. weak problem framing with mentor, identify differences, apply learnings to next project"
+                        ]
+                    },
+                    {
+                        id: "intern-ai-03",
+                        fullText: "Your work ships into the world, and you ask questions to understand its impact on users and business outcomes",
+                        shortText: "Ships work and measures impact",
+                        improvementResources: [
+                            "For your next 3 shipped features, attend the post-launch review meeting, write down: What metric improved? What user behavior changed? What surprised you?",
+                            "Shadow analytics review meetings (5 sessions), learn basic metrics for your product: DAU, conversion rate, retention, NPS",
+                            "Read \"Lean Analytics\" by Croll & Yoskovitz (chapters 1-3), then create simple measurement plan for next project: What will we track? Why?"
+                        ]
+                    },
+                    {
+                        id: "intern-ai-04",
+                        fullText: "You're learning that failure is part of learning; when something doesn't work, you're curious about why",
+                        shortText: "Views failure as learning",
+                        improvementResources: [
+                            "Attend 3 project retrospectives or post-mortems, note how team discusses what didn't work without blame, document 1 learning from each",
+                            "For your next 3 projects, create 3 design versions before settling on an approach, document why you rejected the other two",
+                            "Read \"Sprint\" by Jake Knapp (chapters on rapid iteration), then practice: When design feedback is critical, ask \"What can I learn from this?\" instead of defending"
+                        ]
+                    }
                 ]
             },
             {
@@ -67,9 +202,27 @@ const competencies = {
                 competency: "Leveling Up Others",
                 title: "Leveling Up Others (Internal influence)",
                 description: "Even as an intern, you contribute to the team culture and help create a positive, collaborative environment. Your enthusiasm and willingness to learn helps energize the team.",
-                bullets: [
-                    "You contribute to design culture by offering perspectives in critiques and showing enthusiasm for supporting peers",
-                    "You participate in hiring processes as needed and refer candidates you're interested in working with"
+                subCompetencies: [
+                    {
+                        id: "intern-luo-01",
+                        fullText: "You contribute to design culture by offering perspectives in critiques and showing enthusiasm for supporting peers",
+                        shortText: "Contributes to design culture",
+                        improvementResources: [
+                            "Participate actively in 10 design critiques, provide 1 piece of constructive feedback using \"I observe... I wonder... What if...\" framework",
+                            "Share 1 learning each week in team meeting: What you learned, how it helped your work, how others might apply it",
+                            "Attend all design team events and meetings for 3 months, volunteer for 1 team culture initiative (design lunch, show-and-tell, game night)"
+                        ]
+                    },
+                    {
+                        id: "intern-luo-02",
+                        fullText: "You participate in hiring processes as needed and refer candidates you're interested in working with",
+                        shortText: "Participates in hiring activities",
+                        improvementResources: [
+                            "Shadow 5 design interviews observing senior designer's evaluation approach, learn hiring rubric and evaluation criteria for intern/UX 1 level",
+                            "Study FamilySearch design team values and culture fit criteria, participate in 3 interviews with senior designer leading",
+                            "Refer 2 candidates to design team (network building through school, bootcamp, meetups), write referral explaining why they'd be great fit"
+                        ]
+                    }
                 ]
             },
             {
@@ -77,9 +230,27 @@ const competencies = {
                 competency: "Independence",
                 title: "Independence (Self-sufficiency)",
                 description: "You're building the foundation for independent work. At this stage, you work best with guidance and structure, and you're learning when to ask for help versus when to push forward.",
-                bullets: [
-                    "You manage small tasks effectively with guidance, meet deadlines, and ask for help when blocked",
-                    "You're learning to work through problems with support while building confidence"
+                subCompetencies: [
+                    {
+                        id: "intern-ind-01",
+                        fullText: "You manage small tasks effectively with guidance, meet deadlines, and ask for help when blocked",
+                        shortText: "Manages tasks with guidance",
+                        improvementResources: [
+                            "Create daily task list with priorities, share with mentor at start of day, review at end of day for 2 weeks to build self-management",
+                            "Use \"30-minute rule\": Try solving problem independently for 30 minutes before asking for help, document what you tried when asking",
+                            "Practice \"Question-Assumption-Options\" framework: When blocked, write down: What's the question? What do I assume? What are 3 options? Then ask mentor"
+                        ]
+                    },
+                    {
+                        id: "intern-ind-02",
+                        fullText: "You're learning to work through problems with support while building confidence",
+                        shortText: "Builds problem-solving confidence",
+                        improvementResources: [
+                            "Keep decision journal for 2 weeks: What small decisions did you make independently? What was the outcome? What did you learn?",
+                            "Read \"The Effective Engineer\" by Edmond Lau (chapters on problem-solving), identify 3 techniques to try in next project",
+                            "Practice making small low-stakes decisions independently daily for 1 month (component choice, color, spacing), review decisions with mentor weekly"
+                        ]
+                    }
                 ]
             },
             {
@@ -87,11 +258,47 @@ const competencies = {
                 competency: "Skill Development",
                 title: "Skill Development (Continuous learning)",
                 description: "Continuous learning is essential for growth. Focus on building your foundational skills in tools, principles, and professional practices while developing your unique design perspective.",
-                bullets: [
-                    "You're learning industry-standard design tools (Figma, Sketch, Adobe Creative Suite) and building speed with them",
-                    "You're developing strong design fundamentals: typography, color theory, layout, composition, visual hierarchy, accessibility basics, and basic design principles",
-                    "You're learning to give and receive critique constructively, developing portfolio documentation skills, and exploring prototyping techniques",
-                    "You're participating in learning opportunities and exploring how emerging tools (including AI) can enhance your work with guidance"
+                subCompetencies: [
+                    {
+                        id: "intern-sd-01",
+                        fullText: "You're learning industry-standard design tools (Figma, Sketch, Adobe Creative Suite) and building speed with them",
+                        shortText: "Learning design tools",
+                        improvementResources: [
+                            "Complete Figma fundamental tutorials (official Figma learning), practice 30 minutes daily for 30 days to build tool muscle memory",
+                            "Recreate 10 production designs pixel-perfect to develop eye for detail and learn advanced tool techniques from senior designers' files",
+                            "Watch 5 advanced Figma tutorials on components, auto-layout, variants; try each technique in practice file before using in real project"
+                        ]
+                    },
+                    {
+                        id: "intern-sd-02",
+                        fullText: "You're developing strong design fundamentals: typography, color theory, layout, composition, visual hierarchy, accessibility basics, and basic design principles",
+                        shortText: "Developing design fundamentals",
+                        improvementResources: [
+                            "Read \"Refactoring UI\" by Adam Wathan & Steve Schoger, apply 1 principle per day to your work for 2 weeks",
+                            "Daily practice: Analyze 1 beautiful interface, note visual decisions (typeface choice, color palette, spacing system), recreate 1 component",
+                            "Complete \"Visual Design Fundamentals\" internal course, then get design review from UX 2+ on every screen before proceeding to next"
+                        ]
+                    },
+                    {
+                        id: "intern-sd-03",
+                        fullText: "You're learning to give and receive critique constructively, developing portfolio documentation skills, and exploring prototyping techniques",
+                        shortText: "Learning critique and documentation",
+                        improvementResources: [
+                            "Attend design critique 2x per week for 1 month, focus on learning critique format and language, practice giving 1 piece of feedback per session",
+                            "Read \"Discussing Design\" by Adam Connor & Aaron Irizarry, then practice feedback framework: Observation → Question → Suggestion",
+                            "Create documentation for 3 completed projects using template: Problem → Solution → Process → Outcome, get feedback from mentor on clarity"
+                        ]
+                    },
+                    {
+                        id: "intern-sd-04",
+                        fullText: "You're participating in learning opportunities and exploring how emerging tools (including AI) can enhance your work with guidance",
+                        shortText: "Explores learning and tools",
+                        improvementResources: [
+                            "Create personal learning plan with 3-month goals, share with mentor, schedule monthly check-ins to review progress",
+                            "Attend 3 design talks/webinars monthly, write 1-paragraph summary of key learning and how you'll apply it to your work",
+                            "Experiment with AI design tools (ChatGPT, Midjourney, etc.) under mentor guidance for 3 tasks, document: What worked? What didn't? When is human judgment essential?"
+                        ]
+                    }
                 ]
             }
         ]
