@@ -338,6 +338,11 @@ function selectSubCompRating(subCompId, value) {
             // Show finish button
             const finishBtn = document.getElementById('finishBtn');
             finishBtn.style.display = 'inline-flex';
+        } else if (allRated && !isLastQuestion) {
+            // Auto-advance to next question after a brief delay
+            setTimeout(() => {
+                nextQuestion();
+            }, 500);
         }
     }
 }
