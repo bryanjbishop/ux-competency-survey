@@ -218,7 +218,7 @@ function renderQuestion() {
     document.getElementById('questionTitle').textContent = currentQuestion.title;
 
     // Build subtitle with description and sub-competencies or bullets
-    let subtitleHTML = `<p class="mb-6">${currentQuestion.description}</p>`;
+    let subtitleHTML = `<p class="text-sm mb-6">${currentQuestion.description}</p>`;
 
     // Check if using new subCompetencies structure or old bullets structure
     if (currentQuestion.subCompetencies && currentQuestion.subCompetencies.length > 0) {
@@ -232,7 +232,7 @@ function renderQuestion() {
                 <div class="mb-8">
                     <div class="mb-6">
                         <p class="text-sm font-semibold text-primary mb-3">${subCompNumber}</p>
-                        <p class="text-lg leading-relaxed">${subComp.fullText}</p>
+                        <p class="text-2xl leading-relaxed text-white">${subComp.fullText}</p>
                     </div>
 
                     <!-- Rating buttons for this sub-competency -->
