@@ -409,7 +409,11 @@ function previousQuestion() {
     if (surveyState.currentQuestionIndex > 0) {
         surveyState.currentQuestionIndex--;
         renderQuestion();
-        window.scrollTo(0, 0);
+        // Scroll the survey content area to top
+        const surveyContent = document.getElementById('surveyContent');
+        if (surveyContent) {
+            surveyContent.scrollTop = 0;
+        }
     }
 }
 
@@ -419,7 +423,11 @@ function nextQuestion() {
     if (surveyState.currentQuestionIndex < questions.length - 1) {
         surveyState.currentQuestionIndex++;
         renderQuestion();
-        window.scrollTo(0, 0);
+        // Scroll the survey content area to top
+        const surveyContent = document.getElementById('surveyContent');
+        if (surveyContent) {
+            surveyContent.scrollTop = 0;
+        }
     } else {
         completeSurvey();
     }
