@@ -218,21 +218,26 @@ function renderQuestion() {
     document.getElementById('questionTitle').textContent = currentQuestion.title;
 
     // Build subtitle with description and sub-competencies or bullets
-    let subtitleHTML = `<p class="mb-4">${currentQuestion.description}</p>`;
+    let subtitleHTML = `<p class="mb-6">${currentQuestion.description}</p>`;
 
     // Check if using new subCompetencies structure or old bullets structure
     if (currentQuestion.subCompetencies && currentQuestion.subCompetencies.length > 0) {
-        // New detailed sub-competency format
-        subtitleHTML += '<div class="space-y-6 mb-6">';
+        // New detailed sub-competency format with individual ratings
+        subtitleHTML += '<div class="space-y-8">';
         currentQuestion.subCompetencies.forEach((subComp, index) => {
+            const subCompNumber = `${surveyState.currentQuestionIndex + 1}.${index + 1}`;
+            const ratingValue = surveyState.responses[subComp.id] || 0;
+
             subtitleHTML += `
-                <div class="border border-input rounded-lg p-5 bg-card">
-                    <div class="mb-3">
-                        <p class="font-medium text-sm text-primary mb-1">${subComp.shortText}</p>
-                        <p class="text-sm leading-relaxed">${subComp.fullText}</p>
+                <div class="border border-input rounded-lg p-6 bg-card">
+                    <div class="mb-4">
+                        <p class="text-xs font-semibold text-primary mb-2">${subCompNumber}</p>
+                        <p class="font-semibold text-base mb-1">${subComp.shortText}</p>
+                        <p class="text-sm leading-relaxed text-muted-foreground">${subComp.fullText}</p>
                     </div>
+
                     ${subComp.improvementResources && subComp.improvementResources.length > 0 ? `
-                        <details class="mt-3">
+                        <details class="mb-4">
                             <summary class="cursor-pointer text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors">
                                 💡 Improvement Resources
                             </summary>
@@ -241,6 +246,19 @@ function renderQuestion() {
                             </ul>
                         </details>
                     ` : ''}
+
+                    <!-- Rating buttons for this sub-competency -->
+                    <div class="grid grid-cols-5 gap-3 mt-4">
+                        ${[1, 2, 3, 4, 5].map(rating => `
+                            <button onclick="selectSubCompRating('${subComp.id}', ${rating})"
+                                    data-subcomp-id="${subComp.id}"
+                                    data-rating="${rating}"
+                                    class="sub-rating-btn flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${ratingValue === rating ? 'border-primary bg-primary/10' : 'border-input bg-card hover:border-primary/50'}">
+                                <span class="text-2xl font-bold">${rating}</span>
+                                <span class="text-xs font-medium text-center">${['Developing', 'Emerging', 'Proficient', 'Advanced', 'Expert'][rating - 1]}</span>
+                            </button>
+                        `).join('')}
+                    </div>
                 </div>
             `;
         });
@@ -287,6 +305,71 @@ function renderQuestion() {
     } else {
         finishBtn.style.display = 'none';
     }
+}
+
+// Handle sub-competency rating selection
+function selectSubCompRating(subCompId, value) {
+    // Save the rating for this specific sub-competency
+    surveyState.responses[subCompId] = value;
+
+    console.log(`Sub-competency rating: ${value} for ${subCompId}`);
+
+    // Update button states for this sub-competency
+    const buttons = document.querySelectorAll(`[data-subcomp-id="${subCompId}"]`);
+    buttons.forEach(btn => {
+        const btnValue = parseInt(btn.getAttribute('data-rating'));
+        if (btnValue === value) {
+            btn.classList.add('border-primary', 'bg-primary/10');
+            btn.classList.remove('border-input', 'bg-card');
+        } else {
+            btn.classList.remove('border-primary', 'bg-primary/10');
+            btn.classList.add('border-input', 'bg-card');
+        }
+    });
+
+    // Update progress bar
+    updateProgressBar();
+
+    // Check if all sub-competencies for current question are rated
+    const questions = competencies[surveyState.role].questions;
+    const currentQuestion = questions[surveyState.currentQuestionIndex];
+    if (currentQuestion.subCompetencies) {
+        const allRated = currentQuestion.subCompetencies.every(sub => surveyState.responses[sub.id]);
+        const isLastQuestion = surveyState.currentQuestionIndex === questions.length - 1;
+
+        if (allRated && isLastQuestion) {
+            // Show finish button
+            const finishBtn = document.getElementById('finishBtn');
+            finishBtn.style.display = 'inline-flex';
+        }
+    }
+}
+
+// Helper function to update progress bar
+function updateProgressBar() {
+    const questions = competencies[surveyState.role].questions;
+    let totalSubCompetencies = 0;
+    let ratedSubCompetencies = 0;
+
+    questions.forEach(question => {
+        if (question.subCompetencies) {
+            totalSubCompetencies += question.subCompetencies.length;
+            question.subCompetencies.forEach(subComp => {
+                if (surveyState.responses[subComp.id]) {
+                    ratedSubCompetencies++;
+                }
+            });
+        } else {
+            // For old format questions without sub-competencies
+            totalSubCompetencies++;
+            if (surveyState.responses[question.id]) {
+                ratedSubCompetencies++;
+            }
+        }
+    });
+
+    const progress = (ratedSubCompetencies / totalSubCompetencies) * 100;
+    document.getElementById('progressFill').style.width = `${progress}%`;
 }
 
 function selectRating(value) {
