@@ -229,26 +229,14 @@ function renderQuestion() {
             const ratingValue = surveyState.responses[subComp.id] || 0;
 
             subtitleHTML += `
-                <div class="border border-input rounded-lg p-6 bg-card">
-                    <div class="mb-4">
-                        <p class="text-xs font-semibold text-primary mb-2">${subCompNumber}</p>
-                        <p class="font-semibold text-base mb-1">${subComp.shortText}</p>
-                        <p class="text-sm leading-relaxed text-muted-foreground">${subComp.fullText}</p>
+                <div class="mb-8">
+                    <div class="mb-6">
+                        <p class="text-sm font-semibold text-primary mb-3">${subCompNumber}</p>
+                        <p class="text-lg leading-relaxed">${subComp.fullText}</p>
                     </div>
 
-                    ${subComp.improvementResources && subComp.improvementResources.length > 0 ? `
-                        <details class="mb-4">
-                            <summary class="cursor-pointer text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors">
-                                💡 Improvement Resources
-                            </summary>
-                            <ul class="list-decimal ml-6 mt-2 space-y-1 text-xs text-muted-foreground">
-                                ${subComp.improvementResources.map(resource => `<li class="leading-relaxed">${resource}</li>`).join('')}
-                            </ul>
-                        </details>
-                    ` : ''}
-
                     <!-- Rating buttons for this sub-competency -->
-                    <div class="grid grid-cols-5 gap-3 mt-4">
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
                         ${[1, 2, 3, 4, 5].map(rating => {
                             const labels = ['Developing', 'Emerging', 'Proficient', 'Advanced', 'Expert'];
                             const descriptions = [
@@ -262,10 +250,10 @@ function renderQuestion() {
                             <button onclick="selectSubCompRating('${subComp.id}', ${rating})"
                                     data-subcomp-id="${subComp.id}"
                                     data-rating="${rating}"
-                                    class="sub-rating-btn flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${ratingValue === rating ? 'border-primary bg-primary/10' : 'border-input bg-card hover:border-primary/50'}">
-                                <span class="text-2xl font-bold">${rating}</span>
-                                <span class="text-xs font-medium text-center">${labels[rating - 1]}</span>
-                                <span class="text-xs text-muted-foreground text-center leading-tight hidden md:block">${descriptions[rating - 1]}</span>
+                                    class="sub-rating-btn flex flex-col items-center justify-center gap-1 p-4 rounded-lg transition-all ${ratingValue === rating ? 'bg-primary text-primary-foreground' : 'bg-muted/50 hover:bg-muted'}">
+                                <span class="text-3xl font-bold">${rating}</span>
+                                <span class="text-xs font-semibold text-center">${labels[rating - 1]}</span>
+                                <span class="text-xs opacity-70 text-center leading-tight">${descriptions[rating - 1]}</span>
                             </button>
                         `;
                         }).join('')}
@@ -330,11 +318,11 @@ function selectSubCompRating(subCompId, value) {
     buttons.forEach(btn => {
         const btnValue = parseInt(btn.getAttribute('data-rating'));
         if (btnValue === value) {
-            btn.classList.add('border-primary', 'bg-primary/10');
-            btn.classList.remove('border-input', 'bg-card');
+            btn.classList.add('bg-primary', 'text-primary-foreground');
+            btn.classList.remove('bg-muted/50');
         } else {
-            btn.classList.remove('border-primary', 'bg-primary/10');
-            btn.classList.add('border-input', 'bg-card');
+            btn.classList.remove('bg-primary', 'text-primary-foreground');
+            btn.classList.add('bg-muted/50');
         }
     });
 
