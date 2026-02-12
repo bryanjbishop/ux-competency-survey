@@ -334,6 +334,10 @@ function selectSubCompRating(subCompId, value) {
         const allRated = currentQuestion.subCompetencies.every(sub => surveyState.responses[sub.id]);
         const isLastQuestion = surveyState.currentQuestionIndex === questions.length - 1;
 
+        // Find current sub-competency index
+        const currentSubIndex = currentQuestion.subCompetencies.findIndex(sub => sub.id === subCompId);
+        const hasNextSub = currentSubIndex < currentQuestion.subCompetencies.length - 1;
+
         if (allRated && isLastQuestion) {
             // Show finish button
             const finishBtn = document.getElementById('finishBtn');
@@ -343,6 +347,18 @@ function selectSubCompRating(subCompId, value) {
             setTimeout(() => {
                 nextQuestion();
             }, 500);
+        } else if (hasNextSub && !allRated) {
+            // Scroll to next sub-competency after a brief delay
+            setTimeout(() => {
+                const nextSubId = currentQuestion.subCompetencies[currentSubIndex + 1].id;
+                const nextSubButtons = document.querySelectorAll(`[data-subcomp-id="${nextSubId}"]`);
+                if (nextSubButtons.length > 0) {
+                    const nextSubElement = nextSubButtons[0].closest('.mb-12');
+                    if (nextSubElement) {
+                        nextSubElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            }, 300);
         }
     }
 }
