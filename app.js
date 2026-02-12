@@ -788,20 +788,44 @@ function renderCompetencyCards(surveyResults) {
         const questions = competencies[result.role].questions;
 
         questions.forEach(question => {
-            const score = result.responses[question.id];
-            if (score) {
-                const item = {
-                    designer: result.name,
-                    competency: question.competency,
-                    score: score
-                };
+            // Check if question has sub-competencies
+            if (question.subCompetencies && question.subCompetencies.length > 0) {
+                // Handle sub-competency structure
+                question.subCompetencies.forEach(subComp => {
+                    const score = result.responses[subComp.id];
+                    if (score) {
+                        const item = {
+                            designer: result.name,
+                            competency: `${question.competency} - ${subComp.shortText}`,
+                            score: score
+                        };
 
-                if (score <= 2) {
-                    improve.push(item);
-                } else if (score === 3) {
-                    growing.push(item);
-                } else {
-                    excelling.push(item);
+                        if (score <= 2) {
+                            improve.push(item);
+                        } else if (score === 3) {
+                            growing.push(item);
+                        } else {
+                            excelling.push(item);
+                        }
+                    }
+                });
+            } else {
+                // Handle old format without sub-competencies
+                const score = result.responses[question.id];
+                if (score) {
+                    const item = {
+                        designer: result.name,
+                        competency: question.competency,
+                        score: score
+                    };
+
+                    if (score <= 2) {
+                        improve.push(item);
+                    } else if (score === 3) {
+                        growing.push(item);
+                    } else {
+                        excelling.push(item);
+                    }
                 }
             }
         });
@@ -889,31 +913,61 @@ function renderDetailedResults(surveyResults) {
         `;
 
         questions.forEach(question => {
-            const score = result.responses[question.id];
-            const rating = ratingScale.find(r => r.value === score);
+            const badgeColors = {
+                1: 'bg-red-500/20 text-red-700 dark:text-red-400',
+                2: 'bg-orange-500/20 text-orange-700 dark:text-orange-400',
+                3: 'bg-blue-500/20 text-blue-700 dark:text-blue-400',
+                4: 'bg-purple-500/20 text-purple-700 dark:text-purple-400',
+                5: 'bg-green-500/20 text-green-700 dark:text-green-400'
+            };
 
-            if (score) {
-                const badgeColors = {
-                    1: 'bg-red-500/20 text-red-700 dark:text-red-400',
-                    2: 'bg-orange-500/20 text-orange-700 dark:text-orange-400',
-                    3: 'bg-blue-500/20 text-blue-700 dark:text-blue-400',
-                    4: 'bg-purple-500/20 text-purple-700 dark:text-purple-400',
-                    5: 'bg-green-500/20 text-green-700 dark:text-green-400'
-                };
+            // Check if question has sub-competencies
+            if (question.subCompetencies && question.subCompetencies.length > 0) {
+                // Display main competency header
+                html += `<div class="mb-4"><h4 class="font-bold text-sm mb-3 text-primary">${question.competency}</h4>`;
 
-                html += `
-                    <div class="p-4 bg-muted rounded-lg mb-3">
-                        <div class="flex justify-between items-center mb-2">
-                            <strong class="text-sm">${question.competency}</strong>
-                            <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${badgeColors[score]}">
-                                ${score} - ${rating.label}
-                            </span>
+                // Handle sub-competency structure
+                question.subCompetencies.forEach(subComp => {
+                    const score = result.responses[subComp.id];
+                    const rating = ratingScale.find(r => r.value === score);
+
+                    if (score && rating) {
+                        html += `
+                            <div class="p-4 bg-muted rounded-lg mb-3 ml-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <strong class="text-sm">${subComp.shortText}</strong>
+                                    <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${badgeColors[score]}">
+                                        ${score} - ${rating.label}
+                                    </span>
+                                </div>
+                                <p class="text-xs text-muted-foreground mt-1">
+                                    ${rating.description}
+                                </p>
+                            </div>
+                        `;
+                    }
+                });
+                html += '</div>';
+            } else {
+                // Handle old format without sub-competencies
+                const score = result.responses[question.id];
+                const rating = ratingScale.find(r => r.value === score);
+
+                if (score && rating) {
+                    html += `
+                        <div class="p-4 bg-muted rounded-lg mb-3">
+                            <div class="flex justify-between items-center mb-2">
+                                <strong class="text-sm">${question.competency}</strong>
+                                <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${badgeColors[score]}">
+                                    ${score} - ${rating.label}
+                                </span>
+                            </div>
+                            <p class="text-xs text-muted-foreground mt-1">
+                                ${rating.description}
+                            </p>
                         </div>
-                        <p class="text-xs text-muted-foreground mt-1">
-                            ${rating.description}
-                        </p>
-                    </div>
-                `;
+                    `;
+                }
             }
         });
 
