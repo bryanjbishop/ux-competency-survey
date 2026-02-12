@@ -223,15 +223,15 @@ function renderQuestion() {
     // Check if using new subCompetencies structure or old bullets structure
     if (currentQuestion.subCompetencies && currentQuestion.subCompetencies.length > 0) {
         // New detailed sub-competency format with individual ratings
-        subtitleHTML += '<div class="space-y-8">';
+        subtitleHTML += '<div>';
         currentQuestion.subCompetencies.forEach((subComp, index) => {
             const subCompNumber = `${surveyState.currentQuestionIndex + 1}.${index + 1}`;
             const ratingValue = surveyState.responses[subComp.id] || 0;
 
             subtitleHTML += `
-                <div class="mb-8">
-                    <div class="mb-6">
-                        <p class="text-sm font-semibold text-primary mb-3">${subCompNumber}</p>
+                <div class="mb-12">
+                    <div class="mb-8">
+                        <p class="text-sm font-semibold text-primary mb-4">${subCompNumber}</p>
                         <p class="text-2xl leading-relaxed text-white">${subComp.fullText}</p>
                     </div>
 
