@@ -249,15 +249,26 @@ function renderQuestion() {
 
                     <!-- Rating buttons for this sub-competency -->
                     <div class="grid grid-cols-5 gap-3 mt-4">
-                        ${[1, 2, 3, 4, 5].map(rating => `
+                        ${[1, 2, 3, 4, 5].map(rating => {
+                            const labels = ['Developing', 'Emerging', 'Proficient', 'Advanced', 'Expert'];
+                            const descriptions = [
+                                "I'm learning this skill",
+                                "I can do this with guidance",
+                                "I can do this independently",
+                                "I can mentor others on this",
+                                "I'm defining best practices for this"
+                            ];
+                            return `
                             <button onclick="selectSubCompRating('${subComp.id}', ${rating})"
                                     data-subcomp-id="${subComp.id}"
                                     data-rating="${rating}"
                                     class="sub-rating-btn flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all ${ratingValue === rating ? 'border-primary bg-primary/10' : 'border-input bg-card hover:border-primary/50'}">
                                 <span class="text-2xl font-bold">${rating}</span>
-                                <span class="text-xs font-medium text-center">${['Developing', 'Emerging', 'Proficient', 'Advanced', 'Expert'][rating - 1]}</span>
+                                <span class="text-xs font-medium text-center">${labels[rating - 1]}</span>
+                                <span class="text-xs text-muted-foreground text-center leading-tight hidden md:block">${descriptions[rating - 1]}</span>
                             </button>
-                        `).join('')}
+                        `;
+                        }).join('')}
                     </div>
                 </div>
             `;
