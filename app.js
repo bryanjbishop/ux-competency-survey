@@ -248,7 +248,7 @@ function renderQuestion() {
                             <button onclick="selectSubCompRating('${subComp.id}', ${rating})"
                                     data-subcomp-id="${subComp.id}"
                                     data-rating="${rating}"
-                                    class="sub-rating-btn flex flex-col items-center justify-center gap-1 p-6 rounded-lg transition-all ${ratingValue === rating ? 'bg-primary text-primary-foreground' : 'bg-muted/50 hover:bg-muted'}">
+                                    class="sub-rating-btn flex flex-col items-center justify-start gap-1 p-6 rounded-lg transition-all ${ratingValue === rating ? 'bg-primary text-primary-foreground' : 'bg-muted/50 hover:bg-muted'}">
                                 <span class="text-4xl font-bold text-white" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">${rating}</span>
                                 <span class="text-xs font-semibold text-center">${labels[rating - 1]}</span>
                                 <span class="text-xs opacity-70 text-center leading-tight">${descriptions[rating - 1]}</span>
