@@ -211,11 +211,9 @@ function renderQuestion() {
     const progress = (answeredCount / questions.length) * 100;
     document.getElementById('progressFill').style.width = `${progress}%`;
 
-    // Update competency badge
-    document.getElementById('competencyBadge').textContent = currentQuestion.competency;
-
-    // Update question content
-    document.getElementById('questionTitle').textContent = currentQuestion.title;
+    // Update question content - remove text in parentheses
+    const cleanTitle = currentQuestion.title.replace(/\s*\([^)]*\)\s*/g, '').trim();
+    document.getElementById('questionTitle').textContent = cleanTitle;
 
     // Build subtitle with description and sub-competencies or bullets
     let subtitleHTML = `<p class="text-sm" style="margin-bottom: 64px;">${currentQuestion.description}</p>`;
