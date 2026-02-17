@@ -147,6 +147,40 @@
         .dark #designerFilter {
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
         }
+
+        /* Transparent scrollbar for all browsers */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: transparent transparent;
+        }
+
+        /* Webkit browsers (Chrome, Safari, Edge) */
+        *::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        *::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        *::-webkit-scrollbar-thumb {
+            background: transparent;
+            border-radius: 4px;
+        }
+
+        *::-webkit-scrollbar-thumb:hover {
+            background: transparent;
+        }
+
+        /* Submit button custom colors */
+        #finishBtn {
+            background-color: #20293A;
+        }
+
+        #finishBtn:hover {
+            background-color: #4D81EE;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-background text-foreground transition-colors duration-300">
@@ -227,10 +261,6 @@
                     <button onclick="attemptSignIn()"
                             class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8 w-full">
                         Sign In
-                    </button>
-                    <button onclick="returnHome()"
-                            class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 px-8 w-full">
-                        Back
                     </button>
                 </div>
             </div>
@@ -316,8 +346,12 @@
         <div class="screen max-w-3xl w-full" id="surveyScreen">
             <!-- Scrollable Content Area -->
             <div id="surveyContent" class="mt-8 pb-96 overflow-y-auto" style="max-height: calc(100vh - 200px);">
+                <div id="roleTitle" class="text-sm mb-4">
+                    <span id="roleLevel" class="text-primary font-semibold uppercase"></span>
+                    <span class="text-white/30 font-semibold"></span>
+                </div>
                 <h2 id="questionTitle" class="text-5xl font-bold tracking-tight mb-8"></h2>
-                <div id="questionSubtitle" class="text-muted-foreground prose prose-sm max-w-none [&>p]:mb-4 [&>ul]:ml-5 [&>ul]:list-disc [&>ul>li]:mb-2"></div>
+                <div id="questionSubtitle" class="text-white/60 prose prose-sm max-w-none [&>p]:mb-4 [&>ul]:ml-5 [&>ul]:list-disc [&>ul>li]:mb-2"></div>
             </div>
 
             <!-- Sticky Navigation Section at Bottom -->
@@ -325,8 +359,35 @@
                 <div class="max-w-3xl mx-auto px-4 py-6">
                     <!-- Navigation -->
                     <div>
-                        <!-- Progress Bar -->
-                        <div class="w-full h-1.5 bg-secondary rounded-full mb-4 overflow-hidden">
+                        <!-- Segmented Progress Bar for All Roles -->
+                        <div id="internProgressBars" class="w-full mb-4">
+                            <div class="flex gap-1.5 w-full h-2 rounded-full p-0">
+                                <div class="flex-1 relative overflow-hidden rounded-l-full bg-muted border border-input">
+                                    <div id="progressSegment0" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                                <div class="flex-1 relative overflow-hidden bg-muted border border-input">
+                                    <div id="progressSegment1" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                                <div class="flex-1 relative overflow-hidden bg-muted border border-input">
+                                    <div id="progressSegment2" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                                <div class="flex-1 relative overflow-hidden bg-muted border border-input">
+                                    <div id="progressSegment3" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                                <div class="flex-1 relative overflow-hidden bg-muted border border-input">
+                                    <div id="progressSegment4" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                                <div class="flex-1 relative overflow-hidden bg-muted border border-input">
+                                    <div id="progressSegment5" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                                <div class="flex-1 relative overflow-hidden rounded-r-full bg-muted border border-input">
+                                    <div id="progressSegment6" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Single Progress Bar for Other Roles -->
+                        <div id="singleProgressBar" class="w-full h-1.5 bg-secondary rounded-full mb-4 overflow-hidden" style="display: none;">
                             <div id="progressFill" class="h-full bg-primary transition-all duration-300 rounded-full"></div>
                         </div>
 
@@ -342,8 +403,8 @@
                             <div class="flex items-center gap-4">
                                 <span id="questionCounter" class="text-sm text-muted-foreground font-medium"></span>
                                 <button id="finishBtn" onclick="completeSurvey()" style="display: none;"
-                                        class="inline-flex items-center gap-2 rounded-md text-sm font-semibold transition-all bg-green-600 text-white hover:bg-green-700 hover:scale-105 h-10 px-6 shadow-lg">
-                                    Finish Survey ✓
+                                        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 text-white h-10 px-6">
+                                    Submit
                                 </button>
                             </div>
                         </div>

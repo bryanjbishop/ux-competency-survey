@@ -206,10 +206,35 @@ function renderQuestion() {
     const currentQuestion = questions[surveyState.currentQuestionIndex];
     const isLastQuestion = surveyState.currentQuestionIndex === questions.length - 1;
 
-    // Update progress bar based on answered questions
-    const answeredCount = Object.keys(surveyState.responses).length;
-    const progress = (answeredCount / questions.length) * 100;
-    document.getElementById('progressFill').style.width = `${progress}%`;
+    // Show segmented progress bar for all roles
+    const segmentedBars = document.getElementById('internProgressBars');
+    const singleBar = document.getElementById('singleProgressBar');
+
+    if (segmentedBars) {
+        segmentedBars.style.display = 'block';
+    }
+    if (singleBar) {
+        singleBar.style.display = 'none';
+    }
+    updateSegmentedProgressBars();
+
+    // Update role title
+    const roleInfo = competencies[surveyState.role].role;
+    const roleTitleElement = document.getElementById('roleTitle');
+    const roleLevelElement = document.getElementById('roleLevel');
+
+    if (roleTitleElement && roleLevelElement) {
+        if (roleInfo.includes(' - ')) {
+            // Format: "UX 1 - Associate Designer"
+            const [level, name] = roleInfo.split(' - ');
+            roleLevelElement.textContent = level.toUpperCase() + ': ';
+            roleLevelElement.nextElementSibling.textContent = name;
+        } else {
+            // For "Intern" role - just show "INTERN"
+            roleLevelElement.textContent = 'INTERN';
+            roleLevelElement.nextElementSibling.textContent = '';
+        }
+    }
 
     // Update question content - remove text in parentheses
     const cleanTitle = currentQuestion.title.replace(/\s*\([^)]*\)\s*/g, '').trim();
@@ -365,29 +390,34 @@ function selectSubCompRating(subCompId, value) {
 
 // Helper function to update progress bar
 function updateProgressBar() {
-    const questions = competencies[surveyState.role].questions;
-    let totalSubCompetencies = 0;
-    let ratedSubCompetencies = 0;
+    updateSegmentedProgressBars();
+}
 
-    questions.forEach(question => {
+// Update segmented progress bars for all roles (7 separate segments)
+function updateSegmentedProgressBars() {
+    const questions = competencies[surveyState.role].questions;
+
+    questions.forEach((question, index) => {
+        let totalSubComps = question.subCompetencies ? question.subCompetencies.length : 0;
+        let completedSubComps = 0;
+
         if (question.subCompetencies) {
-            totalSubCompetencies += question.subCompetencies.length;
             question.subCompetencies.forEach(subComp => {
                 if (surveyState.responses[subComp.id]) {
-                    ratedSubCompetencies++;
+                    completedSubComps++;
                 }
             });
+        }
+
+        const progress = totalSubComps > 0 ? (completedSubComps / totalSubComps) * 100 : 0;
+        console.log(`Progress segment ${index}: ${completedSubComps}/${totalSubComps} = ${progress}%`);
+        const progressSegment = document.getElementById(`progressSegment${index}`);
+        if (progressSegment) {
+            progressSegment.style.width = `${progress}%`;
         } else {
-            // For old format questions without sub-competencies
-            totalSubCompetencies++;
-            if (surveyState.responses[question.id]) {
-                ratedSubCompetencies++;
-            }
+            console.error(`Progress segment ${index} element not found`);
         }
     });
-
-    const progress = (ratedSubCompetencies / totalSubCompetencies) * 100;
-    document.getElementById('progressFill').style.width = `${progress}%`;
 }
 
 function selectRating(value) {

@@ -313,11 +313,27 @@ const competencies = {
                 competency: "Product Strategy",
                 title: "Product Strategy (Before you work)",
                 description: "You're developing more independence in your research and strategic thinking. You're moving from following directions to actively shaping the work, asking better questions, challenging assumptions, and building conviction in your design decisions through evidence. You're beginning to practice Continuous Discovery Habits.",
-                bullets: [
-                    "You conduct basic interviews and surveys, observing and capturing user needs effectively, and participate in weekly user touchpoints with increasing confidence",
-                    "You occasionally proactively identify gaps in problem definitions and read and interpret product requirements, presenting multiple paths forward",
-                    "You understand the voice of the customer and are learning to connect design work to measurable outcomes (not just feature completion)",
-                    "You justify ideas based on real evidence versus intuition and are starting to recognize industry patterns and trends"
+                subCompetencies: [
+                    {
+                        id: "ux1-ps-01",
+                        fullText: "You conduct basic interviews and surveys, observing and capturing user needs effectively, and participate in weekly user touchpoints with increasing confidence",
+                        shortText: "Conducts research with confidence"
+                    },
+                    {
+                        id: "ux1-ps-02",
+                        fullText: "You occasionally proactively identify gaps in problem definitions and read and interpret product requirements, presenting multiple paths forward",
+                        shortText: "Identifies gaps, proposes options"
+                    },
+                    {
+                        id: "ux1-ps-03",
+                        fullText: "You understand the voice of the customer and are learning to connect design work to measurable outcomes (not just feature completion)",
+                        shortText: "Connects work to outcomes"
+                    },
+                    {
+                        id: "ux1-ps-04",
+                        fullText: "You justify ideas based on real evidence versus intuition and are starting to recognize industry patterns and trends",
+                        shortText: "Justifies ideas with evidence"
+                    }
                 ]
             },
             {
@@ -325,11 +341,27 @@ const competencies = {
                 competency: "Craft and Quality",
                 title: "Craft and Quality (While you work)",
                 description: "You're transitioning from learning patterns to applying them with judgment. Your work is becoming more polished as you develop an intuitive sense for quality, knowing when good enough is good enough, and when to push for excellence.",
-                bullets: [
-                    "Your work is starting to require less oversight from the team, and you follow established structures set by senior designers",
-                    "You take time to understand Zion UI design system, lean on existing patterns, and create simple flows with mentoring to ensure usability and accessibility",
-                    "You design with accessibility in mind from the start, understanding how to use Zion UI's accessible components correctly",
-                    "You understand and adhere to FamilySearch's design principles with decreasing need for guidance, and prototype solutions to test assumptions with users"
+                subCompetencies: [
+                    {
+                        id: "ux1-cq-01",
+                        fullText: "Your work is starting to require less oversight from the team, and you follow established structures set by senior designers",
+                        shortText: "Works with decreasing oversight"
+                    },
+                    {
+                        id: "ux1-cq-02",
+                        fullText: "You take time to understand Zion UI design system, lean on existing patterns, and create simple flows with mentoring to ensure usability and accessibility",
+                        shortText: "Uses system patterns effectively"
+                    },
+                    {
+                        id: "ux1-cq-03",
+                        fullText: "You design with accessibility in mind from the start, understanding how to use Zion UI's accessible components correctly",
+                        shortText: "Designs accessibly from start"
+                    },
+                    {
+                        id: "ux1-cq-04",
+                        fullText: "You understand and adhere to FamilySearch's design principles with decreasing need for guidance, and prototype solutions to test assumptions with users",
+                        shortText: "Applies principles and prototypes"
+                    }
                 ]
             },
             {
@@ -337,10 +369,22 @@ const competencies = {
                 competency: "Communication and Collaboration",
                 title: "Communication and Collaboration (Working together)",
                 description: "You're building confidence as a communicator and finding your voice. You're learning that communication isn't just about presenting polished work, it's about inviting collaboration early, being receptive to feedback, and building trust through transparency in the product trio.",
-                bullets: [
-                    "You're comfortable presenting work to broader stakeholders with clear communication and are receptive to constructive feedback in critiques",
-                    "You listen actively to engineers and PMs in trio meetings, communicating project goals clearly when asked and sharing user research insights",
-                    "You document decision making in a way that's clear and easy for others to understand, including the outcomes you're trying to achieve"
+                subCompetencies: [
+                    {
+                        id: "ux1-cc-01",
+                        fullText: "You're comfortable presenting work to broader stakeholders with clear communication and are receptive to constructive feedback in critiques",
+                        shortText: "Presents work with clarity"
+                    },
+                    {
+                        id: "ux1-cc-02",
+                        fullText: "You listen actively to engineers and PMs in trio meetings, communicating project goals clearly when asked and sharing user research insights",
+                        shortText: "Listens and shares insights"
+                    },
+                    {
+                        id: "ux1-cc-03",
+                        fullText: "You document decision making in a way that's clear and easy for others to understand, including the outcomes you're trying to achieve",
+                        shortText: "Documents decisions clearly"
+                    }
                 ]
             },
             {
@@ -348,11 +392,27 @@ const competencies = {
                 competency: "Action and Impact",
                 title: "Action and Impact (Shipping)",
                 description: "You're developing the discipline of consistent delivery. Shipping isn't just about meeting deadlines, it's about learning to balance craft with pragmatism, understanding that shipped work creates real value and real learning opportunities. You're beginning to measure what happens after launch.",
-                bullets: [
-                    "You meet project deadlines, occasionally ahead of schedule, checking in frequently to avoid blocking progress",
-                    "You ship work regularly and understand its impact on the business, asking questions about outcomes and user response",
-                    "You maintain an organized workflow, track progress on assigned tasks, and are curious about what happens after your work goes live",
-                    "When designs don't perform as expected, you're curious and open to learning why"
+                subCompetencies: [
+                    {
+                        id: "ux1-ai-01",
+                        fullText: "You meet project deadlines, occasionally ahead of schedule, checking in frequently to avoid blocking progress",
+                        shortText: "Meets deadlines consistently"
+                    },
+                    {
+                        id: "ux1-ai-02",
+                        fullText: "You ship work regularly and understand its impact on the business, asking questions about outcomes and user response",
+                        shortText: "Ships and tracks outcomes"
+                    },
+                    {
+                        id: "ux1-ai-03",
+                        fullText: "You maintain an organized workflow, track progress on assigned tasks, and are curious about what happens after your work goes live",
+                        shortText: "Maintains organized workflow"
+                    },
+                    {
+                        id: "ux1-ai-04",
+                        fullText: "When designs don't perform as expected, you're curious and open to learning why",
+                        shortText: "Learns from performance data"
+                    }
                 ]
             },
             {
@@ -360,10 +420,22 @@ const competencies = {
                 competency: "Leveling Up Others",
                 title: "Leveling Up Others (Internal influence)",
                 description: "You're starting to contribute more actively to team processes and provide helpful feedback to others. You're becoming a more engaged team member beyond just your individual work.",
-                bullets: [
-                    "You participate in hiring processes, refer potential candidates, and support interns and new team members with onboarding",
-                    "You regularly participate in design team meetings, critiques, and events",
-                    "You seek to provide actionable feedback to other projects when possible"
+                subCompetencies: [
+                    {
+                        id: "ux1-luo-01",
+                        fullText: "You participate in hiring processes, refer potential candidates, and support interns and new team members with onboarding",
+                        shortText: "Supports hiring and onboarding"
+                    },
+                    {
+                        id: "ux1-luo-02",
+                        fullText: "You regularly participate in design team meetings, critiques, and events",
+                        shortText: "Actively participates in team"
+                    },
+                    {
+                        id: "ux1-luo-03",
+                        fullText: "You seek to provide actionable feedback to other projects when possible",
+                        shortText: "Provides actionable feedback"
+                    }
                 ]
             },
             {
@@ -371,9 +443,17 @@ const competencies = {
                 competency: "Independence",
                 title: "Independence (Self-sufficiency)",
                 description: "You're building autonomy through structured support. You're learning the crucial skill of knowing when to push forward independently and when to pause and ask questions, finding the balance between self-reliance and collaboration.",
-                bullets: [
-                    "You're learning to move forward on tasks with modest supervision, though you still require frequent check-ins",
-                    "You ask good questions to clarify requirements before starting work and are building confidence to make small decisions independently"
+                subCompetencies: [
+                    {
+                        id: "ux1-ind-01",
+                        fullText: "You're learning to move forward on tasks with modest supervision, though you still require frequent check-ins",
+                        shortText: "Works with modest supervision"
+                    },
+                    {
+                        id: "ux1-ind-02",
+                        fullText: "You ask good questions to clarify requirements before starting work and are building confidence to make small decisions independently",
+                        shortText: "Clarifies before working independently"
+                    }
                 ]
             },
             {
@@ -381,11 +461,27 @@ const competencies = {
                 competency: "Skill Development",
                 title: "Skill Development (Continuous learning)",
                 description: "You're moving from learning to proficiency. Focus on mastering your core tools, developing your design judgment, and building the soft skills that make you an effective collaborator.",
-                bullets: [
-                    "You're achieving proficiency in primary design tools and building speed and confidence in execution",
-                    "You're strengthening your grasp of design principles and can articulate why certain design decisions work or don't work",
-                    "You're developing communication skills: presenting work clearly, writing concise documentation, explaining your rationale",
-                    "You're learning basic analytics tools to understand user behavior and measure outcomes, and developing research methodologies to synthesize findings into actionable insights"
+                subCompetencies: [
+                    {
+                        id: "ux1-sd-01",
+                        fullText: "You're achieving proficiency in primary design tools and building speed and confidence in execution",
+                        shortText: "Achieving tool proficiency"
+                    },
+                    {
+                        id: "ux1-sd-02",
+                        fullText: "You're strengthening your grasp of design principles and can articulate why certain design decisions work or don't work",
+                        shortText: "Articulates design decisions"
+                    },
+                    {
+                        id: "ux1-sd-03",
+                        fullText: "You're developing communication skills: presenting work clearly, writing concise documentation, explaining your rationale",
+                        shortText: "Developing communication skills"
+                    },
+                    {
+                        id: "ux1-sd-04",
+                        fullText: "You're learning basic analytics tools to understand user behavior and measure outcomes, and developing research methodologies to synthesize findings into actionable insights",
+                        shortText: "Learning analytics and research"
+                    }
                 ]
             }
         ]
@@ -400,11 +496,27 @@ const competencies = {
                 competency: "Product Strategy",
                 title: "Product Strategy (Before you work)",
                 description: "You're shifting from reactive execution to proactive problem-solving. You're learning to see beyond the stated requirements to the real user and business needs underneath, using research not just to validate solutions, but to reframe problems more effectively. You actively practice Continuous Discovery Habits.",
-                bullets: [
-                    "You independently plan and conduct weekly user touchpoints (interviews, lightweight usability tests) and use insights to refine project scope",
-                    "You identify gaps in problem definitions and propose solutions backed by user data, mapping assumptions and testing them with users",
-                    "You understand how design impacts business outcomes (conversion, retention, engagement) and regularly use both qualitative and quantitative data to measure success",
-                    "You have a deep understanding of the current tooling industry and know when to focus on the big picture versus zoom into details"
+                subCompetencies: [
+                    {
+                        id: "ux2-ps-01",
+                        fullText: "You independently plan and conduct weekly user touchpoints (interviews, lightweight usability tests) and use insights to refine project scope",
+                        shortText: "Leads continuous discovery independently"
+                    },
+                    {
+                        id: "ux2-ps-02",
+                        fullText: "You identify gaps in problem definitions and propose solutions backed by user data, mapping assumptions and testing them with users",
+                        shortText: "Identifies gaps, validates assumptions"
+                    },
+                    {
+                        id: "ux2-ps-03",
+                        fullText: "You understand how design impacts business outcomes (conversion, retention, engagement) and regularly use both qualitative and quantitative data to measure success",
+                        shortText: "Measures design impact"
+                    },
+                    {
+                        id: "ux2-ps-04",
+                        fullText: "You have a deep understanding of the current tooling industry and know when to focus on the big picture versus zoom into details",
+                        shortText: "Balances strategy and details"
+                    }
                 ]
             },
             {
@@ -412,12 +524,32 @@ const competencies = {
                 competency: "Craft and Quality",
                 title: "Craft and Quality (While you work)",
                 description: "Your craft has matured to the point where quality is becoming automatic rather than effortful. You've internalized the fundamentals deeply enough that you can focus on the harder problems: complex information architecture, system-level thinking, and designing for edge cases without being reminded.",
-                bullets: [
-                    "Your work is crisp and thorough with very few pixel-artifacts, misalignments, or gestalt principle issues",
-                    "You create and refine information architecture across features, ensuring logical consistency, and design moderate-to-complex flows leveraging established Zion UI patterns",
-                    "You actively use and contribute feedback to Zion UI, identifying gaps or improvement opportunities",
-                    "You produce mid-to-high-fidelity prototypes for usability validation and rapid experimentation, iterate based on user feedback, and your work exemplifies FamilySearch's design principles",
-                    "You design for accessibility by default and can identify and fix common A11y issues"
+                subCompetencies: [
+                    {
+                        id: "ux2-cq-01",
+                        fullText: "Your work is crisp and thorough with very few pixel-artifacts, misalignments, or gestalt principle issues",
+                        shortText: "Delivers crisp, thorough work"
+                    },
+                    {
+                        id: "ux2-cq-02",
+                        fullText: "You create and refine information architecture across features, ensuring logical consistency, and design moderate-to-complex flows leveraging established Zion UI patterns",
+                        shortText: "Designs complex flows systematically"
+                    },
+                    {
+                        id: "ux2-cq-03",
+                        fullText: "You actively use and contribute feedback to Zion UI, identifying gaps or improvement opportunities",
+                        shortText: "Contributes to design system"
+                    },
+                    {
+                        id: "ux2-cq-04",
+                        fullText: "You produce mid-to-high-fidelity prototypes for usability validation and rapid experimentation, iterate based on user feedback, and your work exemplifies FamilySearch's design principles",
+                        shortText: "Prototypes and iterates effectively"
+                    },
+                    {
+                        id: "ux2-cq-05",
+                        fullText: "You design for accessibility by default and can identify and fix common A11y issues",
+                        shortText: "Designs accessibly by default"
+                    }
                 ]
             },
             {
@@ -425,11 +557,27 @@ const competencies = {
                 competency: "Communication and Collaboration",
                 title: "Communication and Collaboration (Working together)",
                 description: "You're an effective communicator and collaborator. Importantly, you care less about \"being right\" and more about helping your team move forward; you check your ego at the door. You're a true partner in the product trio.",
-                bullets: [
-                    "You present work to broader stakeholders, document decisions clearly, and can easily explain the rationale for design decisions within a larger context",
-                    "You share design iterations regularly and research discoveries with the trio, setting an example for \"open design\" and collaborative sense-making",
-                    "You care less about \"being right\" and more about helping your team move forward, fostering transparency and trust through your collaborative approach",
-                    "You respectfully challenge assumptions when needed and advocate for user needs even when facing pushback"
+                subCompetencies: [
+                    {
+                        id: "ux2-cc-01",
+                        fullText: "You present work to broader stakeholders, document decisions clearly, and can easily explain the rationale for design decisions within a larger context",
+                        shortText: "Presents with clear rationale"
+                    },
+                    {
+                        id: "ux2-cc-02",
+                        fullText: "You share design iterations regularly and research discoveries with the trio, setting an example for \"open design\" and collaborative sense-making",
+                        shortText: "Practices open, collaborative design"
+                    },
+                    {
+                        id: "ux2-cc-03",
+                        fullText: "You care less about \"being right\" and more about helping your team move forward, fostering transparency and trust through your collaborative approach",
+                        shortText: "Prioritizes progress over ego"
+                    },
+                    {
+                        id: "ux2-cc-04",
+                        fullText: "You respectfully challenge assumptions when needed and advocate for user needs even when facing pushback",
+                        shortText: "Advocates for users constructively"
+                    }
                 ]
             },
             {
@@ -437,12 +585,32 @@ const competencies = {
                 competency: "Action and Impact",
                 title: "Action and Impact (Shipping)",
                 description: "You've developed strong delivery instincts and understand the rhythm of product development. You know how to maintain momentum, breaking through obstacles, managing your own energy, and making smart trade-offs between quality and speed without needing someone to tell you which to prioritize. You focus on delivering the right thing, not just shipping for the sake of shipping.",
-                bullets: [
-                    "You consistently meet deadlines, sometimes ahead of schedule, and embrace \"perfect is the enemy of good\"; you know when to ship to learn",
-                    "You ship small experiments to validate assumptions quickly rather than waiting for perfect solutions",
-                    "You file bugs regularly and unblock yourself swiftly, maintaining momentum",
-                    "You measure outcomes after launch, not just completion, and adjust based on what you learn; you're consistently able to unblock yourself to never be stalled or idle",
-                    "When experiments fail, you share learnings openly and iterate quickly"
+                subCompetencies: [
+                    {
+                        id: "ux2-ai-01",
+                        fullText: "You consistently meet deadlines, sometimes ahead of schedule, and embrace \"perfect is the enemy of good\"; you know when to ship to learn",
+                        shortText: "Ships strategically to learn"
+                    },
+                    {
+                        id: "ux2-ai-02",
+                        fullText: "You ship small experiments to validate assumptions quickly rather than waiting for perfect solutions",
+                        shortText: "Experiments rapidly before perfecting"
+                    },
+                    {
+                        id: "ux2-ai-03",
+                        fullText: "You file bugs regularly and unblock yourself swiftly, maintaining momentum",
+                        shortText: "Maintains momentum proactively"
+                    },
+                    {
+                        id: "ux2-ai-04",
+                        fullText: "You measure outcomes after launch, not just completion, and adjust based on what you learn; you're consistently able to unblock yourself to never be stalled or idle",
+                        shortText: "Measures and adjusts post-launch"
+                    },
+                    {
+                        id: "ux2-ai-05",
+                        fullText: "When experiments fail, you share learnings openly and iterate quickly",
+                        shortText: "Shares failures, iterates quickly"
+                    }
                 ]
             },
             {
@@ -450,10 +618,22 @@ const competencies = {
                 competency: "Leveling Up Others",
                 title: "Leveling Up Others (Internal influence)",
                 description: "You're transitioning from focusing solely on your own growth to actively investing in others. You're discovering that teaching reinforces your own understanding and that lifting others up strengthens the entire team.",
-                bullets: [
-                    "You actively participate in design critiques, offering constructive, clear, actionable feedback regularly",
-                    "You mentor interns and UX 1 designers in fundamental tasks and processes, including Continuous Discovery practices",
-                    "You facilitate design sessions when needed and seek opportunities to help others outside of your standard projects"
+                subCompetencies: [
+                    {
+                        id: "ux2-luo-01",
+                        fullText: "You actively participate in design critiques, offering constructive, clear, actionable feedback regularly",
+                        shortText: "Gives constructive critique regularly"
+                    },
+                    {
+                        id: "ux2-luo-02",
+                        fullText: "You mentor interns and UX 1 designers in fundamental tasks and processes, including Continuous Discovery practices",
+                        shortText: "Mentors junior designers effectively"
+                    },
+                    {
+                        id: "ux2-luo-03",
+                        fullText: "You facilitate design sessions when needed and seek opportunities to help others outside of your standard projects",
+                        shortText: "Facilitates and helps proactively"
+                    }
                 ]
             },
             {
@@ -461,10 +641,22 @@ const competencies = {
                 competency: "Independence",
                 title: "Independence (Self-sufficiency)",
                 description: "You've achieved reliable independence on most standard work. You can carry projects through from ambiguous beginning to shipped end, sensing risks before they become problems and making sound judgment calls without constant validation.",
-                bullets: [
-                    "You carry small-to-medium projects end-to-end with minimal check-ins and proactively flag risks or issues before they become blockers",
-                    "You identify next steps intuitively and rarely wait for direction",
-                    "You're confident in making project-level decisions without heavy oversight"
+                subCompetencies: [
+                    {
+                        id: "ux2-ind-01",
+                        fullText: "You carry small-to-medium projects end-to-end with minimal check-ins and proactively flag risks or issues before they become blockers",
+                        shortText: "Manages projects end-to-end"
+                    },
+                    {
+                        id: "ux2-ind-02",
+                        fullText: "You identify next steps intuitively and rarely wait for direction",
+                        shortText: "Self-directs without waiting"
+                    },
+                    {
+                        id: "ux2-ind-03",
+                        fullText: "You're confident in making project-level decisions without heavy oversight",
+                        shortText: "Makes project decisions confidently"
+                    }
                 ]
             },
             {
@@ -472,11 +664,27 @@ const competencies = {
                 competency: "Skill Development",
                 title: "Skill Development (Continuous learning)",
                 description: "You're moving toward mastery of your craft. Focus on deepening expertise in specific areas, developing your strategic thinking, and building your voice in the design community.",
-                bullets: [
-                    "You've achieved mastery of core design tools and workflows; you can work efficiently and teach others",
-                    "You can identify and articulate nuanced design quality issues: hierarchy problems, visual weight, rhythm, balance, accessibility barriers",
-                    "You understand advanced design principles and can apply them intentionally with critical judgment",
-                    "You're proficient with analytics platforms (understanding conversion funnels, user behavior patterns, A/B test results), building expertise in specific areas (accessibility, motion, interaction design, AI integration), and becoming more active in the design community"
+                subCompetencies: [
+                    {
+                        id: "ux2-sd-01",
+                        fullText: "You've achieved mastery of core design tools and workflows; you can work efficiently and teach others",
+                        shortText: "Masters tools, teaches others"
+                    },
+                    {
+                        id: "ux2-sd-02",
+                        fullText: "You can identify and articulate nuanced design quality issues: hierarchy problems, visual weight, rhythm, balance, accessibility barriers",
+                        shortText: "Identifies nuanced quality issues"
+                    },
+                    {
+                        id: "ux2-sd-03",
+                        fullText: "You understand advanced design principles and can apply them intentionally with critical judgment",
+                        shortText: "Applies principles with judgment"
+                    },
+                    {
+                        id: "ux2-sd-04",
+                        fullText: "You're proficient with analytics platforms (understanding conversion funnels, user behavior patterns, A/B test results), building expertise in specific areas (accessibility, motion, interaction design, AI integration), and becoming more active in the design community",
+                        shortText: "Builds specialized expertise"
+                    }
                 ]
             }
         ]
@@ -491,11 +699,27 @@ const competencies = {
                 competency: "Product Strategy",
                 title: "Product Strategy (Before you work)",
                 description: "You've developed strategic intuition—the ability to synthesize user needs, business constraints, and technical realities into coherent direction. You guide teams not just in solving problems, but in identifying which problems are worth solving and when. You lead discovery efforts and coach others in outcome-focused thinking.",
-                bullets: [
-                    "You orchestrate comprehensive continuous discovery for large, complex initiatives, leading weekly touchpoints and coaching mid-level designers on research best practices",
-                    "You guide teams to converge on the right problem statements, balancing user data, business constraints, and technical feasibility, building consensus using your thorough product and customer understanding",
-                    "You contribute to product roadmaps based on discovery insights, weigh trade-offs among user needs, feasibility, and business outcomes (not just features), and have strong intuition on what's needed to move objectives forward",
-                    "You use opportunity solution trees or similar frameworks to help teams visualize and prioritize the right work"
+                subCompetencies: [
+                    {
+                        id: "ux3-ps-01",
+                        fullText: "You orchestrate comprehensive continuous discovery for large, complex initiatives, leading weekly touchpoints and coaching mid-level designers on research best practices",
+                        shortText: "Orchestrates discovery at scale"
+                    },
+                    {
+                        id: "ux3-ps-02",
+                        fullText: "You guide teams to converge on the right problem statements, balancing user data, business constraints, and technical feasibility, building consensus using your thorough product and customer understanding",
+                        shortText: "Builds consensus on problems"
+                    },
+                    {
+                        id: "ux3-ps-03",
+                        fullText: "You contribute to product roadmaps based on discovery insights, weigh trade-offs among user needs, feasibility, and business outcomes (not just features), and have strong intuition on what's needed to move objectives forward",
+                        shortText: "Shapes roadmaps with insights"
+                    },
+                    {
+                        id: "ux3-ps-04",
+                        fullText: "You use opportunity solution trees or similar frameworks to help teams visualize and prioritize the right work",
+                        shortText: "Uses frameworks to prioritize"
+                    }
                 ]
             },
             {
@@ -503,12 +727,32 @@ const competencies = {
                 competency: "Craft and Quality",
                 title: "Craft and Quality (While you work)",
                 description: "Your craft has reached a level where others look to your work as the standard. You handle complexity with apparent ease, solving intricate problems, knowing when existing patterns serve and when new ones are needed, and delivering work so thorough that edge cases and details are anticipated rather than discovered.",
-                bullets: [
-                    "You solve intricate information architecture issues, ensure cross-product consistency using Zion UI, and own multiple complex flows ensuring seamless user experience",
-                    "You actively contribute to Zion UI evolution, identifying system gaps, proposing improvements, and validating new patterns with user research",
-                    "You innovate new patterns only when truly beneficial, validating them with research, and deeply understand when industry patterns are effective",
-                    "Your designs are consistently a shining example of completeness; people rarely need clarification on hover states, edge cases, screen sizes, or accessibility requirements",
-                    "You champion accessibility across your projects and can conduct thorough accessibility audits"
+                subCompetencies: [
+                    {
+                        id: "ux3-cq-01",
+                        fullText: "You solve intricate information architecture issues, ensure cross-product consistency using Zion UI, and own multiple complex flows ensuring seamless user experience",
+                        shortText: "Solves complex IA problems"
+                    },
+                    {
+                        id: "ux3-cq-02",
+                        fullText: "You actively contribute to Zion UI evolution, identifying system gaps, proposing improvements, and validating new patterns with user research",
+                        shortText: "Evolves design system strategically"
+                    },
+                    {
+                        id: "ux3-cq-03",
+                        fullText: "You innovate new patterns only when truly beneficial, validating them with research, and deeply understand when industry patterns are effective",
+                        shortText: "Innovates patterns when beneficial"
+                    },
+                    {
+                        id: "ux3-cq-04",
+                        fullText: "Your designs are consistently a shining example of completeness; people rarely need clarification on hover states, edge cases, screen sizes, or accessibility requirements",
+                        shortText: "Designs with complete thoroughness"
+                    },
+                    {
+                        id: "ux3-cq-05",
+                        fullText: "You champion accessibility across your projects and can conduct thorough accessibility audits",
+                        shortText: "Champions accessibility organization-wide"
+                    }
                 ]
             },
             {
@@ -516,11 +760,27 @@ const competencies = {
                 competency: "Communication and Collaboration",
                 title: "Communication and Collaboration (Working together)",
                 description: "You've become a unifying force across teams. You navigate complex stakeholder dynamics with confidence, build genuine shared ownership of outcomes, and create environments where knowledge sharing happens naturally rather than through forced processes.",
-                bullets: [
-                    "You engage any stakeholder (including leadership) with confidence and clarity, and delegate effectively when a project requires it",
-                    "You foster a culture of open feedback and shared ownership within trios, regularly sharing project context, discovery insights, and outcomes across teams to maintain alignment",
-                    "Knowledge flows freely rather than being siloed; you actively share what you learn from both successes and failures",
-                    "You facilitate difficult conversations and navigate disagreement productively, helping teams reach decisions even when perspectives conflict"
+                subCompetencies: [
+                    {
+                        id: "ux3-cc-01",
+                        fullText: "You engage any stakeholder (including leadership) with confidence and clarity, and delegate effectively when a project requires it",
+                        shortText: "Engages leadership with confidence"
+                    },
+                    {
+                        id: "ux3-cc-02",
+                        fullText: "You foster a culture of open feedback and shared ownership within trios, regularly sharing project context, discovery insights, and outcomes across teams to maintain alignment",
+                        shortText: "Fosters shared ownership culture"
+                    },
+                    {
+                        id: "ux3-cc-03",
+                        fullText: "Knowledge flows freely rather than being siloed; you actively share what you learn from both successes and failures",
+                        shortText: "Shares knowledge across teams"
+                    },
+                    {
+                        id: "ux3-cc-04",
+                        fullText: "You facilitate difficult conversations and navigate disagreement productively, helping teams reach decisions even when perspectives conflict",
+                        shortText: "Navigates difficult conversations productively"
+                    }
                 ]
             },
             {
@@ -528,11 +788,27 @@ const competencies = {
                 competency: "Action and Impact",
                 title: "Action and Impact (Shipping)",
                 description: "You're recognized as someone who \"gets big things done\"—not through heroics, but through smart decomposition, clear sequencing, and the ability to maintain team momentum even through complex, ambiguous work. People trust that when you take something on, it will ship and deliver measurable outcomes.",
-                bullets: [
-                    "You break down large problems into smaller deliverables to maintain momentum and focus on high business-impact outcomes (not just high-visibility features)",
-                    "You set an example for producing work that delivers results; people see you as a \"doer\" who focuses on what matters",
-                    "You not only meet deadlines but often orchestrate projects to finish ahead of schedule, and you're prolific at filing and resolving bugs",
-                    "You measure and share the outcomes of shipped work, using data to inform next iterations and celebrate learning from experiments, even when they don't work as planned"
+                subCompetencies: [
+                    {
+                        id: "ux3-ai-01",
+                        fullText: "You break down large problems into smaller deliverables to maintain momentum and focus on high business-impact outcomes (not just high-visibility features)",
+                        shortText: "Decomposes complexity strategically"
+                    },
+                    {
+                        id: "ux3-ai-02",
+                        fullText: "You set an example for producing work that delivers results; people see you as a \"doer\" who focuses on what matters",
+                        shortText: "Known for delivering results"
+                    },
+                    {
+                        id: "ux3-ai-03",
+                        fullText: "You not only meet deadlines but often orchestrate projects to finish ahead of schedule, and you're prolific at filing and resolving bugs",
+                        shortText: "Exceeds delivery expectations consistently"
+                    },
+                    {
+                        id: "ux3-ai-04",
+                        fullText: "You measure and share the outcomes of shipped work, using data to inform next iterations and celebrate learning from experiments, even when they don't work as planned",
+                        shortText: "Measures outcomes, shares learnings"
+                    }
                 ]
             },
             {
@@ -540,11 +816,27 @@ const competencies = {
                 competency: "Leveling Up Others",
                 title: "Leveling Up Others (Internal influence)",
                 description: "You've become a force multiplier for the team. You run design processes that bring out the best thinking in others, coach across levels with equal effectiveness, and model how to maintain high standards while being genuinely supportive rather than critical.",
-                bullets: [
-                    "You comfortably run design processes at scale (critiques, workshops, brainstorming sessions, discovery sessions)",
-                    "Colleagues actively seek your feedback; you're respected for your expertise, guidance, and ability to coach others in Continuous Discovery practices",
-                    "You actively coach junior and mid-level designers and invest in developing future leaders, sharing not just design skills but strategic thinking",
-                    "You create a culture where it's safe to experiment, fail fast, and share learnings"
+                subCompetencies: [
+                    {
+                        id: "ux3-luo-01",
+                        fullText: "You comfortably run design processes at scale (critiques, workshops, brainstorming sessions, discovery sessions)",
+                        shortText: "Facilitates processes at scale"
+                    },
+                    {
+                        id: "ux3-luo-02",
+                        fullText: "Colleagues actively seek your feedback; you're respected for your expertise, guidance, and ability to coach others in Continuous Discovery practices",
+                        shortText: "Sought for expertise and coaching"
+                    },
+                    {
+                        id: "ux3-luo-03",
+                        fullText: "You actively coach junior and mid-level designers and invest in developing future leaders, sharing not just design skills but strategic thinking",
+                        shortText: "Develops future design leaders"
+                    },
+                    {
+                        id: "ux3-luo-04",
+                        fullText: "You create a culture where it's safe to experiment, fail fast, and share learnings",
+                        shortText: "Builds experimentation culture"
+                    }
                 ]
             },
             {
@@ -552,11 +844,27 @@ const competencies = {
                 competency: "Independence",
                 title: "Independence (Self-sufficiency)",
                 description: "You operate with full autonomy on complex work, trusted to navigate ambiguity without a map. You don't wait for opportunities to be defined—you spot them, shape them, and drive them forward, self-managing toward maximum impact.",
-                bullets: [
-                    "You require minimal guidance even on complex, ambiguous tasks and proactively flag new opportunities to leadership",
-                    "You self-manage priorities effectively for maximal business and user impact (not just maximal output)",
-                    "You're confident making strategic decisions that affect multiple product areas",
-                    "You know when to advocate strongly for user needs and when to compromise, making these trade-offs transparently"
+                subCompetencies: [
+                    {
+                        id: "ux3-ind-01",
+                        fullText: "You require minimal guidance even on complex, ambiguous tasks and proactively flag new opportunities to leadership",
+                        shortText: "Operates autonomously on complexity"
+                    },
+                    {
+                        id: "ux3-ind-02",
+                        fullText: "You self-manage priorities effectively for maximal business and user impact (not just maximal output)",
+                        shortText: "Prioritizes for maximum impact"
+                    },
+                    {
+                        id: "ux3-ind-03",
+                        fullText: "You're confident making strategic decisions that affect multiple product areas",
+                        shortText: "Makes cross-product strategic decisions"
+                    },
+                    {
+                        id: "ux3-ind-04",
+                        fullText: "You know when to advocate strongly for user needs and when to compromise, making these trade-offs transparently",
+                        shortText: "Balances advocacy with pragmatism"
+                    }
                 ]
             },
             {
@@ -564,12 +872,32 @@ const competencies = {
                 competency: "Skill Development",
                 title: "Skill Development (Continuous learning)",
                 description: "You've achieved expertise and are beginning to shape how others think about design. Your focus is on developing specialized depth, codifying what you know so others can learn from it, and contributing back to the broader design community.",
-                bullets: [
-                    "You have expert-level proficiency across design tools and contribute to or lead Zion UI design system strategy",
-                    "You have mastered advanced design craft and can articulate subtle quality differences, teaching others to see them",
-                    "You have deep specialization in multiple areas (e.g., accessibility, data visualization, AI integration, research methods) and are recognized as a subject matter expert",
-                    "You're proficient in analyzing quantitative data, setting up experiments, and interpreting results to guide design decisions",
-                    "You're developing thought leadership, mentoring across disciplines, and teaching others when to leverage new tools versus when human expertise is essential"
+                subCompetencies: [
+                    {
+                        id: "ux3-sd-01",
+                        fullText: "You have expert-level proficiency across design tools and contribute to or lead Zion UI design system strategy",
+                        shortText: "Expert in tools and systems"
+                    },
+                    {
+                        id: "ux3-sd-02",
+                        fullText: "You have mastered advanced design craft and can articulate subtle quality differences, teaching others to see them",
+                        shortText: "Articulates and teaches craft"
+                    },
+                    {
+                        id: "ux3-sd-03",
+                        fullText: "You have deep specialization in multiple areas (e.g., accessibility, data visualization, AI integration, research methods) and are recognized as a subject matter expert",
+                        shortText: "Recognized subject matter expert"
+                    },
+                    {
+                        id: "ux3-sd-04",
+                        fullText: "You're proficient in analyzing quantitative data, setting up experiments, and interpreting results to guide design decisions",
+                        shortText: "Analyzes data to guide decisions"
+                    },
+                    {
+                        id: "ux3-sd-05",
+                        fullText: "You're developing thought leadership, mentoring across disciplines, and teaching others when to leverage new tools versus when human expertise is essential",
+                        shortText: "Develops thought leadership broadly"
+                    }
                 ]
             }
         ]
@@ -584,11 +912,27 @@ const competencies = {
                 competency: "Product Strategy",
                 title: "Product Strategy (Before you work)",
                 description: "You operate at a strategic level, shaping how the organization thinks about and invests in user experience. You partner with executives as a peer, translating user insights into business strategy and ensuring design thinking and Continuous Discovery practices permeate the highest levels of product and company direction.",
-                bullets: [
-                    "You establish robust discovery approaches that inform critical decisions across product lines and mentor teams in planning, conducting, and interpreting research at an organizational level",
-                    "You're a clear subject-matter expert on the product with strong intuition on what's needed, and you're frequently looked to for guidance on strategic direction",
-                    "You connect design decisions to key business outcomes (revenue, retention, acquisition, engagement), present compelling ROI arguments to leadership, and partner with executives to shape product roadmaps",
-                    "You champion outcome-based thinking organization-wide, helping shift culture from \"shipping features\" to \"delivering measurable value\""
+                subCompetencies: [
+                    {
+                        id: "ux4-ps-01",
+                        fullText: "You establish robust discovery approaches that inform critical decisions across product lines and mentor teams in planning, conducting, and interpreting research at an organizational level",
+                        shortText: "Shapes discovery across organization"
+                    },
+                    {
+                        id: "ux4-ps-02",
+                        fullText: "You're a clear subject-matter expert on the product with strong intuition on what's needed, and you're frequently looked to for guidance on strategic direction",
+                        shortText: "Guides organizational product strategy"
+                    },
+                    {
+                        id: "ux4-ps-03",
+                        fullText: "You connect design decisions to key business outcomes (revenue, retention, acquisition, engagement), present compelling ROI arguments to leadership, and partner with executives to shape product roadmaps",
+                        shortText: "Connects design to business outcomes"
+                    },
+                    {
+                        id: "ux4-ps-04",
+                        fullText: "You champion outcome-based thinking organization-wide, helping shift culture from \"shipping features\" to \"delivering measurable value\"",
+                        shortText: "Champions outcome-based culture"
+                    }
                 ]
             },
             {
@@ -596,12 +940,32 @@ const competencies = {
                 competency: "Craft and Quality",
                 title: "Craft and Quality (While you work)",
                 description: "You define what excellent design means at FamilySearch, not through mandates, but through work that's so consistently strong that it becomes the natural reference point. Your influence on quality extends beyond individual projects to shape organizational standards and, at times, industry expectations.",
-                bullets: [
-                    "You oversee structural consistency across multiple product lines and set frameworks others adopt",
-                    "You set the bar for quality at FamilySearch; people look up to your work and often follow your patterns",
-                    "You champion and guide Zion UI's evolution, ensuring system decisions connect to user outcomes and organizational goals, and making strategic decisions about when to expand or refine the system",
-                    "You consistently produce designs that raise the collective quality bar, in some cases influencing industry thinking, and create design patterns others adopt across the ecosystem",
-                    "You establish accessibility standards and practices organization-wide, ensuring FamilySearch remains a leader in inclusive design"
+                subCompetencies: [
+                    {
+                        id: "ux4-cq-01",
+                        fullText: "You oversee structural consistency across multiple product lines and set frameworks others adopt",
+                        shortText: "Ensures cross-product consistency"
+                    },
+                    {
+                        id: "ux4-cq-02",
+                        fullText: "You set the bar for quality at FamilySearch; people look up to your work and often follow your patterns",
+                        shortText: "Defines organizational quality standards"
+                    },
+                    {
+                        id: "ux4-cq-03",
+                        fullText: "You champion and guide Zion UI's evolution, ensuring system decisions connect to user outcomes and organizational goals, and making strategic decisions about when to expand or refine the system",
+                        shortText: "Guides design system evolution"
+                    },
+                    {
+                        id: "ux4-cq-04",
+                        fullText: "You consistently produce designs that raise the collective quality bar, in some cases influencing industry thinking, and create design patterns others adopt across the ecosystem",
+                        shortText: "Influences industry design standards"
+                    },
+                    {
+                        id: "ux4-cq-05",
+                        fullText: "You establish accessibility standards and practices organization-wide, ensuring FamilySearch remains a leader in inclusive design",
+                        shortText: "Leads accessibility organization-wide"
+                    }
                 ]
             },
             {
@@ -609,12 +973,32 @@ const competencies = {
                 competency: "Communication and Collaboration",
                 title: "Communication and Collaboration (Working together)",
                 description: "You've become a cultural anchor for the organization, someone who embodies what great collaboration looks like regardless of seniority. Your influence extends across departments because you lead with humility, maintain perspective during challenges, and improve how teams work together rather than just what they produce.",
-                bullets: [
-                    "You embody the company's values and actively promote company culture; you're seen as a role model for collaboration across trios and departments",
-                    "Despite your seniority and expert knowledge, you always act with humility and without ego, maintaining constructive energy even during setbacks and modeling resilience for others",
-                    "You find ways to improve process and communication across departments, not just within design, and demonstrate the value of design thinking to non-designers",
-                    "You mentor executives and senior leaders in user-centered and outcome-based thinking, helping them understand the strategic value of design",
-                    "You navigate complex organizational dynamics and facilitate alignment across competing priorities with grace and effectiveness"
+                subCompetencies: [
+                    {
+                        id: "ux4-cc-01",
+                        fullText: "You embody the company's values and actively promote company culture; you're seen as a role model for collaboration across trios and departments",
+                        shortText: "Embodies values, role model"
+                    },
+                    {
+                        id: "ux4-cc-02",
+                        fullText: "Despite your seniority and expert knowledge, you always act with humility and without ego, maintaining constructive energy even during setbacks and modeling resilience for others",
+                        shortText: "Models humility and resilience"
+                    },
+                    {
+                        id: "ux4-cc-03",
+                        fullText: "You find ways to improve process and communication across departments, not just within design, and demonstrate the value of design thinking to non-designers",
+                        shortText: "Improves cross-departmental collaboration"
+                    },
+                    {
+                        id: "ux4-cc-04",
+                        fullText: "You mentor executives and senior leaders in user-centered and outcome-based thinking, helping them understand the strategic value of design",
+                        shortText: "Mentors executives in design"
+                    },
+                    {
+                        id: "ux4-cc-05",
+                        fullText: "You navigate complex organizational dynamics and facilitate alignment across competing priorities with grace and effectiveness",
+                        shortText: "Navigates complex org dynamics"
+                    }
                 ]
             },
             {
@@ -622,12 +1006,32 @@ const competencies = {
                 competency: "Action and Impact",
                 title: "Action and Impact (Shipping)",
                 description: "Your impact transcends individual projects—you influence business outcomes across multiple areas through both direct work and the standards you set. You have an impeccable track record not because you avoid risk, but because you have the judgment to know which battles matter and the discipline to see them through to measurable results.",
-                bullets: [
-                    "You influence high-level business outcomes across multiple departments or product pillars; your impact is felt in multiple areas of the company",
-                    "You maintain an impeccable track record of delivering critical work on time (or early) that drives measurable business and user outcomes",
-                    "You have excellent judgment on how to spend time in ways best for the business, lead by example getting your hands dirty, and frequently suggest and execute extra projects outside of core duties",
-                    "You help the organization focus on outcomes over outputs, establishing metrics and measurement practices that guide strategic decisions",
-                    "You create a culture where intelligent failure is valued as learning, conducting and championing post-mortems that improve organizational practices"
+                subCompetencies: [
+                    {
+                        id: "ux4-ai-01",
+                        fullText: "You influence high-level business outcomes across multiple departments or product pillars; your impact is felt in multiple areas of the company",
+                        shortText: "Influences company-wide outcomes"
+                    },
+                    {
+                        id: "ux4-ai-02",
+                        fullText: "You maintain an impeccable track record of delivering critical work on time (or early) that drives measurable business and user outcomes",
+                        shortText: "Impeccable delivery track record"
+                    },
+                    {
+                        id: "ux4-ai-03",
+                        fullText: "You have excellent judgment on how to spend time in ways best for the business, lead by example getting your hands dirty, and frequently suggest and execute extra projects outside of core duties",
+                        shortText: "Exercises strategic judgment consistently"
+                    },
+                    {
+                        id: "ux4-ai-04",
+                        fullText: "You help the organization focus on outcomes over outputs, establishing metrics and measurement practices that guide strategic decisions",
+                        shortText: "Establishes outcome-focused practices"
+                    },
+                    {
+                        id: "ux4-ai-05",
+                        fullText: "You create a culture where intelligent failure is valued as learning, conducting and championing post-mortems that improve organizational practices",
+                        shortText: "Values learning from failure"
+                    }
                 ]
             },
             {
@@ -635,12 +1039,32 @@ const competencies = {
                 competency: "Leveling Up Others",
                 title: "Leveling Up Others (Internal influence)",
                 description: "You're not just developing individuals—you're shaping the organization's design culture and capabilities. Your influence on talent extends beyond mentorship to making the organization the kind of place where excellent designers want to work and grow. You create other leaders with a \"high-tide rises all boats\" approach.",
-                bullets: [
-                    "You actively shape the entire design organization's capabilities, culture, and practices, mentoring design leaders at all levels",
-                    "You're recognized as a key reason talent joins and stays; you cultivate organizational design culture and inspire the team through both your work and your leadership",
-                    "You have incredibly strong leadership and coaching abilities; when you work with others, they consistently learn and bring those learnings to other aspects of their work, often becoming leaders themselves",
-                    "You establish and run programs that develop design capability across the organization (workshops, training, mentorship programs)",
-                    "If external opportunities arise (speaking, writing, advisory roles), you represent FamilySearch well, though your primary focus remains internal organizational impact"
+                subCompetencies: [
+                    {
+                        id: "ux4-luo-01",
+                        fullText: "You actively shape the entire design organization's capabilities, culture, and practices, mentoring design leaders at all levels",
+                        shortText: "Shapes organizational design capabilities"
+                    },
+                    {
+                        id: "ux4-luo-02",
+                        fullText: "You're recognized as a key reason talent joins and stays; you cultivate organizational design culture and inspire the team through both your work and your leadership",
+                        shortText: "Key to talent attraction"
+                    },
+                    {
+                        id: "ux4-luo-03",
+                        fullText: "You have incredibly strong leadership and coaching abilities; when you work with others, they consistently learn and bring those learnings to other aspects of their work, often becoming leaders themselves",
+                        shortText: "Develops exceptional leaders"
+                    },
+                    {
+                        id: "ux4-luo-04",
+                        fullText: "You establish and run programs that develop design capability across the organization (workshops, training, mentorship programs)",
+                        shortText: "Runs capability development programs"
+                    },
+                    {
+                        id: "ux4-luo-05",
+                        fullText: "If external opportunities arise (speaking, writing, advisory roles), you represent FamilySearch well, though your primary focus remains internal organizational impact",
+                        shortText: "Represents FamilySearch externally"
+                    }
                 ]
             },
             {
@@ -648,11 +1072,27 @@ const competencies = {
                 competency: "Independence",
                 title: "Independence (Self-sufficiency)",
                 description: "You operate with complete autonomy at the strategic level, identifying opportunities, shaping initiatives, and driving change without needing direction. The relationship has inverted: rather than receiving guidance, you provide it to the organization's most senior leaders.",
-                bullets: [
-                    "You operate autonomously, identifying and driving strategic initiatives without direction, and require no supervision",
-                    "Instead, you provide guidance to the highest levels of leadership on design strategy, user needs, and product direction",
-                    "You're trusted to make decisions that affect organizational direction and significant resources",
-                    "You balance organizational constraints with user needs, making strategic trade-offs transparently and advocating effectively when necessary"
+                subCompetencies: [
+                    {
+                        id: "ux4-ind-01",
+                        fullText: "You operate autonomously, identifying and driving strategic initiatives without direction, and require no supervision",
+                        shortText: "Operates autonomously at scale"
+                    },
+                    {
+                        id: "ux4-ind-02",
+                        fullText: "Instead, you provide guidance to the highest levels of leadership on design strategy, user needs, and product direction",
+                        shortText: "Advises C-suite on strategy"
+                    },
+                    {
+                        id: "ux4-ind-03",
+                        fullText: "You're trusted to make decisions that affect organizational direction and significant resources",
+                        shortText: "Makes organizational-level decisions"
+                    },
+                    {
+                        id: "ux4-ind-04",
+                        fullText: "You balance organizational constraints with user needs, making strategic trade-offs transparently and advocating effectively when necessary",
+                        shortText: "Balances constraints with advocacy"
+                    }
                 ]
             },
             {
@@ -660,12 +1100,32 @@ const competencies = {
                 competency: "Skill Development",
                 title: "Skill Development (Continuous learning)",
                 description: "You're a master of your craft and a recognized internal leader. Focus on shaping the future of design at FamilySearch, developing other leaders, and ensuring the organization's design capabilities continue to evolve.",
-                bullets: [
-                    "You have mastery across the entire design technology stack and can articulate and teach the highest levels of design craft",
-                    "You define what good design means at the organizational level and understand design's role in business strategy",
-                    "You have recognized expertise in multiple specializations, shape internal best practices, and drive organizational transformation in tools, processes, and methodologies",
-                    "You're deeply proficient in data analysis and experimentation, establishing how teams measure and learn from their work",
-                    "You coach senior leaders and executives on design thinking, outcome-based strategy, and user-centered decision-making"
+                subCompetencies: [
+                    {
+                        id: "ux4-sd-01",
+                        fullText: "You have mastery across the entire design technology stack and can articulate and teach the highest levels of design craft",
+                        shortText: "Mastery across design stack"
+                    },
+                    {
+                        id: "ux4-sd-02",
+                        fullText: "You define what good design means at the organizational level and understand design's role in business strategy",
+                        shortText: "Defines organizational design standards"
+                    },
+                    {
+                        id: "ux4-sd-03",
+                        fullText: "You have recognized expertise in multiple specializations, shape internal best practices, and drive organizational transformation in tools, processes, and methodologies",
+                        shortText: "Recognized multi-domain expert"
+                    },
+                    {
+                        id: "ux4-sd-04",
+                        fullText: "You're deeply proficient in data analysis and experimentation, establishing how teams measure and learn from their work",
+                        shortText: "Establishes measurement practices"
+                    },
+                    {
+                        id: "ux4-sd-05",
+                        fullText: "You coach senior leaders and executives on design thinking, outcome-based strategy, and user-centered decision-making",
+                        shortText: "Coaches executives organization-wide"
+                    }
                 ]
             }
         ]
