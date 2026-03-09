@@ -201,10 +201,17 @@
             left: 0 !important;
             right: 0 !important;
             margin: 0 !important;
-            padding: 0 24px !important;
+            padding: 32px 48px !important;
             max-width: 1280px !important;
             margin-left: auto !important;
             margin-right: auto !important;
+        }
+
+        /* Responsive padding for smaller screens */
+        @media (max-width: 768px) {
+            #dashboardScreen.active {
+                padding: 24px !important;
+            }
         }
     </style>
 </head>
