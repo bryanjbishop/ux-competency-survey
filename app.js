@@ -70,22 +70,13 @@ function showScreen(screenId) {
     const appContainer = document.getElementById('app');
     if (appContainer) {
         if (screenId === 'dashboardScreen') {
-            // Remove centering but keep app container minimal
+            // Remove centering for dashboard
             appContainer.classList.remove('items-center', 'justify-center', 'p-4', 'md:p-6');
             appContainer.classList.add('items-start', 'justify-start');
             appContainer.style.padding = '0';
             appContainer.style.margin = '0';
             appContainer.style.alignItems = 'flex-start';
             appContainer.style.justifyContent = 'flex-start';
-
-            // Apply padding to the dashboard screen itself
-            const dashboardScreen = document.getElementById('dashboardScreen');
-            if (dashboardScreen) {
-                dashboardScreen.style.paddingTop = '32px';
-                dashboardScreen.style.paddingLeft = '48px';
-                dashboardScreen.style.paddingRight = '48px';
-                dashboardScreen.style.paddingBottom = '32px';
-            }
         } else {
             // Restore centering for other screens
             appContainer.classList.remove('items-start', 'justify-start');
