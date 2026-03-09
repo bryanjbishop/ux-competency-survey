@@ -181,6 +181,18 @@
         #finishBtn:hover {
             background-color: #4D81EE;
         }
+
+        /* Level filter button active state */
+        .level-filter-btn.active {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border-color: hsl(var(--primary));
+        }
+
+        .level-filter-btn.active .level-count {
+            color: hsl(var(--primary-foreground));
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-background text-foreground transition-colors duration-300">
@@ -505,7 +517,7 @@
             <div class="sticky top-0 z-50 bg-background pb-6 space-y-6">
                 <!-- Header -->
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-6">
-                    <h1 class="text-3xl md:text-4xl font-bold tracking-tight">Survey Results Dashboard</h1>
+                    <h1 class="text-3xl md:text-4xl font-bold tracking-tight">Results</h1>
                     <div class="flex items-center gap-2">
                         <!-- Theme Toggle -->
                         <button onclick="toggleTheme()"
@@ -526,7 +538,8 @@
                 </div>
 
                 <!-- Toolbar -->
-                <div class="rounded-lg border border-input bg-card p-4 shadow-sm">
+                <div class="rounded-lg border border-input bg-card p-4 shadow-sm space-y-4">
+                    <!-- Designer Filter and Export Buttons -->
                     <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
                         <div class="w-full lg:w-auto">
                             <select id="designerFilter" onchange="filterDashboard()"
@@ -560,6 +573,66 @@
                             </button>
                         </div>
                     </div>
+
+                    <!-- Level Filter -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-4 mt-4 border-t border-input">
+                        <div class="flex items-center gap-3">
+                            <span class="uppercase" style="font-size: 11px; color: #A0A0A0; font-family: 'Segoe UI', sans-serif;">Filter By:</span>
+                            <div class="inline-flex" id="levelFilter">
+                                <button onclick="filterByLevel('all')" data-level="all"
+                                        class="level-filter-btn active inline-flex items-center gap-1.5 text-xs font-medium transition-colors px-3 border border-input hover:bg-accent" style="height: 32px; border-radius: 4px 0 0 4px;">
+                                    All <span class="level-count text-xs text-muted-foreground">(0)</span>
+                                </button>
+                                <button onclick="filterByLevel('ux4')" data-level="ux4"
+                                        class="level-filter-btn inline-flex items-center gap-1.5 text-xs font-medium transition-colors px-3 border border-input hover:bg-accent" style="height: 32px; border-radius: 0; border-left: none;">
+                                    UX4 <span class="level-count text-xs text-muted-foreground">(0)</span>
+                                </button>
+                                <button onclick="filterByLevel('ux3')" data-level="ux3"
+                                        class="level-filter-btn inline-flex items-center gap-1.5 text-xs font-medium transition-colors px-3 border border-input hover:bg-accent" style="height: 32px; border-radius: 0; border-left: none;">
+                                    UX3 <span class="level-count text-xs text-muted-foreground">(0)</span>
+                                </button>
+                                <button onclick="filterByLevel('ux2')" data-level="ux2"
+                                        class="level-filter-btn inline-flex items-center gap-1.5 text-xs font-medium transition-colors px-3 border border-input hover:bg-accent" style="height: 32px; border-radius: 0; border-left: none;">
+                                    UX2 <span class="level-count text-xs text-muted-foreground">(0)</span>
+                                </button>
+                                <button onclick="filterByLevel('ux1')" data-level="ux1"
+                                        class="level-filter-btn inline-flex items-center gap-1.5 text-xs font-medium transition-colors px-3 border border-input hover:bg-accent" style="height: 32px; border-radius: 0; border-left: none;">
+                                    UX1 <span class="level-count text-xs text-muted-foreground">(0)</span>
+                                </button>
+                                <button onclick="filterByLevel('intern')" data-level="intern"
+                                        class="level-filter-btn inline-flex items-center gap-1.5 text-xs font-medium transition-colors px-3 border border-input hover:bg-accent" style="height: 32px; border-radius: 0 4px 4px 0; border-left: none;">
+                                    INTERN <span class="level-count text-xs text-muted-foreground">(0)</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Rating Scale Legend -->
+                        <div class="flex items-center gap-3">
+                            <span class="uppercase" style="font-size: 11px; color: #A0A0A0; font-family: 'Segoe UI', sans-serif;">Scale:</span>
+                            <div class="flex flex-wrap gap-3 text-xs">
+                                <div class="flex items-center gap-1.5">
+                                    <div class="rounded-full" style="width: 10px; height: 10px; background-color: #FF666C;"></div>
+                                    <span style="color: #A0A0A0;">1-Developing</span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <div class="rounded-full" style="width: 10px; height: 10px; background-color: #FF8B16;"></div>
+                                    <span style="color: #A0A0A0;">2-Emerging</span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <div class="rounded-full" style="width: 10px; height: 10px; background-color: #00D794;"></div>
+                                    <span style="color: #A0A0A0;">3-Proficient</span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <div class="rounded-full" style="width: 10px; height: 10px; background-color: #46A8FF;"></div>
+                                    <span style="color: #A0A0A0;">4-Advanced</span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <div class="rounded-full" style="width: 10px; height: 10px; background-color: #CA82FF;"></div>
+                                    <span style="color: #A0A0A0;">5-Expert</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -567,28 +640,6 @@
 
                 <!-- Summary -->
                 <div id="dashboardSummary"></div>
-
-                <!-- Three Column Cards -->
-                <div class="grid md:grid-cols-3 gap-6">
-                    <div class="rounded-lg border border-input bg-card">
-                        <div class="p-6">
-                            <h3 class="font-semibold text-lg mb-4">Areas to Improve</h3>
-                            <div id="areasToImprove" class="space-y-3"></div>
-                        </div>
-                    </div>
-                    <div class="rounded-lg border border-input bg-card">
-                        <div class="p-6">
-                            <h3 class="font-semibold text-lg mb-4">Areas of Growth</h3>
-                            <div id="areasGrowing" class="space-y-3"></div>
-                        </div>
-                    </div>
-                    <div class="rounded-lg border border-input bg-card">
-                        <div class="p-6">
-                            <h3 class="font-semibold text-lg mb-4">Areas Excelling</h3>
-                            <div id="areasExcelling" class="space-y-3"></div>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Detailed Results -->
                 <div id="dashboardDetails"></div>

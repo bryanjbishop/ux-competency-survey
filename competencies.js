@@ -686,6 +686,44 @@ const competencies = {
                         shortText: "Builds specialized expertise"
                     }
                 ]
+            },
+            {
+                id: "ux2_technical_fluency",
+                competency: "Technical Fluency",
+                title: "Technical Fluency (How you bridge design and engineering)",
+                description: "The design landscape is shifting. AI tools are changing how products are built and how designers contribute. At this level you're beginning to develop technical fluency — not to become an engineer, but to understand the medium well enough to design with greater clarity, collaborate with more credibility, and stay relevant as the industry evolves. The goal is bridge-building, not boundary-crossing.",
+                subCompetencies: [
+                    {
+                        id: "ux2-tf-01",
+                        fullText: "You're developing awareness of how AI systems and front-end technologies work, understanding enough to have informed conversations with engineers about feasibility, constraints, and trade-offs. You can read basic code, inspect components in the browser or codebase, and ask questions that demonstrate genuine curiosity about how design decisions translate into technical reality.",
+                        shortText: "Develops technical awareness and curiosity",
+                        improvementResources: [
+                            "Spend 2 hours with an engineer on your trio doing a guided walkthrough of one feature in the codebase — not to write code, but to understand how your designs become reality. Document 3 things that surprised you and share with your manager.",
+                            "Complete freeCodeCamp's Responsive Web Design certification (first 3 sections), then open 3 of your own shipped designs in browser dev tools and inspect the component structure. Note where your design intent matched what was built and where it diverged.",
+                            "Explore one beginner-level project from the AI Engineering Hub (github.com/patchy631/ai-engineering-hub) — choose a simple RAG or chat interface tutorial. Read through it enough to understand what's happening and write a 1-paragraph reflection on how it changes how you'd design an AI-powered feature."
+                        ]
+                    },
+                    {
+                        id: "ux2-tf-02",
+                        fullText: "You're actively experimenting with AI tools in your design workflow — using them to accelerate research synthesis, generate design variations, explore content possibilities, or pressure-test ideas. You're developing a personal point of view on where AI assistance genuinely helps versus where human judgment remains essential.",
+                        shortText: "Experiments with AI tools in workflow",
+                        improvementResources: [
+                            "Choose one active project and use an AI tool (Figma AI, ChatGPT, Claude, or similar) at three distinct points in your process — research synthesis, ideation, and critique prep. Document what you tried, what worked, what didn't, and what you'd do differently. Share findings with your trio.",
+                            "Attend or watch one recorded talk about AI in design practice (NNG, Figma Config, or similar). Write a 1-page reflection connecting what you learned to your current work and share it in a team meeting.",
+                            "Pick one repetitive task in your current workflow — tagging research notes, writing microcopy variations, generating placeholder content — and try accelerating it with an AI tool for one sprint. Measure the time saved and reflect on whether the quality held up."
+                        ]
+                    },
+                    {
+                        id: "ux2-tf-03",
+                        fullText: "You can build prototypes that go beyond static Figma screens — using code-based tools, AI-assisted builders, or high-fidelity interactive prototypes — to communicate design intent with enough technical clarity that engineers spend less time interpreting and more time building. You understand the difference between a prototype and production code and are transparent about that distinction with your trio.",
+                        shortText: "Builds prototypes with technical clarity",
+                        improvementResources: [
+                            "On your next project, build one prototype using a tool beyond Figma — options include Framer, Webflow, CodeSandbox with a component library, or an AI-assisted builder like v0.dev. The goal is not perfection, it's fidelity. Share it with your engineering partner and ask: \"Does this communicate what I intended?\" Document their feedback.",
+                            "Pair with an engineer for one hour specifically around a prototype handoff. Ask them to walk you through what questions come up when they look at your Figma files versus a higher-fidelity prototype. Turn their feedback into a personal checklist for future handoffs.",
+                            "Study Zion UI's component documentation alongside the actual component code. For 5 components you use regularly, understand what props they accept, what states they support, and what accessibility behavior is built in. Apply that knowledge to your next design so your specs reflect what the component actually does."
+                        ]
+                    }
+                ]
             }
         ]
     },
@@ -897,6 +935,44 @@ const competencies = {
                         id: "ux3-sd-05",
                         fullText: "You're developing thought leadership, mentoring across disciplines, and teaching others when to leverage new tools versus when human expertise is essential",
                         shortText: "Develops thought leadership broadly"
+                    }
+                ]
+            },
+            {
+                id: "ux3_technical_fluency",
+                competency: "Technical Fluency",
+                title: "Technical Fluency (How you bridge design and engineering)",
+                description: "Technical fluency at this level moves from awareness to application. You're using your understanding of how things are built to make better design decisions earlier, reduce friction at handoff, and contribute to conversations about AI-enabled features with genuine insight. FamilySearch's mature codebase means you're designing with constraints in mind — and that's a strength, not a limitation.",
+                subCompetencies: [
+                    {
+                        id: "ux3-tf-01",
+                        fullText: "You have a working understanding of AI capabilities and front-end architecture that actively shapes your design decisions before handoff. You know what is technically expensive versus cheap to build in FamilySearch's system, and you use that knowledge to design more realistically and advocate more credibly for user needs in technical conversations.",
+                        shortText: "Applies technical understanding to design decisions",
+                        improvementResources: [
+                            "Partner with your engineering lead for one quarter with a specific goal: before starting any significant new feature, spend 30 minutes reviewing the relevant part of the codebase together. Document how that conversation changed your design approach for each feature. Present the pattern to your manager at quarter end.",
+                            "Complete one intermediate-level project from the AI Engineering Hub (github.com/patchy631/ai-engineering-hub) — choose something relevant to a feature your team is designing for, such as an agentic workflow or RAG system. Write a design critique of the project's UX, identifying what you would do differently and why. Share with your trio.",
+                            "Map out the technical constraints for your current product area with your engineering partner — what's locked, what's flexible, what's costly to change. Turn this into a \"design within constraints\" reference doc that helps you and other designers on your team make faster, more realistic decisions."
+                        ]
+                    },
+                    {
+                        id: "ux3-tf-02",
+                        fullText: "You use AI tools with intention and selectivity, integrating them into your workflow at the points where they produce measurably better or faster outcomes. You can articulate clearly to your team and trio where AI assistance improved the work and where it fell short, contributing to a shared team understanding of effective AI-assisted design practice.",
+                        shortText: "Leads intentional AI-assisted design practice",
+                        improvementResources: [
+                            "Run a 30-minute \"AI in our workflow\" session with your design peers — share what tools you're using, how, and what you've learned. Facilitate a discussion about where the team should invest time experimenting versus where human judgment should remain primary. Document the outcomes and share with your manager.",
+                            "Over one quarter, track every instance where you used an AI tool in your design process. At the end of the quarter, categorize them: where did AI assistance genuinely improve outcomes? Where did it create more work? Where was it neutral? Turn this into a personal practice guide and share with the team.",
+                            "Identify one AI-powered feature in FamilySearch's roadmap or backlog. Conduct a design critique of how AI is being used in that feature from a user experience perspective — where does it add value, where might it confuse or frustrate users, what would you change? Present your critique to your PM and engineering partner."
+                        ]
+                    },
+                    {
+                        id: "ux3-tf-03",
+                        fullText: "You build functional prototypes using front-end components and real data where possible, close enough to production reality that engineering can use them as a meaningful reference. Your prototypes demonstrate understanding of FamilySearch's component architecture and design system, reducing handoff friction and increasing the accuracy of what gets built relative to what was designed.",
+                        shortText: "Builds production-adjacent prototypes",
+                        improvementResources: [
+                            "On your next complex feature, build a prototype using actual Zion UI components in code — not Figma representations of them. Use a sandbox environment with your engineering partner's help to set it up. The goal is a working front-end prototype that uses real components with real props and states. Document what you learned about the gap between how you design with the system versus how it actually behaves.",
+                            "Shadow your engineering partner through one full feature implementation from design handoff to production. Document every question they had, every decision they made that wasn't in your specs, and every place the design changed during implementation. Use those findings to improve your next handoff.",
+                            "Study one intermediate or advanced AI engineering project from the AI Engineering Hub (github.com/patchy631/ai-engineering-hub) that involves a front-end interface. Focus specifically on how the front-end communicates with the AI backend — what data flows where, what states the UI needs to handle. Apply that understanding to how you design AI-powered features in FamilySearch."
+                        ]
                     }
                 ]
             }
@@ -1125,6 +1201,44 @@ const competencies = {
                         id: "ux4-sd-05",
                         fullText: "You coach senior leaders and executives on design thinking, outcome-based strategy, and user-centered decision-making",
                         shortText: "Coaches executives organization-wide"
+                    }
+                ]
+            },
+            {
+                id: "ux4_technical_fluency",
+                competency: "Technical Fluency",
+                title: "Technical Fluency (How you bridge design and engineering)",
+                description: "At this level technical fluency becomes organizational. You're not just personally fluent — you're shaping how your team thinks about the design-to-engineering relationship, advocating for the right collaboration models, and helping leadership understand what AI-enabled design practice actually looks like at scale inside a complex, established system.",
+                subCompetencies: [
+                    {
+                        id: "ux4-tf-01",
+                        fullText: "You have deep enough technical fluency to evaluate emerging AI capabilities and front-end approaches strategically, advising on where investment will produce the highest design-to-engineering leverage. You shape how the team thinks about technical constraints as a design input rather than a design limitation.",
+                        shortText: "Advises on technical investment strategically",
+                        improvementResources: [
+                            "Establish a quarterly \"technical landscape\" review with your engineering leadership partner — what new AI capabilities, frameworks, or tools are emerging that could change how your team designs or builds? Present findings and design implications to leadership quarterly. Track which recommendations get acted on.",
+                            "Mentor 3 UX 3 designers in developing their own technical fluency over 6 months. Create a structured approach: what should they understand, how should they develop it, how will you measure growth? Present outcomes to your manager.",
+                            "Partner with engineering leadership to define what \"technical fluency\" means for designers at FamilySearch specifically — given the maturity of the codebase, the existing processes, and the team structure. Document this as an organizational standard that guides hiring, onboarding, and growth conversations."
+                        ]
+                    },
+                    {
+                        id: "ux4-tf-02",
+                        fullText: "You shape the team's approach to AI-assisted design practice, establishing shared principles for when and how AI tools should be used in the design process. You stay ahead of emerging tools and evaluate them critically, bringing recommendations to leadership that are grounded in observed design outcomes rather than novelty.",
+                        shortText: "Shapes organizational AI design practice",
+                        improvementResources: [
+                            "Develop a FamilySearch AI design practice guide — a living document that captures where AI tools are being used across the design team, what's working, what's not, and what the principles are for responsible and effective AI-assisted design. Present to leadership and make it available to the full team.",
+                            "Evaluate 3 emerging AI design tools over one quarter against a consistent rubric: output quality, workflow integration, learning curve, alignment with FamilySearch values and standards. Share evaluations with leadership and the team as a model for how to approach tool adoption decisions.",
+                            "Partner with HR and design leadership to incorporate AI fluency expectations into hiring rubrics, onboarding materials, and the competency framework review cycle. Ensure that what the organization expects and what it supports designers in developing are clearly aligned."
+                        ]
+                    },
+                    {
+                        id: "ux4-tf-03",
+                        fullText: "You define what prototype fidelity means at FamilySearch across different project types and stages, establishing team norms for when higher-fidelity technical prototyping is worth the investment versus when lower-fidelity is sufficient. You mentor designers in building with technical intent and advocate with engineering leadership for collaboration models that reduce the cost of translation between design and production.",
+                        shortText: "Defines prototype fidelity standards and collaboration models",
+                        improvementResources: [
+                            "Develop a prototype fidelity framework for FamilySearch — a clear guide that helps designers and their trios decide what level of prototype is appropriate at each stage of a project. Include examples from actual FamilySearch projects at each fidelity level. Get adoption from both design and engineering leadership.",
+                            "Partner with engineering leadership to design and pilot a new design-engineering collaboration model for one product team — one that reduces handoff friction by increasing designer technical involvement at the right moments. Measure the impact on implementation accuracy and team velocity over one quarter. Present findings.",
+                            "Mentor 2 UX 3 designers in building production-adjacent prototypes over 6 months. Create a structured learning arc: start with component inspection, move to sandbox builds, finish with a full feature prototype reviewed by engineering. Document their growth and share as evidence of what the technical fluency track produces."
+                        ]
                     }
                 ]
             }

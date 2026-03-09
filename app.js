@@ -684,19 +684,32 @@ async function loadSurveyData() {
 }
 
 async function deleteSurvey(designerName) {
+    console.log('Delete function called for:', designerName);
+
     // Confirm deletion
     if (!confirm(`Are you sure you want to delete the survey for ${designerName}? This action cannot be undone.`)) {
+        console.log('User cancelled deletion');
         return;
     }
 
     try {
+        console.log('Attempting to delete from Supabase...');
+
         // Delete from Supabase
-        const { error } = await supabaseClient
+        const { data, error } = await supabaseClient
             .from('survey_responses')
             .delete()
-            .eq('designer_name', designerName);
+            .eq('designer_name', designerName)
+            .select();
 
-        if (error) throw error;
+        console.log('Delete response:', { data, error });
+
+        if (error) {
+            console.error('Supabase error:', error);
+            throw error;
+        }
+
+        console.log('Delete successful, reloading dashboard...');
 
         // Reload dashboard
         const allResults = await loadSurveyData();
@@ -706,7 +719,7 @@ async function deleteSurvey(designerName) {
         alert(`Survey for ${designerName} has been deleted successfully.`);
     } catch (error) {
         console.error('Error deleting survey:', error);
-        alert('Error deleting survey. Please try again.');
+        alert(`Error deleting survey: ${error.message}. Please check the console for details.`);
     }
 }
 
@@ -719,6 +732,9 @@ async function viewDashboard() {
         showSignIn();
         return;
     }
+
+    // Reset level filter to "all"
+    currentLevelFilter = 'all';
 
     const surveyResults = await loadSurveyData();
 
@@ -746,14 +762,61 @@ function renderDashboard(surveyResults) {
         filterSelect.appendChild(option);
     });
 
+    // Update level filter counts
+    updateLevelFilterCounts(surveyResults);
+
     // Render summary
     renderDashboardSummary(surveyResults);
 
-    // Render competency cards
-    renderCompetencyCards(surveyResults);
-
     // Render detailed results
     renderDetailedResults(surveyResults);
+}
+
+// Global variable to store current level filter
+let currentLevelFilter = 'all';
+
+function updateLevelFilterCounts(surveyResults) {
+    const levelCounts = {
+        all: surveyResults.length,
+        ux4: 0,
+        ux3: 0,
+        ux2: 0,
+        ux1: 0,
+        intern: 0
+    };
+
+    surveyResults.forEach(result => {
+        if (levelCounts.hasOwnProperty(result.role)) {
+            levelCounts[result.role]++;
+        }
+    });
+
+    // Update the counts in the UI
+    const buttons = document.querySelectorAll('.level-filter-btn');
+    buttons.forEach(btn => {
+        const level = btn.getAttribute('data-level');
+        const countSpan = btn.querySelector('.level-count');
+        if (countSpan && levelCounts.hasOwnProperty(level)) {
+            countSpan.textContent = `(${levelCounts[level]})`;
+        }
+    });
+}
+
+function filterByLevel(level) {
+    currentLevelFilter = level;
+
+    // Update active state of buttons
+    const buttons = document.querySelectorAll('.level-filter-btn');
+    buttons.forEach(btn => {
+        if (btn.getAttribute('data-level') === level) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    // Refilter the dashboard
+    filterDashboard();
 }
 
 async function filterDashboard() {
@@ -761,12 +824,18 @@ async function filterDashboard() {
     const allResults = await loadSurveyData();
 
     let filteredResults = allResults;
+
+    // Filter by designer
     if (selectedDesigner !== 'all') {
-        filteredResults = allResults.filter(r => r.name === selectedDesigner);
+        filteredResults = filteredResults.filter(r => r.name === selectedDesigner);
+    }
+
+    // Filter by level
+    if (currentLevelFilter !== 'all') {
+        filteredResults = filteredResults.filter(r => r.role === currentLevelFilter);
     }
 
     renderDashboardSummary(filteredResults);
-    renderCompetencyCards(filteredResults);
     renderDetailedResults(filteredResults);
 }
 
@@ -780,30 +849,56 @@ function renderDashboardSummary(surveyResults) {
 
     // Calculate statistics
     let totalResponses = 0;
-    let totalScore = 0;
+    const ratingCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
 
     surveyResults.forEach(result => {
         const responses = Object.values(result.responses);
         totalResponses += responses.length;
-        totalScore += responses.reduce((sum, val) => sum + val, 0);
+
+        // Count ratings by level
+        responses.forEach(rating => {
+            if (ratingCounts.hasOwnProperty(rating)) {
+                ratingCounts[rating]++;
+            }
+        });
     });
 
-    const avgScore = totalResponses > 0 ? (totalScore / totalResponses).toFixed(2) : 0;
+    // Calculate percentages for each rating
+    const ratingPercentages = {};
+    for (let i = 1; i <= 5; i++) {
+        ratingPercentages[i] = totalResponses > 0 ? ((ratingCounts[i] / totalResponses) * 100).toFixed(1) : 0;
+    }
+
+    const ratingColors = {
+        1: '#FF666C',
+        2: '#FF8B16',
+        3: '#00D794',
+        4: '#46A8FF',
+        5: '#CA82FF'
+    };
+
+    const ratingLabels = {
+        1: 'Developing',
+        2: 'Emerging',
+        3: 'Proficient',
+        4: 'Advanced',
+        5: 'Expert'
+    };
 
     summaryDiv.innerHTML = `
-        <h2 class="text-2xl font-bold mb-4">Summary</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="text-center">
-                <div class="text-4xl font-bold text-primary">${surveyResults.length}</div>
-                <div class="text-sm text-muted-foreground mt-2">Designers Surveyed</div>
-            </div>
-            <div class="text-center">
-                <div class="text-4xl font-bold text-primary">${totalResponses}</div>
-                <div class="text-sm text-muted-foreground mt-2">Total Responses</div>
-            </div>
-            <div class="text-center">
-                <div class="text-4xl font-bold text-primary">${avgScore}</div>
-                <div class="text-sm text-muted-foreground mt-2">Average Rating</div>
+        <div class="rounded-lg border border-input bg-card p-6">
+            <h3 class="text-lg font-semibold mb-4">Rating Distribution</h3>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                ${[1, 2, 3, 4, 5].map(rating => `
+                    <div class="text-center">
+                        <div class="flex items-center justify-center gap-1.5 mb-2">
+                            <div class="rounded-full" style="width: 10px; height: 10px; background-color: ${ratingColors[rating]};"></div>
+                            <span class="text-xs font-medium" style="color: #A0A0A0;">${rating} - ${ratingLabels[rating]}</span>
+                        </div>
+                        <div class="text-2xl font-bold text-white/90">${ratingCounts[rating]}</div>
+                        <div class="text-xs" style="color: #A0A0A0;">${ratingPercentages[rating]}%</div>
+                    </div>
+                `).join('')}
             </div>
         </div>
     `;
@@ -931,7 +1026,7 @@ function renderDetailedResults(surveyResults) {
                             Completed: ${new Date(result.completionTime).toLocaleDateString()}
                         </p>
                     </div>
-                    <button onclick="deleteSurvey('${result.name}')"
+                    <button onclick="deleteSurvey(\`${result.name}\`)"
                             class="inline-flex items-center gap-1 rounded-md text-sm font-medium transition-colors border border-destructive bg-destructive/10 text-destructive hover:bg-destructive hover:text-white h-9 px-3">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
