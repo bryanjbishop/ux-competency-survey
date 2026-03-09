@@ -66,6 +66,20 @@ function showScreen(screenId) {
     document.getElementById(screenId).classList.add('active');
     window.scrollTo(0, 0);
 
+    // Adjust app container alignment for dashboard
+    const appContainer = document.getElementById('app');
+    if (appContainer) {
+        if (screenId === 'dashboardScreen') {
+            // Remove centering and padding for dashboard
+            appContainer.classList.remove('items-center', 'justify-center', 'p-4', 'md:p-6');
+            appContainer.classList.add('items-start');
+        } else {
+            // Restore centering for other screens
+            appContainer.classList.remove('items-start');
+            appContainer.classList.add('items-center', 'justify-center', 'p-4', 'md:p-6');
+        }
+    }
+
     // Hide top-right controls on dashboard
     const topRightControls = document.querySelector('.fixed.top-4.right-4');
     if (topRightControls) {

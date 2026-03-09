@@ -193,18 +193,6 @@
             color: hsl(var(--primary-foreground));
             opacity: 0.8;
         }
-
-        /* Dashboard specific styling - align to top */
-        #dashboardScreen.active {
-            margin-top: 0 !important;
-            padding-top: 0 !important;
-        }
-
-        /* Remove padding from app container when dashboard is active */
-        #app:has(#dashboardScreen.active) {
-            padding-top: 0 !important;
-            align-items: flex-start !important;
-        }
     </style>
 </head>
 <body class="min-h-screen bg-background text-foreground transition-colors duration-300">
