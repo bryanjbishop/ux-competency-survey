@@ -70,13 +70,21 @@ function showScreen(screenId) {
     const appContainer = document.getElementById('app');
     if (appContainer) {
         if (screenId === 'dashboardScreen') {
-            // Remove centering and padding for dashboard
+            // Remove ALL centering, padding, and margins for dashboard
             appContainer.classList.remove('items-center', 'justify-center', 'p-4', 'md:p-6');
-            appContainer.classList.add('items-start');
+            appContainer.classList.add('items-start', 'justify-start');
+            appContainer.style.padding = '0';
+            appContainer.style.margin = '0';
+            appContainer.style.alignItems = 'flex-start';
+            appContainer.style.justifyContent = 'flex-start';
         } else {
             // Restore centering for other screens
-            appContainer.classList.remove('items-start');
+            appContainer.classList.remove('items-start', 'justify-start');
             appContainer.classList.add('items-center', 'justify-center', 'p-4', 'md:p-6');
+            appContainer.style.padding = '';
+            appContainer.style.margin = '';
+            appContainer.style.alignItems = '';
+            appContainer.style.justifyContent = '';
         }
     }
 

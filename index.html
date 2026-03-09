@@ -193,6 +193,19 @@
             color: hsl(var(--primary-foreground));
             opacity: 0.8;
         }
+
+        /* FORCE dashboard to top - aggressive styling */
+        #dashboardScreen.active {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            margin: 0 !important;
+            padding: 0 24px !important;
+            max-width: 1280px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-background text-foreground transition-colors duration-300">
@@ -512,7 +525,7 @@
         </div>
 
         <!-- Dashboard Screen -->
-        <div class="screen w-full max-w-7xl self-start" id="dashboardScreen">
+        <div class="screen w-full max-w-7xl" id="dashboardScreen" style="margin: 0 !important; padding: 0 !important; align-self: flex-start !important;">
             <!-- Sticky Header Container -->
             <div class="sticky top-0 z-50 bg-background pb-6 space-y-6">
                 <!-- Header -->
