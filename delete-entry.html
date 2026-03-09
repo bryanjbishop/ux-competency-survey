@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Survey Entry - Direct Access</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="min-h-screen bg-gray-900 text-white p-8">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6">Delete Survey Entry - Direct Access</h1>
+
+        <div class="bg-gray-800 rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Step 1: Load All Entries</h2>
+            <button onclick="loadEntries()"
+                    class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-medium">
+                Load All Survey Responses
+            </button>
+        </div>
+
+        <div id="entries" class="space-y-4"></div>
+
+        <div id="status" class="mt-6 p-4 rounded-lg hidden"></div>
+    </div>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://wpsejjiqklhngnjeovwt.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indwc2Vqamlxa2xobmduamVvdnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNTUwMDIsImV4cCI6MjA4NTczMTAwMn0.yPoPTlj6ExpMEmxSp3NX6ScVlCJ-uKH31JLQvnwydTM';
+
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function loadEntries() {
+            showStatus('Loading entries...', 'info');
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('survey_responses')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                displayEntries(data);
+                showStatus(`Loaded ${data.length} entries`, 'success');
+            } catch (error) {
+                showStatus(`Error loading entries: ${error.message}`, 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        function displayEntries(entries) {
+            const container = document.getElementById('entries');
+
+            if (!entries || entries.length === 0) {
+                container.innerHTML = '<p class="text-gray-400">No entries found</p>';
+                return;
+            }
+
+            container.innerHTML = entries.map(entry => `
+                <div class="bg-gray-800 rounded-lg p-4 flex justify-between items-center">
+                    <div>
+                        <h3 class="font-semibold text-lg">${entry.designer_name}</h3>
+                        <p class="text-sm text-gray-400">Level: ${entry.role_level || 'N/A'}</p>
+                        <p class="text-sm text-gray-400">Date: ${new Date(entry.created_at).toLocaleString()}</p>
+                        <p class="text-xs text-gray-500 mt-1">ID: ${entry.id}</p>
+                    </div>
+                    <button onclick="deleteEntry('${entry.id}', '${entry.designer_name.replace(/'/g, "\\'")}')"
+                            class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-medium">
+                        Delete
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        async function deleteEntry(id, name) {
+            if (!confirm(`Are you sure you want to delete the survey for "${name}"?\n\nThis action cannot be undone.`)) {
+                return;
+            }
+
+            showStatus(`Deleting "${name}"...`, 'info');
+
+            try {
+                const { error } = await supabaseClient
+                    .from('survey_responses')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                showStatus(`Successfully deleted "${name}"`, 'success');
+
+                // Reload entries after deletion
+                setTimeout(() => loadEntries(), 1000);
+            } catch (error) {
+                showStatus(`Error deleting entry: ${error.message}`, 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('status');
+            statusEl.className = `mt-6 p-4 rounded-lg ${
+                type === 'error' ? 'bg-red-900 text-red-200' :
+                type === 'success' ? 'bg-green-900 text-green-200' :
+                'bg-blue-900 text-blue-200'
+            }`;
+            statusEl.textContent = message;
+            statusEl.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
