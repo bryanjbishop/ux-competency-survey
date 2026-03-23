@@ -35,28 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Theme Management - Updated for Tailwind
+// Theme Management - Dark mode only
 function initTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    if (savedTheme === 'dark') {
-        document.documentElement.classList.add('dark');
-    } else {
-        document.documentElement.classList.remove('dark');
-    }
+    // Always use dark mode
+    document.documentElement.classList.add('dark');
 }
-
-function toggleTheme() {
-    const isDark = document.documentElement.classList.contains('dark');
-    if (isDark) {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
-    } else {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-    }
-}
-
-document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
 
 // Screen Navigation
 function showScreen(screenId) {
