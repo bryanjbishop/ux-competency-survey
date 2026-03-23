@@ -105,7 +105,10 @@
         }
 
         .screen.active {
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
         }
 
         @keyframes fadeIn {
@@ -194,31 +197,32 @@
             opacity: 0.8;
         }
 
-        /* FORCE dashboard to top - aggressive styling */
+        /* Center dashboard content */
         #dashboardScreen.active {
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            margin: 0 !important;
+            display: block !important;
+            align-items: flex-start !important;
+            justify-content: flex-start !important;
+            min-height: 100vh !important;
+            width: 100% !important;
+            max-width: 100% !important;
             padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        #dashboardScreen .sticky {
             max-width: 1280px !important;
             margin-left: auto !important;
             margin-right: auto !important;
+            width: 100% !important;
         }
 
-        /* Responsive padding for smaller screens */
-        @media (max-width: 768px) {
-            #dashboardScreen .sticky,
-            #dashboardScreen .space-y-6 {
-                padding-left: 1.5rem !important;
-                padding-right: 1.5rem !important;
-            }
-
-            #dashboardScreen .sticky {
-                padding-top: 1.5rem !important;
-            }
+        #dashboardScreen .space-y-6 {
+            max-width: 1280px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            width: 100% !important;
         }
+
     </style>
 </head>
 <body class="min-h-screen bg-background text-foreground transition-colors duration-300">
@@ -253,10 +257,11 @@
     </div>
 
     <!-- Main Container -->
-    <div class="min-h-screen flex items-center justify-center p-4 md:p-6" id="app">
+    <div class="min-h-screen" id="app">
 
         <!-- Welcome Screen -->
-        <div class="screen active max-w-2xl w-full text-center" id="welcomeScreen">
+        <div class="screen active" id="welcomeScreen">
+            <div class="max-w-2xl w-full text-center p-4 md:p-6">
             <div class="mb-10">
                 <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">UX Competency Survey 2026</h1>
             </div>
@@ -269,10 +274,12 @@
             </div>
 
             <p class="text-2xl font-semibold tracking-wider uppercase text-white opacity-30" style="margin-top: 80px;">FSDG</p>
+            </div>
         </div>
 
         <!-- Sign In Screen -->
-        <div class="screen max-w-md w-full" id="signInScreen">
+        <div class="screen" id="signInScreen">
+            <div class="max-w-md w-full p-4 md:p-6">
             <div class="text-center mb-10">
                 <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-3">Manager Sign In</h2>
                 <p class="text-muted-foreground">Enter your credentials to view the dashboard</p>
@@ -302,10 +309,12 @@
                     </button>
                 </div>
             </div>
+            </div>
         </div>
 
         <!-- Role Selection Screen -->
-        <div class="screen max-w-3xl w-full" id="roleScreen">
+        <div class="screen" id="roleScreen">
+            <div class="max-w-3xl w-full p-4 md:p-6">
             <div class="text-center mb-10">
                 <h2 class="text-5xl font-bold tracking-tight mb-3">What is your current role?</h2>
                 <p class="text-muted-foreground">Select your role level to begin the assessment</p>
@@ -357,10 +366,12 @@
                     <p class="text-xs text-muted-foreground leading-relaxed">Organizational leader, shapes design culture and standards</p>
                 </button>
             </div>
+            </div>
         </div>
 
         <!-- Name Input Screen -->
-        <div class="screen max-w-xl w-full" id="nameScreen">
+        <div class="screen" id="nameScreen">
+            <div class="max-w-xl w-full p-4 md:p-6">
             <div class="text-center mb-10">
                 <h2 class="text-5xl font-bold tracking-tight mb-3">What's your name?</h2>
                 <p class="text-muted-foreground">This helps us track your progress over time</p>
@@ -378,10 +389,12 @@
                     Continue
                 </button>
             </div>
+            </div>
         </div>
 
         <!-- Survey Screen -->
-        <div class="screen max-w-3xl w-full" id="surveyScreen">
+        <div class="screen" id="surveyScreen">
+            <div class="max-w-3xl w-full p-4 md:p-6">
             <!-- Scrollable Content Area -->
             <div id="surveyContent" class="mt-8 pb-96 overflow-y-auto" style="max-height: calc(100vh - 200px);">
                 <div id="roleTitle" class="text-sm mb-4">
@@ -449,10 +462,12 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div>
 
         <!-- Completion Screen -->
-        <div class="screen max-w-2xl w-full text-center" id="completionScreen">
+        <div class="screen" id="completionScreen">
+            <div class="max-w-2xl w-full text-center p-4 md:p-6">
             <!-- Confetti Canvas -->
             <canvas id="confettiCanvas" class="fixed inset-0 pointer-events-none z-40"></canvas>
 
@@ -481,10 +496,12 @@
                     class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8">
                 Return Home
             </button>
+            </div>
         </div>
 
         <!-- Goal Setting Screen -->
-        <div class="screen max-w-3xl w-full" id="goalSettingScreen">
+        <div class="screen" id="goalSettingScreen">
+            <div class="max-w-3xl w-full p-4 md:p-6">
             <div class="text-center mb-10">
                 <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">Set Your 2026 Goals</h1>
                 <p class="text-lg text-muted-foreground max-w-2xl mx-auto">Based on your self-assessment, identify 2-3 specific goals for your development this year</p>
@@ -535,12 +552,13 @@
                     </button>
                 </div>
             </div>
+            </div>
         </div>
 
         <!-- Dashboard Screen -->
-        <div class="screen w-full max-w-7xl" id="dashboardScreen" style="margin: 0 !important; align-self: flex-start !important;">
+        <div class="screen" id="dashboardScreen">
             <!-- Sticky Header Container -->
-            <div class="sticky top-0 z-50 bg-background pb-6 space-y-6" style="padding-top: 32px !important; padding-left: 48px !important; padding-right: 48px !important;">
+            <div class="sticky top-0 z-50 bg-background pb-6 space-y-6 pt-8 px-6">
                 <!-- Header -->
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <h1 class="text-3xl md:text-4xl font-bold tracking-tight">Results</h1>
@@ -662,7 +680,7 @@
                 </div>
             </div>
 
-            <div class="space-y-6" style="padding-left: 48px !important; padding-right: 48px !important; padding-bottom: 48px !important;">
+            <div class="space-y-6 pb-12 px-6">
 
                 <!-- Summary -->
                 <div id="dashboardSummary"></div>
