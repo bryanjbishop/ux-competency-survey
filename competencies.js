@@ -1156,7 +1156,7 @@ const competencies = {
                     },
                     {
                         id: "ux4-ind-02",
-                        fullText: "Instead, you provide guidance to the highest levels of leadership on design strategy, user needs, and product direction",
+                        fullText: "You provide guidance to the highest levels of leadership on design strategy, user needs, and product direction",
                         shortText: "Advises C-suite on strategy"
                     },
                     {
