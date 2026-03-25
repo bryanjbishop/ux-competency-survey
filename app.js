@@ -6,7 +6,11 @@ let surveyState = {
     responses: {},
     goals: {},
     startTime: null,
-    completionTime: null
+    completionTime: null,
+    isManagerEvaluation: false,
+    evaluatedReportName: null,
+    evaluatedReportLevel: null,
+    evaluationNotes: {}
 };
 
 // Initialize app
@@ -203,6 +207,104 @@ async function signOut() {
         console.error('Sign out error:', error);
         alert('Error signing out. Please try again.');
     }
+}
+
+// Manager Evaluation Functions
+async function showEvaluateReports() {
+    // Check authentication
+    const isAuthenticated = await checkAuthentication();
+    if (!isAuthenticated) {
+        alert('Please sign in to evaluate reports.');
+        showSignIn();
+        return;
+    }
+
+    // Get current user's email
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) {
+        alert('Could not get user information.');
+        return;
+    }
+
+    // Load direct reports for this manager
+    const { data: reports, error } = await supabaseClient
+        .from('manager_reports')
+        .select('*')
+        .eq('manager_email', user.email)
+        .order('report_name');
+
+    if (error) {
+        console.error('Error loading direct reports:', error);
+        alert('Error loading your direct reports. Please try again.');
+        return;
+    }
+
+    // Render the direct reports list
+    const container = document.getElementById('directReportsList');
+
+    if (!reports || reports.length === 0) {
+        container.innerHTML = `
+            <div class="text-center text-muted-foreground py-12">
+                <p class="mb-4">You don't have any direct reports assigned yet.</p>
+                <p class="text-sm">Contact your administrator to set up your team.</p>
+            </div>
+        `;
+    } else {
+        container.innerHTML = reports.map(report => {
+            const levelDisplay = {
+                'intern': 'Intern',
+                'ux1': 'UX 1 - Associate Designer',
+                'ux2': 'UX 2 - Junior Designer',
+                'ux3': 'UX 3 - Mid-Level Designer',
+                'ux4': 'UX 4 - Senior Designer'
+            };
+
+            return `
+                <button onclick="startManagerEvaluation('${report.report_name}', '${report.report_level}')"
+                        class="w-full rounded-lg border-2 border-input bg-card p-6 text-left transition-all hover:shadow-lg hover:border-primary hover:-translate-y-1">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">${report.report_name}</h3>
+                            <p class="text-sm text-muted-foreground">${levelDisplay[report.report_level] || report.report_level}</p>
+                        </div>
+                        <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </button>
+            `;
+        }).join('');
+    }
+
+    showScreen('evaluateReportsScreen');
+}
+
+async function startManagerEvaluation(reportName, reportLevel) {
+    // Get current user's email
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) {
+        alert('Could not get user information.');
+        return;
+    }
+
+    // Reset survey state for manager evaluation
+    surveyState = {
+        role: reportLevel,
+        name: user.email,
+        currentQuestionIndex: 0,
+        responses: {},
+        goals: {},
+        startTime: new Date().toISOString(),
+        completionTime: null,
+        isManagerEvaluation: true,
+        evaluatedReportName: reportName,
+        evaluatedReportLevel: reportLevel,
+        evaluationNotes: {}
+    };
+
+    // Start the survey with the report's level
+    renderQuestion();
+    showScreen('surveyScreen');
 }
 
 // Survey Logic
@@ -487,9 +589,16 @@ function nextQuestion() {
 function completeSurvey() {
     surveyState.completionTime = new Date().toISOString();
     saveSurveyData();
-    showScreen('completionScreen');
-    // Trigger confetti animation
-    setTimeout(() => launchConfetti(), 100);
+
+    // Handle manager evaluation completion differently
+    if (surveyState.isManagerEvaluation) {
+        alert(`Evaluation for ${surveyState.evaluatedReportName} saved successfully!`);
+        viewDashboard();
+    } else {
+        showScreen('completionScreen');
+        // Trigger confetti animation
+        setTimeout(() => launchConfetti(), 100);
+    }
 }
 
 // Confetti Animation
@@ -619,45 +728,91 @@ function skipGoals() {
 // Data Management
 async function saveSurveyData() {
     try {
-        const surveyData = {
-            designer_name: surveyState.name,
-            role: surveyState.role,
-            responses: surveyState.responses,
-            goals: surveyState.goals || {},
-            start_time: surveyState.startTime,
-            completion_time: surveyState.completionTime
-        };
+        // Handle manager evaluation differently
+        if (surveyState.isManagerEvaluation) {
+            const evaluationData = {
+                manager_email: surveyState.name,
+                report_name: surveyState.evaluatedReportName,
+                report_level: surveyState.evaluatedReportLevel,
+                responses: surveyState.responses,
+                notes: surveyState.evaluationNotes || {},
+                evaluation_date: surveyState.completionTime || new Date().toISOString()
+            };
 
-        // Check if survey already exists for this designer
-        const { data: existing, error: fetchError } = await supabaseClient
-            .from('survey_responses')
-            .select('id')
-            .eq('designer_name', surveyState.name)
-            .single();
+            // Check if evaluation already exists
+            const { data: existing, error: fetchError } = await supabaseClient
+                .from('manager_evaluations')
+                .select('id')
+                .eq('manager_email', surveyState.name)
+                .eq('report_name', surveyState.evaluatedReportName)
+                .order('evaluation_date', { ascending: false })
+                .limit(1)
+                .single();
 
-        if (fetchError && fetchError.code !== 'PGRST116') {
-            // PGRST116 is "no rows returned" which is fine
-            throw fetchError;
-        }
+            if (fetchError && fetchError.code !== 'PGRST116') {
+                throw fetchError;
+            }
 
-        if (existing) {
-            // Update existing survey
-            const { error: updateError } = await supabaseClient
-                .from('survey_responses')
-                .update(surveyData)
-                .eq('id', existing.id);
+            if (existing) {
+                // Update existing evaluation
+                const { error: updateError } = await supabaseClient
+                    .from('manager_evaluations')
+                    .update(evaluationData)
+                    .eq('id', existing.id);
 
-            if (updateError) throw updateError;
+                if (updateError) throw updateError;
+            } else {
+                // Insert new evaluation
+                const { error: insertError } = await supabaseClient
+                    .from('manager_evaluations')
+                    .insert([evaluationData]);
+
+                if (insertError) throw insertError;
+            }
+
+            console.log('Manager evaluation saved successfully to Supabase');
         } else {
-            // Insert new survey
-            const { error: insertError } = await supabaseClient
+            // Regular self-assessment
+            const surveyData = {
+                designer_name: surveyState.name,
+                role: surveyState.role,
+                responses: surveyState.responses,
+                goals: surveyState.goals || {},
+                start_time: surveyState.startTime,
+                completion_time: surveyState.completionTime
+            };
+
+            // Check if survey already exists for this designer
+            const { data: existing, error: fetchError } = await supabaseClient
                 .from('survey_responses')
-                .insert([surveyData]);
+                .select('id')
+                .eq('designer_name', surveyState.name)
+                .single();
 
-            if (insertError) throw insertError;
+            if (fetchError && fetchError.code !== 'PGRST116') {
+                // PGRST116 is "no rows returned" which is fine
+                throw fetchError;
+            }
+
+            if (existing) {
+                // Update existing survey
+                const { error: updateError } = await supabaseClient
+                    .from('survey_responses')
+                    .update(surveyData)
+                    .eq('id', existing.id);
+
+                if (updateError) throw updateError;
+            } else {
+                // Insert new survey
+                const { error: insertError } = await supabaseClient
+                    .from('survey_responses')
+                    .insert([surveyData]);
+
+                if (insertError) throw insertError;
+            }
+
+            console.log('Survey data saved successfully to Supabase');
         }
-
-        console.log('Survey data saved successfully to Supabase');
     } catch (error) {
         console.error('Error saving survey data:', error);
         alert('Error saving survey data. Please try again.');
@@ -742,21 +897,51 @@ async function viewDashboard() {
     currentLevelFilter = 'all';
 
     const surveyResults = await loadSurveyData();
+    const managerEvaluations = await loadManagerEvaluations();
 
     if (surveyResults.length === 0) {
         alert('No survey responses yet. Please complete a survey first or load demo data.');
         // Still show dashboard even if empty, so they can load demo data
     }
 
-    renderDashboard(surveyResults);
+    renderDashboard(surveyResults, managerEvaluations);
     showScreen('dashboardScreen');
+}
+
+async function loadManagerEvaluations() {
+    try {
+        const { data, error } = await supabaseClient
+            .from('manager_evaluations')
+            .select('*')
+            .order('evaluation_date', { ascending: false });
+
+        if (error) {
+            console.error('Error loading manager evaluations:', error);
+            return [];
+        }
+
+        // Transform data to match expected format
+        return (data || []).map(evaluation => ({
+            id: evaluation.id,
+            name: evaluation.report_name,
+            role: evaluation.report_level,
+            responses: evaluation.responses,
+            notes: evaluation.notes || {},
+            evaluationDate: evaluation.evaluation_date,
+            managerEmail: evaluation.manager_email,
+            isManagerEvaluation: true
+        }));
+    } catch (error) {
+        console.error('Error in loadManagerEvaluations:', error);
+        return [];
+    }
 }
 
 function viewResults() {
     viewDashboard();
 }
 
-function renderDashboard(surveyResults) {
+function renderDashboard(surveyResults, managerEvaluations = []) {
     // Populate designer filter
     const filterSelect = document.getElementById('designerFilter');
     filterSelect.innerHTML = '<option value="all">All Designers</option>';
@@ -773,8 +958,8 @@ function renderDashboard(surveyResults) {
     // Render summary
     renderDashboardSummary(surveyResults);
 
-    // Render detailed results
-    renderDetailedResults(surveyResults);
+    // Render detailed results with manager evaluations
+    renderDetailedResults(surveyResults, managerEvaluations);
 }
 
 // Global variable to store current level filter
@@ -1001,7 +1186,7 @@ function renderCompetencyCards(surveyResults) {
     }
 }
 
-function renderDetailedResults(surveyResults) {
+function renderDetailedResults(surveyResults, managerEvaluations = []) {
     const detailsDiv = document.getElementById('dashboardDetails');
 
     if (surveyResults.length === 0) {
@@ -1012,6 +1197,11 @@ function renderDetailedResults(surveyResults) {
     let html = '<h2 class="text-2xl font-bold mb-6">Detailed Results by Designer</h2>';
 
     surveyResults.forEach(result => {
+        // Check if there's a manager evaluation for this person
+        const managerEvaluation = managerEvaluations.find(evaluation =>
+            evaluation.name === result.name && evaluation.role === result.role
+        );
+        const hasManagerEval = managerEvaluation !== undefined;
         const questions = competencies[result.role].questions;
         const roleName = competencies[result.role].role;
 
@@ -1021,14 +1211,25 @@ function renderDetailedResults(surveyResults) {
             ? (scores.reduce((sum, val) => sum + val, 0) / scores.length).toFixed(2)
             : 0;
 
+        // Calculate manager average if exists
+        let managerAvgScore = 0;
+        if (hasManagerEval) {
+            const managerScores = Object.values(managerEvaluation.responses);
+            managerAvgScore = managerScores.length > 0
+                ? (managerScores.reduce((sum, val) => sum + val, 0) / managerScores.length).toFixed(2)
+                : 0;
+        }
+
         html += `
             <div class="mb-8">
                 <div class="flex justify-between items-start mb-2">
                     <div>
                         <h3 class="text-xl font-bold">${result.name} - ${roleName}</h3>
                         <p class="text-muted-foreground">
-                            Average Rating: <strong class="text-primary">${avgScore}</strong> |
+                            Self Average: <strong class="text-primary">${avgScore}</strong>
+                            ${hasManagerEval ? `| Manager Average: <strong class="text-primary">${managerAvgScore}</strong>` : ''} |
                             Completed: ${new Date(result.completionTime).toLocaleDateString()}
+                            ${hasManagerEval ? `<br><span class="text-xs inline-flex items-center gap-1 mt-1 px-2 py-1 rounded bg-primary/20 text-primary"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Manager Evaluation Available</span>` : ''}
                         </p>
                     </div>
                     <button onclick="deleteSurvey(\`${result.name}\`)"
@@ -1058,21 +1259,52 @@ function renderDetailedResults(surveyResults) {
 
                 // Handle sub-competency structure
                 question.subCompetencies.forEach(subComp => {
-                    const score = result.responses[subComp.id];
-                    const rating = ratingScale.find(r => r.value === score);
+                    const selfScore = result.responses[subComp.id];
+                    const managerScore = hasManagerEval ? managerEvaluation.responses[subComp.id] : null;
+                    const selfRating = ratingScale.find(r => r.value === selfScore);
+                    const managerRating = managerScore ? ratingScale.find(r => r.value === managerScore) : null;
 
-                    if (score && rating) {
+                    if (selfScore || managerScore) {
+                        const scoreDiff = hasManagerEval && managerScore ? managerScore - selfScore : 0;
+                        const diffColor = scoreDiff > 0 ? 'text-green-500' : (scoreDiff < 0 ? 'text-red-500' : 'text-muted-foreground');
+
                         html += `
                             <div class="p-4 bg-muted rounded-lg mb-3 ml-4">
-                                <div class="flex justify-between items-center mb-2">
+                                <div class="mb-2">
                                     <strong class="text-sm">${subComp.shortText}</strong>
-                                    <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${badgeColors[score]}">
-                                        ${score} - ${rating.label}
+                                </div>
+                                <div class="grid ${hasManagerEval ? 'grid-cols-2' : 'grid-cols-1'} gap-4 mt-3">
+                        `;
+
+                        // Self-assessment score
+                        if (selfScore && selfRating) {
+                            html += `
+                                <div>
+                                    <div class="text-xs text-muted-foreground mb-1">Self-Assessment</div>
+                                    <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${badgeColors[selfScore]}">
+                                        ${selfScore} - ${selfRating.label}
                                     </span>
                                 </div>
-                                <p class="text-xs text-muted-foreground mt-1">
-                                    ${rating.description}
-                                </p>
+                            `;
+                        }
+
+                        // Manager evaluation score
+                        if (hasManagerEval && managerScore && managerRating) {
+                            html += `
+                                <div>
+                                    <div class="text-xs text-muted-foreground mb-1">Manager Evaluation</div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${badgeColors[managerScore]}">
+                                            ${managerScore} - ${managerRating.label}
+                                        </span>
+                                        ${scoreDiff !== 0 ? `<span class="text-xs font-semibold ${diffColor}">${scoreDiff > 0 ? '+' : ''}${scoreDiff}</span>` : ''}
+                                    </div>
+                                </div>
+                            `;
+                        }
+
+                        html += `
+                                </div>
                             </div>
                         `;
                     }
