@@ -1196,7 +1196,7 @@ function renderDetailedResults(surveyResults, managerEvaluations = []) {
 
     let html = '<h2 class="text-2xl font-bold mb-6">Detailed Results by Designer</h2>';
 
-    surveyResults.forEach(result => {
+    surveyResults.forEach((result, index) => {
         // Check if there's a manager evaluation for this person
         const managerEvaluation = managerEvaluations.find(evaluation =>
             evaluation.name === result.name && evaluation.role === result.role
@@ -1213,34 +1213,67 @@ function renderDetailedResults(surveyResults, managerEvaluations = []) {
 
         // Calculate manager average if exists
         let managerAvgScore = 0;
+        let managerEvalDate = '';
         if (hasManagerEval) {
             const managerScores = Object.values(managerEvaluation.responses);
             managerAvgScore = managerScores.length > 0
                 ? (managerScores.reduce((sum, val) => sum + val, 0) / managerScores.length).toFixed(2)
                 : 0;
+            managerEvalDate = new Date(managerEvaluation.evaluationDate).toLocaleDateString();
         }
 
+        const uniqueId = `designer-${index}-${result.name.replace(/\s+/g, '-')}`;
+
         html += `
-            <div class="mb-8">
-                <div class="flex justify-between items-start mb-2">
-                    <div>
-                        <h3 class="text-xl font-bold">${result.name} - ${roleName}</h3>
-                        <p class="text-muted-foreground">
-                            Self Average: <strong class="text-primary">${avgScore}</strong>
-                            ${hasManagerEval ? `| Manager Average: <strong class="text-primary">${managerAvgScore}</strong>` : ''} |
-                            Completed: ${new Date(result.completionTime).toLocaleDateString()}
-                            ${hasManagerEval ? `<br><span class="text-xs inline-flex items-center gap-1 mt-1 px-2 py-1 rounded bg-primary/20 text-primary"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Manager Evaluation Available</span>` : ''}
-                        </p>
+            <div class="mb-6 rounded-lg border border-input bg-card overflow-hidden">
+                <!-- Header Section -->
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-2xl font-bold mb-1">${result.name}</h3>
+                            <p class="text-sm text-muted-foreground">${roleName}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="toggleDetails('${uniqueId}')"
+                                    class="inline-flex items-center gap-1 rounded-md text-sm font-medium transition-colors border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                                <span>View Details</span>
+                                <svg id="${uniqueId}-chevron" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </button>
+                            <button onclick="deleteSurvey(\`${result.name}\`)"
+                                    class="inline-flex items-center gap-1 rounded-md text-sm font-medium transition-colors border border-destructive bg-destructive/10 text-destructive hover:bg-destructive hover:text-white h-9 px-3">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                                Delete
+                            </button>
+                        </div>
                     </div>
-                    <button onclick="deleteSurvey(\`${result.name}\`)"
-                            class="inline-flex items-center gap-1 rounded-md text-sm font-medium transition-colors border border-destructive bg-destructive/10 text-destructive hover:bg-destructive hover:text-white h-9 px-3">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                        </svg>
-                        Delete
-                    </button>
+
+                    <!-- Two Column Score Display -->
+                    <div class="grid ${hasManagerEval ? 'grid-cols-2' : 'grid-cols-1'} gap-6">
+                        <!-- Self Assessment Column -->
+                        <div class="rounded-lg border border-input bg-background/50 p-4">
+                            <div class="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Self Assessment</div>
+                            <div class="text-3xl font-bold text-primary mb-1">${avgScore}</div>
+                            <div class="text-xs text-muted-foreground">Completed: ${new Date(result.completionTime).toLocaleDateString()}</div>
+                        </div>
+
+                        <!-- Manager Evaluation Column (if exists) -->
+                        ${hasManagerEval ? `
+                        <div class="rounded-lg border border-input bg-background/50 p-4">
+                            <div class="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Manager Evaluation</div>
+                            <div class="text-3xl font-bold text-primary mb-1">${managerAvgScore}</div>
+                            <div class="text-xs text-muted-foreground">Completed: ${managerEvalDate}</div>
+                        </div>
+                        ` : ''}
+                    </div>
                 </div>
-                <div class="mb-4">
+
+                <!-- Collapsible Details Section -->
+                <div id="${uniqueId}" class="hidden border-t border-input">
+                    <div class="p-6">
         `;
 
         questions.forEach(question => {
@@ -1333,13 +1366,34 @@ function renderDetailedResults(surveyResults, managerEvaluations = []) {
             }
         });
 
-        html += '</div></div>';
+        html += `
+                    </div>
+                </div>
+            </div>
+        `;
     });
 
     detailsDiv.innerHTML = html;
 
     // Render goals section
     renderGoalsSection(surveyResults);
+}
+
+function toggleDetails(detailsId) {
+    const detailsSection = document.getElementById(detailsId);
+    const chevron = document.getElementById(`${detailsId}-chevron`);
+
+    if (detailsSection && chevron) {
+        const isHidden = detailsSection.classList.contains('hidden');
+
+        if (isHidden) {
+            detailsSection.classList.remove('hidden');
+            chevron.style.transform = 'rotate(180deg)';
+        } else {
+            detailsSection.classList.add('hidden');
+            chevron.style.transform = 'rotate(0deg)';
+        }
+    }
 }
 
 function renderGoalsSection(surveyResults) {
