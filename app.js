@@ -1234,19 +1234,19 @@ function renderDetailedResults(surveyResults, managerEvaluations = []) {
                             <p class="text-sm text-muted-foreground">${roleName}</p>
                         </div>
                         <div class="flex items-center gap-2">
+                            <button onclick="deleteSurvey(\`${result.name}\`)"
+                                    class="inline-flex items-center gap-1 rounded-md text-sm font-medium transition-colors border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                                Delete
+                            </button>
                             <button onclick="toggleDetails('${uniqueId}')"
                                     class="inline-flex items-center gap-1 rounded-md text-sm font-medium transition-colors border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
                                 <span>View Details</span>
                                 <svg id="${uniqueId}-chevron" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                                 </svg>
-                            </button>
-                            <button onclick="deleteSurvey(\`${result.name}\`)"
-                                    class="inline-flex items-center gap-1 rounded-md text-sm font-medium transition-colors border border-destructive bg-destructive/10 text-destructive hover:bg-destructive hover:text-white h-9 px-3">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                </svg>
-                                Delete
                             </button>
                         </div>
                     </div>
