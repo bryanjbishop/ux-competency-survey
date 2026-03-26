@@ -1313,7 +1313,6 @@ function renderDetailedResults(surveyResults, managerEvaluations = []) {
                         if (selfScore && selfRating) {
                             html += `
                                 <div>
-                                    <div class="text-xs text-muted-foreground mb-1">Self-Assessment</div>
                                     <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${badgeColors[selfScore]}">
                                         ${selfScore} - ${selfRating.label}
                                     </span>
@@ -1325,7 +1324,6 @@ function renderDetailedResults(surveyResults, managerEvaluations = []) {
                         if (hasManagerEval && managerScore && managerRating) {
                             html += `
                                 <div>
-                                    <div class="text-xs text-muted-foreground mb-1">Manager Evaluation</div>
                                     <div class="flex items-center gap-2">
                                         <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${badgeColors[managerScore]}">
                                             ${managerScore} - ${managerRating.label}
