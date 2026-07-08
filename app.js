@@ -4,13 +4,8 @@ let surveyState = {
     name: null,
     currentQuestionIndex: 0,
     responses: {},
-    goals: {},
     startTime: null,
-    completionTime: null,
-    isManagerEvaluation: false,
-    evaluatedReportName: null,
-    evaluatedReportLevel: null,
-    evaluationNotes: {}
+    completionTime: null
 };
 
 // Initialize app
@@ -18,30 +13,16 @@ document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     loadSurveyData();
 
-    // Enable Enter key on name input
     const nameInput = document.getElementById('nameInput');
     if (nameInput) {
         nameInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                submitName();
-            }
-        });
-    }
-
-    // Enable Enter key on password input
-    const adminPassword = document.getElementById('adminPassword');
-    if (adminPassword) {
-        adminPassword.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                attemptSignIn();
-            }
+            if (e.key === 'Enter') submitName();
         });
     }
 });
 
 // Theme Management - Dark mode only
 function initTheme() {
-    // Always use dark mode
     document.documentElement.classList.add('dark');
 }
 
@@ -53,46 +34,20 @@ function showScreen(screenId) {
     document.getElementById(screenId).classList.add('active');
     window.scrollTo(0, 0);
 
-    // Adjust app container alignment for dashboard
     const appContainer = document.getElementById('app');
     if (appContainer) {
-        if (screenId === 'dashboardScreen') {
-            // Remove centering for dashboard
-            appContainer.classList.remove('items-center', 'justify-center', 'p-4', 'md:p-6');
-            appContainer.classList.add('items-start', 'justify-start');
-            appContainer.style.padding = '0';
-            appContainer.style.margin = '0';
-            appContainer.style.alignItems = 'flex-start';
-            appContainer.style.justifyContent = 'flex-start';
-        } else {
-            // Restore centering for other screens
-            appContainer.classList.remove('items-start', 'justify-start');
-            appContainer.classList.add('items-center', 'justify-center', 'p-4', 'md:p-6');
-            appContainer.style.padding = '';
-            appContainer.style.margin = '';
-            appContainer.style.alignItems = '';
-            appContainer.style.justifyContent = '';
-        }
+        appContainer.classList.remove('items-start', 'justify-start');
+        appContainer.classList.add('items-center', 'justify-center', 'p-4', 'md:p-6');
+        appContainer.style.padding = '';
+        appContainer.style.margin = '';
+        appContainer.style.alignItems = '';
+        appContainer.style.justifyContent = '';
     }
 
-    // Hide top-right controls on dashboard
-    const topRightControls = document.querySelector('.fixed.top-4.right-4');
-    if (topRightControls) {
-        if (screenId === 'dashboardScreen') {
-            topRightControls.style.display = 'none';
-        } else {
-            topRightControls.style.display = 'flex';
-        }
-    }
-
-    // Hide/show home icon based on screen
+    // Hide home icon on welcome screen
     const topLeftControls = document.querySelector('.fixed.top-4.left-4');
     if (topLeftControls) {
-        if (screenId === 'welcomeScreen' || screenId === 'dashboardScreen') {
-            topLeftControls.style.display = 'none';
-        } else {
-            topLeftControls.style.display = 'block';
-        }
+        topLeftControls.style.display = screenId === 'welcomeScreen' ? 'none' : 'block';
     }
 }
 
@@ -132,256 +87,98 @@ function returnHome() {
     showScreen('welcomeScreen');
 }
 
-// Authentication Functions
-function showSignIn() {
-    // Clear previous inputs and errors
-    document.getElementById('adminUsername').value = '';
-    document.getElementById('adminPassword').value = '';
-    document.getElementById('signInError').classList.add('hidden');
-    showScreen('signInScreen');
-}
-
-async function attemptSignIn() {
-    const email = document.getElementById('adminUsername').value.trim();
-    const password = document.getElementById('adminPassword').value.trim();
-    const errorDiv = document.getElementById('signInError');
-
-    if (!email || !password) {
-        errorDiv.textContent = 'Please enter both email and password.';
-        errorDiv.classList.remove('hidden');
-        return;
-    }
-
-    console.log('=== SIGN IN ATTEMPT ===');
-    console.log(`Email entered: "${email}"`);
-
-    try {
-        // Sign in with Supabase
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
-            email: email,
-            password: password,
-        });
-
-        if (error) {
-            console.log('✗ Authentication failed:', error.message);
-            errorDiv.textContent = 'Invalid email or password. Please try again.';
-            errorDiv.classList.remove('hidden');
-            document.getElementById('adminPassword').value = '';
-            return;
-        }
-
-        console.log('✓ Authentication successful!');
-
-        // Clear form
-        document.getElementById('adminUsername').value = '';
-        document.getElementById('adminPassword').value = '';
-        errorDiv.classList.add('hidden');
-
-        console.log('Navigating to dashboard...');
-
-        // Go to dashboard
-        viewDashboard();
-    } catch (err) {
-        console.error('Sign in error:', err);
-        errorDiv.textContent = 'An error occurred. Please try again.';
-        errorDiv.classList.remove('hidden');
-    }
-}
-
-async function checkAuthentication() {
-    try {
-        const { data: { session } } = await supabaseClient.auth.getSession();
-        return session !== null;
-    } catch (error) {
-        console.error('Auth check error:', error);
-        return false;
-    }
-}
-
-async function signOut() {
-    try {
-        await supabaseClient.auth.signOut();
-        alert('You have been signed out successfully.');
-        returnHome();
-    } catch (error) {
-        console.error('Sign out error:', error);
-        alert('Error signing out. Please try again.');
-    }
-}
-
-// Manager Evaluation Functions
-async function showEvaluateReports() {
-    // Check authentication
-    const isAuthenticated = await checkAuthentication();
-    if (!isAuthenticated) {
-        alert('Please sign in to evaluate reports.');
-        showSignIn();
-        return;
-    }
-
-    // Get current user's email
-    const { data: { user } } = await supabaseClient.auth.getUser();
-    if (!user) {
-        alert('Could not get user information.');
-        return;
-    }
-
-    // Load direct reports for this manager
-    const { data: reports, error } = await supabaseClient
-        .from('manager_reports')
-        .select('*')
-        .eq('manager_email', user.email)
-        .order('report_name');
-
-    if (error) {
-        console.error('Error loading direct reports:', error);
-        alert('Error loading your direct reports. Please try again.');
-        return;
-    }
-
-    // Render the direct reports list
-    const container = document.getElementById('directReportsList');
-
-    if (!reports || reports.length === 0) {
-        container.innerHTML = `
-            <div class="text-center text-muted-foreground py-12">
-                <p class="mb-4">You don't have any direct reports assigned yet.</p>
-                <p class="text-sm">Contact your administrator to set up your team.</p>
-            </div>
-        `;
-    } else {
-        container.innerHTML = reports.map(report => {
-            const levelDisplay = {
-                'intern': 'Intern',
-                'ux1': 'UX 1 - Associate Designer',
-                'ux2': 'UX 2 - Junior Designer',
-                'ux3': 'UX 3 - Mid-Level Designer',
-                'ux4': 'UX 4 - Senior Designer'
-            };
-
-            return `
-                <button onclick="startManagerEvaluation('${report.report_name}', '${report.report_level}')"
-                        class="w-full rounded-lg border-2 border-input bg-card p-6 text-left transition-all hover:shadow-lg hover:border-primary hover:-translate-y-1">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="text-xl font-bold mb-2">${report.report_name}</h3>
-                            <p class="text-sm text-muted-foreground">${levelDisplay[report.report_level] || report.report_level}</p>
-                        </div>
-                        <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </div>
-                </button>
-            `;
-        }).join('');
-    }
-
-    showScreen('evaluateReportsScreen');
-}
-
-async function startManagerEvaluation(reportName, reportLevel) {
-    // Get current user's email
-    const { data: { user } } = await supabaseClient.auth.getUser();
-    if (!user) {
-        alert('Could not get user information.');
-        return;
-    }
-
-    // Reset survey state for manager evaluation
-    surveyState = {
-        role: reportLevel,
-        name: user.email,
-        currentQuestionIndex: 0,
-        responses: {},
-        goals: {},
-        startTime: new Date().toISOString(),
-        completionTime: null,
-        isManagerEvaluation: true,
-        evaluatedReportName: reportName,
-        evaluatedReportLevel: reportLevel,
-        evaluationNotes: {}
-    };
-
-    // Start the survey with the report's level
-    renderQuestion();
-    showScreen('surveyScreen');
-}
-
 // Survey Logic
 function renderQuestion() {
     const questions = competencies[surveyState.role].questions;
     const currentQuestion = questions[surveyState.currentQuestionIndex];
     const isLastQuestion = surveyState.currentQuestionIndex === questions.length - 1;
 
-    // Show segmented progress bar for all roles
     const segmentedBars = document.getElementById('internProgressBars');
     const singleBar = document.getElementById('singleProgressBar');
-
-    if (segmentedBars) {
-        segmentedBars.style.display = 'block';
-    }
-    if (singleBar) {
-        singleBar.style.display = 'none';
-    }
+    if (segmentedBars) segmentedBars.style.display = 'block';
+    if (singleBar) singleBar.style.display = 'none';
     updateSegmentedProgressBars();
 
-    // Update role title
     const roleInfo = competencies[surveyState.role].role;
-    const roleTitleElement = document.getElementById('roleTitle');
     const roleLevelElement = document.getElementById('roleLevel');
-
-    if (roleTitleElement && roleLevelElement) {
+    if (roleLevelElement) {
         if (roleInfo.includes(' - ')) {
-            // Format: "UX 1 - Associate Designer"
             const [level, name] = roleInfo.split(' - ');
             roleLevelElement.textContent = level.toUpperCase() + ': ';
             roleLevelElement.nextElementSibling.textContent = name;
         } else {
-            // For "Intern" role - just show "INTERN"
             roleLevelElement.textContent = 'INTERN';
             roleLevelElement.nextElementSibling.textContent = '';
         }
     }
 
-    // Update question content - remove text in parentheses
     const cleanTitle = currentQuestion.title.replace(/\s*\([^)]*\)\s*/g, '').trim();
     document.getElementById('questionTitle').textContent = cleanTitle;
 
-    // Build subtitle with description and sub-competencies or bullets
     let subtitleHTML = `<p class="text-sm" style="margin-bottom: 64px;">${currentQuestion.description}</p>`;
 
-    // Check if using new subCompetencies structure or old bullets structure
     if (currentQuestion.subCompetencies && currentQuestion.subCompetencies.length > 0) {
-        // New detailed sub-competency format with individual ratings
         subtitleHTML += '<div>';
         currentQuestion.subCompetencies.forEach((subComp, index) => {
             const subCompNumber = `${surveyState.currentQuestionIndex + 1}.${index + 1}`;
+
+            if (currentQuestion.isEvidence) {
+                const textValue = surveyState.responses[subComp.id] || '';
+                const escapedValue = String(textValue)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+                const badgeHTML = subComp.promptType === '360'
+                    ? '<span class="inline-block px-3 py-1 text-xs font-semibold bg-amber-500/20 text-amber-300 rounded-full mb-3">Manager / 360 input — best assessed via peer feedback</span>'
+                    : '<span class="inline-block px-3 py-1 text-xs font-semibold bg-blue-500/20 text-blue-300 rounded-full mb-3">Evidence prompt — narrative, not scored</span>';
+                subtitleHTML += `
+                    <div class="mb-12">
+                        <div class="mb-4">
+                            <p class="text-sm font-semibold text-primary mb-3">${subCompNumber}</p>
+                            ${badgeHTML}
+                            <p class="text-2xl leading-relaxed text-white mt-2">${subComp.fullText}</p>
+                        </div>
+                        <textarea
+                            data-subcomp-id="${subComp.id}"
+                            oninput="updateEvidenceResponse('${subComp.id}', this.value)"
+                            rows="5"
+                            placeholder="Share your evidence here..."
+                            class="w-full p-4 rounded-lg bg-card text-foreground text-base border border-input focus:border-primary focus:outline-none resize-y"
+                        >${escapedValue}</textarea>
+                    </div>
+                `;
+                return;
+            }
+
             const ratingValue = surveyState.responses[subComp.id] || 0;
+            const score4Block = subComp.score4Text
+                ? `<p class="text-sm text-muted-foreground italic mt-4"><span class="font-semibold not-italic text-primary">For example:</span> ${subComp.score4Text}</p>`
+                : '';
 
             subtitleHTML += `
                 <div class="mb-12">
                     <div class="mb-8">
                         <p class="text-sm font-semibold text-primary mb-4">${subCompNumber}</p>
                         <p class="text-2xl leading-relaxed text-white">${subComp.fullText}</p>
+                        ${score4Block}
                     </div>
 
-                    <!-- Rating buttons for this sub-competency -->
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
                         ${[1, 2, 3, 4, 5].map(rating => {
-                            const labels = ['Developing', 'Emerging', 'Proficient', 'Advanced', 'Expert'];
+                            const labels = ['Learning', 'Developing', 'Proficient', 'Advanced', 'Expert'];
                             const descriptions = [
-                                "I'm learning this skill",
-                                "I can do this with guidance",
-                                "I can do this independently",
-                                "I can mentor others on this",
-                                "I'm defining best practices for this"
+                                "I'm still learning this; I rely on guidance and examples",
+                                "I can do this with some support, or on straightforward cases",
+                                "I can do this independently and reliably in typical situations",
+                                "I do this well even when it's complex, ambiguous, or unfamiliar, using sound judgment",
+                                "I consistently do this at a high level on the hardest, highest-stakes, or most novel problems, where there's no established playbook"
                             ];
                             return `
                             <button onclick="selectSubCompRating('${subComp.id}', ${rating})"
                                     data-subcomp-id="${subComp.id}"
                                     data-rating="${rating}"
                                     class="sub-rating-btn flex flex-col items-center justify-start gap-1 p-6 rounded-lg transition-all ${ratingValue === rating ? 'bg-primary text-primary-foreground' : 'bg-muted/50 hover:bg-muted'}">
-                                <span class="text-4xl font-bold text-white" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">${rating}</span>
+                                <span class="text-4xl font-bold text-white">${rating}</span>
                                 <span class="text-xs font-semibold text-center">${labels[rating - 1]}</span>
                                 <span class="text-xs opacity-70 text-center leading-tight">${descriptions[rating - 1]}</span>
                             </button>
@@ -393,7 +190,6 @@ function renderQuestion() {
         });
         subtitleHTML += '</div>';
     } else if (currentQuestion.bullets && currentQuestion.bullets.length > 0) {
-        // Old simple bullet format (backward compatibility)
         subtitleHTML += '<ul class="list-disc ml-5 mb-4 space-y-2">';
         currentQuestion.bullets.forEach(bullet => {
             subtitleHTML += `<li>${bullet}</li>`;
@@ -403,11 +199,9 @@ function renderQuestion() {
 
     document.getElementById('questionSubtitle').innerHTML = subtitleHTML;
 
-    // Update question counter
     document.getElementById('questionCounter').textContent =
         `Question ${surveyState.currentQuestionIndex + 1} of ${questions.length}`;
 
-    // Restore previous selection if exists
     const previousResponse = surveyState.responses[currentQuestion.id];
     document.querySelectorAll('.rating-option').forEach(option => {
         option.classList.remove('selected', 'border-primary', 'bg-primary', 'text-primary-foreground', 'scale-105');
@@ -419,31 +213,16 @@ function renderQuestion() {
         }
     });
 
-    // Update navigation buttons
     const prevBtn = document.getElementById('prevBtn');
-    if (surveyState.currentQuestionIndex === 0) {
-        prevBtn.style.visibility = 'hidden';
-    } else {
-        prevBtn.style.visibility = 'visible';
-    }
+    prevBtn.style.visibility = surveyState.currentQuestionIndex === 0 ? 'hidden' : 'visible';
 
-    // Show/hide finish button based on last question
     const finishBtn = document.getElementById('finishBtn');
-    if (isLastQuestion && previousResponse) {
-        finishBtn.style.display = 'inline-flex';
-    } else {
-        finishBtn.style.display = 'none';
-    }
+    finishBtn.style.display = (isLastQuestion && previousResponse) ? 'inline-flex' : 'none';
 }
 
-// Handle sub-competency rating selection
 function selectSubCompRating(subCompId, value) {
-    // Save the rating for this specific sub-competency
     surveyState.responses[subCompId] = value;
 
-    console.log(`Sub-competency rating: ${value} for ${subCompId}`);
-
-    // Update button states for this sub-competency
     const buttons = document.querySelectorAll(`[data-subcomp-id="${subCompId}"]`);
     buttons.forEach(btn => {
         const btnValue = parseInt(btn.getAttribute('data-rating'));
@@ -456,31 +235,21 @@ function selectSubCompRating(subCompId, value) {
         }
     });
 
-    // Update progress bar
     updateProgressBar();
 
-    // Check if all sub-competencies for current question are rated
     const questions = competencies[surveyState.role].questions;
     const currentQuestion = questions[surveyState.currentQuestionIndex];
     if (currentQuestion.subCompetencies) {
         const allRated = currentQuestion.subCompetencies.every(sub => surveyState.responses[sub.id]);
         const isLastQuestion = surveyState.currentQuestionIndex === questions.length - 1;
-
-        // Find current sub-competency index
         const currentSubIndex = currentQuestion.subCompetencies.findIndex(sub => sub.id === subCompId);
         const hasNextSub = currentSubIndex < currentQuestion.subCompetencies.length - 1;
 
         if (allRated && isLastQuestion) {
-            // Show finish button
-            const finishBtn = document.getElementById('finishBtn');
-            finishBtn.style.display = 'inline-flex';
+            document.getElementById('finishBtn').style.display = 'inline-flex';
         } else if (allRated && !isLastQuestion) {
-            // Auto-advance to next question after a brief delay
-            setTimeout(() => {
-                nextQuestion();
-            }, 500);
+            setTimeout(() => nextQuestion(), 500);
         } else if (hasNextSub && !allRated) {
-            // Scroll to next sub-competency after a brief delay
             setTimeout(() => {
                 const nextSubId = currentQuestion.subCompetencies[currentSubIndex + 1].id;
                 const nextSubButtons = document.querySelectorAll(`[data-subcomp-id="${nextSubId}"]`);
@@ -495,12 +264,34 @@ function selectSubCompRating(subCompId, value) {
     }
 }
 
-// Helper function to update progress bar
+function updateEvidenceResponse(subCompId, value) {
+    if (value && value.trim().length > 0) {
+        surveyState.responses[subCompId] = value;
+    } else {
+        delete surveyState.responses[subCompId];
+    }
+
+    updateProgressBar();
+
+    const questions = competencies[surveyState.role].questions;
+    const currentQuestion = questions[surveyState.currentQuestionIndex];
+    const isLastQuestion = surveyState.currentQuestionIndex === questions.length - 1;
+
+    if (currentQuestion.subCompetencies) {
+        const allCompleted = currentQuestion.subCompetencies.every(sub => Boolean(surveyState.responses[sub.id]));
+        const finishBtn = document.getElementById('finishBtn');
+        if (allCompleted && isLastQuestion) {
+            finishBtn.style.display = 'inline-flex';
+        } else if (isLastQuestion) {
+            finishBtn.style.display = 'none';
+        }
+    }
+}
+
 function updateProgressBar() {
     updateSegmentedProgressBars();
 }
 
-// Update segmented progress bars for all roles (7 separate segments)
 function updateSegmentedProgressBars() {
     const questions = competencies[surveyState.role].questions;
 
@@ -510,20 +301,13 @@ function updateSegmentedProgressBars() {
 
         if (question.subCompetencies) {
             question.subCompetencies.forEach(subComp => {
-                if (surveyState.responses[subComp.id]) {
-                    completedSubComps++;
-                }
+                if (surveyState.responses[subComp.id]) completedSubComps++;
             });
         }
 
         const progress = totalSubComps > 0 ? (completedSubComps / totalSubComps) * 100 : 0;
-        console.log(`Progress segment ${index}: ${completedSubComps}/${totalSubComps} = ${progress}%`);
         const progressSegment = document.getElementById(`progressSegment${index}`);
-        if (progressSegment) {
-            progressSegment.style.width = `${progress}%`;
-        } else {
-            console.error(`Progress segment ${index} element not found`);
-        }
+        if (progressSegment) progressSegment.style.width = `${progress}%`;
     });
 }
 
@@ -532,10 +316,8 @@ function selectRating(value) {
     const currentQuestion = questions[surveyState.currentQuestionIndex];
     const isLastQuestion = surveyState.currentQuestionIndex === questions.length - 1;
 
-    // Save response
     surveyState.responses[currentQuestion.id] = value;
 
-    // Visual feedback - Update for Tailwind classes
     document.querySelectorAll('.rating-option').forEach(option => {
         option.classList.remove('selected', 'border-primary', 'bg-primary', 'text-primary-foreground', 'scale-105');
         option.classList.add('border-input', 'bg-card');
@@ -546,15 +328,10 @@ function selectRating(value) {
         }
     });
 
-    // If last question, show finish button instead of auto-advancing
     if (isLastQuestion) {
-        const finishBtn = document.getElementById('finishBtn');
-        finishBtn.style.display = 'inline-flex';
+        document.getElementById('finishBtn').style.display = 'inline-flex';
     } else {
-        // Auto-advance after selection for non-last questions
-        setTimeout(() => {
-            nextQuestion();
-        }, 500);
+        setTimeout(() => nextQuestion(), 500);
     }
 }
 
@@ -562,11 +339,8 @@ function previousQuestion() {
     if (surveyState.currentQuestionIndex > 0) {
         surveyState.currentQuestionIndex--;
         renderQuestion();
-        // Scroll the survey content area to top
         const surveyContent = document.getElementById('surveyContent');
-        if (surveyContent) {
-            surveyContent.scrollTop = 0;
-        }
+        if (surveyContent) surveyContent.scrollTop = 0;
     }
 }
 
@@ -576,11 +350,8 @@ function nextQuestion() {
     if (surveyState.currentQuestionIndex < questions.length - 1) {
         surveyState.currentQuestionIndex++;
         renderQuestion();
-        // Scroll the survey content area to top
         const surveyContent = document.getElementById('surveyContent');
-        if (surveyContent) {
-            surveyContent.scrollTop = 0;
-        }
+        if (surveyContent) surveyContent.scrollTop = 0;
     } else {
         completeSurvey();
     }
@@ -589,16 +360,8 @@ function nextQuestion() {
 function completeSurvey() {
     surveyState.completionTime = new Date().toISOString();
     saveSurveyData();
-
-    // Handle manager evaluation completion differently
-    if (surveyState.isManagerEvaluation) {
-        alert(`Evaluation for ${surveyState.evaluatedReportName} saved successfully!`);
-        viewDashboard();
-    } else {
-        showScreen('completionScreen');
-        // Trigger confetti animation
-        setTimeout(() => launchConfetti(), 100);
-    }
+    showScreen('completionScreen');
+    setTimeout(() => launchConfetti(), 100);
 }
 
 // Confetti Animation
@@ -630,8 +393,6 @@ function launchConfetti() {
             this.y += this.speedY;
             this.x += this.speedX;
             this.rotation += this.rotationSpeed;
-
-            // Add some gravity
             this.speedY += 0.05;
         }
 
@@ -645,30 +406,23 @@ function launchConfetti() {
         }
     }
 
-    // Create confetti pieces
     for (let i = 0; i < confettiCount; i++) {
         confettiPieces.push(new ConfettiPiece());
     }
 
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
         let stillAnimating = false;
 
         confettiPieces.forEach(piece => {
             piece.update();
             piece.draw();
-
-            // Check if piece is still visible
-            if (piece.y < canvas.height + 10) {
-                stillAnimating = true;
-            }
+            if (piece.y < canvas.height + 10) stillAnimating = true;
         });
 
         if (stillAnimating) {
             requestAnimationFrame(animate);
         } else {
-            // Clean up canvas after animation
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
     }
@@ -676,146 +430,93 @@ function launchConfetti() {
     animate();
 }
 
-// Goal Setting Functions
-function showGoalSetting() {
-    // Load existing goals if they exist
-    const surveyResults = loadSurveyData();
-    const existingResponse = surveyResults.find(r => r.name === surveyState.name);
+// Download survey results as JSON
+function downloadSurveyJSON() {
+    const roleData = competencies[surveyState.role];
+    const ratingLabels = ['', 'Learning', 'Developing', 'Proficient', 'Advanced', 'Expert'];
 
-    if (existingResponse && existingResponse.goals) {
-        document.getElementById('goal1').value = existingResponse.goals.goal1 || '';
-        document.getElementById('goal1Description').value = existingResponse.goals.goal1Description || '';
-        document.getElementById('goal2').value = existingResponse.goals.goal2 || '';
-        document.getElementById('goal2Description').value = existingResponse.goals.goal2Description || '';
-        document.getElementById('goal3').value = existingResponse.goals.goal3 || '';
-        document.getElementById('goal3Description').value = existingResponse.goals.goal3Description || '';
-    }
+    const sections = roleData.questions.map(question => {
+        const subCompetencies = (question.subCompetencies || []).map(subComp => {
+            const raw = surveyState.responses[subComp.id];
+            const isNarrative = !!subComp.promptType;
+            return {
+                id: subComp.id,
+                text: subComp.shortText || subComp.fullText,
+                type: isNarrative ? (subComp.promptType === '360' ? 'manager_360' : 'evidence') : 'rating',
+                ...(isNarrative
+                    ? { response: raw || null }
+                    : { rating: raw || null, ratingLabel: raw ? ratingLabels[raw] : null }
+                )
+            };
+        });
 
-    showScreen('goalSettingScreen');
-}
+        return {
+            competency: question.competency || question.title,
+            subCompetencies
+        };
+    });
 
-function saveGoals() {
-    const goal1 = document.getElementById('goal1').value.trim();
-    const goal1Description = document.getElementById('goal1Description').value.trim();
-    const goal2 = document.getElementById('goal2').value.trim();
-    const goal2Description = document.getElementById('goal2Description').value.trim();
-    const goal3 = document.getElementById('goal3').value.trim();
-    const goal3Description = document.getElementById('goal3Description').value.trim();
+    const numericScores = Object.values(surveyState.responses).filter(v => typeof v === 'number');
+    const averageRating = numericScores.length > 0
+        ? parseFloat((numericScores.reduce((sum, v) => sum + v, 0) / numericScores.length).toFixed(2))
+        : null;
 
-    if (!goal1) {
-        alert('Please enter at least Goal 1');
-        return;
-    }
-
-    surveyState.goals = {
-        goal1,
-        goal1Description,
-        goal2,
-        goal2Description,
-        goal3,
-        goal3Description
+    const payload = {
+        survey: 'UX Competency Self-Assessment 2026',
+        name: surveyState.name,
+        role: surveyState.role,
+        roleLabel: roleData.role,
+        completedAt: surveyState.completionTime,
+        averageRating,
+        sections
     };
 
-    saveSurveyData();
-    alert('Goals saved successfully! 🎉');
-    returnHome();
-}
-
-function skipGoals() {
-    returnHome();
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    const safeName = (surveyState.name || 'results').toLowerCase().replace(/\s+/g, '-');
+    link.download = `ux-competency-${safeName}-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
 }
 
 // Data Management
 async function saveSurveyData() {
     try {
-        // Handle manager evaluation differently
-        if (surveyState.isManagerEvaluation) {
-            const evaluationData = {
-                manager_email: surveyState.name,
-                report_name: surveyState.evaluatedReportName,
-                report_level: surveyState.evaluatedReportLevel,
-                responses: surveyState.responses,
-                notes: surveyState.evaluationNotes || {},
-                evaluation_date: surveyState.completionTime || new Date().toISOString()
-            };
+        const surveyData = {
+            designer_name: surveyState.name,
+            role: surveyState.role,
+            responses: surveyState.responses,
+            goals: {},
+            start_time: surveyState.startTime,
+            completion_time: surveyState.completionTime
+        };
 
-            // Check if evaluation already exists
-            const { data: existing, error: fetchError } = await supabaseClient
-                .from('manager_evaluations')
-                .select('id')
-                .eq('manager_email', surveyState.name)
-                .eq('report_name', surveyState.evaluatedReportName)
-                .order('evaluation_date', { ascending: false })
-                .limit(1)
-                .single();
+        const { data: existing, error: fetchError } = await supabaseClient
+            .from('survey_responses')
+            .select('id')
+            .eq('designer_name', surveyState.name)
+            .single();
 
-            if (fetchError && fetchError.code !== 'PGRST116') {
-                throw fetchError;
-            }
+        if (fetchError && fetchError.code !== 'PGRST116') throw fetchError;
 
-            if (existing) {
-                // Update existing evaluation
-                const { error: updateError } = await supabaseClient
-                    .from('manager_evaluations')
-                    .update(evaluationData)
-                    .eq('id', existing.id);
-
-                if (updateError) throw updateError;
-            } else {
-                // Insert new evaluation
-                const { error: insertError } = await supabaseClient
-                    .from('manager_evaluations')
-                    .insert([evaluationData]);
-
-                if (insertError) throw insertError;
-            }
-
-            console.log('Manager evaluation saved successfully to Supabase');
-        } else {
-            // Regular self-assessment
-            const surveyData = {
-                designer_name: surveyState.name,
-                role: surveyState.role,
-                responses: surveyState.responses,
-                goals: surveyState.goals || {},
-                start_time: surveyState.startTime,
-                completion_time: surveyState.completionTime
-            };
-
-            // Check if survey already exists for this designer
-            const { data: existing, error: fetchError } = await supabaseClient
+        if (existing) {
+            const { error: updateError } = await supabaseClient
                 .from('survey_responses')
-                .select('id')
-                .eq('designer_name', surveyState.name)
-                .single();
-
-            if (fetchError && fetchError.code !== 'PGRST116') {
-                // PGRST116 is "no rows returned" which is fine
-                throw fetchError;
-            }
-
-            if (existing) {
-                // Update existing survey
-                const { error: updateError } = await supabaseClient
-                    .from('survey_responses')
-                    .update(surveyData)
-                    .eq('id', existing.id);
-
-                if (updateError) throw updateError;
-            } else {
-                // Insert new survey
-                const { error: insertError } = await supabaseClient
-                    .from('survey_responses')
-                    .insert([surveyData]);
-
-                if (insertError) throw insertError;
-            }
-
-            console.log('Survey data saved successfully to Supabase');
+                .update(surveyData)
+                .eq('id', existing.id);
+            if (updateError) throw updateError;
+        } else {
+            const { error: insertError } = await supabaseClient
+                .from('survey_responses')
+                .insert([surveyData]);
+            if (insertError) throw insertError;
         }
+
+        console.log('Survey data saved successfully to Supabase');
     } catch (error) {
         console.error('Error saving survey data:', error);
-        alert('Error saving survey data. Please try again.');
     }
 }
 
@@ -828,7 +529,6 @@ async function loadSurveyData() {
 
         if (error) throw error;
 
-        // Transform data to match the old localStorage format
         return data.map(record => ({
             name: record.designer_name,
             role: record.role,
@@ -840,923 +540,5 @@ async function loadSurveyData() {
     } catch (error) {
         console.error('Error loading survey data:', error);
         return [];
-    }
-}
-
-async function deleteSurvey(designerName) {
-    console.log('Delete function called for:', designerName);
-
-    // Confirm deletion
-    if (!confirm(`Are you sure you want to delete the survey for ${designerName}? This action cannot be undone.`)) {
-        console.log('User cancelled deletion');
-        return;
-    }
-
-    try {
-        console.log('Attempting to delete from Supabase...');
-
-        // Delete from Supabase
-        const { data, error } = await supabaseClient
-            .from('survey_responses')
-            .delete()
-            .eq('designer_name', designerName)
-            .select();
-
-        console.log('Delete response:', { data, error });
-
-        if (error) {
-            console.error('Supabase error:', error);
-            throw error;
-        }
-
-        console.log('Delete successful, reloading dashboard...');
-
-        // Reload dashboard
-        const allResults = await loadSurveyData();
-        renderDashboard(allResults);
-
-        // Show success message
-        alert(`Survey for ${designerName} has been deleted successfully.`);
-    } catch (error) {
-        console.error('Error deleting survey:', error);
-        alert(`Error deleting survey: ${error.message}. Please check the console for details.`);
-    }
-}
-
-// Dashboard Functions
-async function viewDashboard() {
-    // Check authentication first
-    const isAuthenticated = await checkAuthentication();
-    if (!isAuthenticated) {
-        alert('Please sign in to view the dashboard.');
-        showSignIn();
-        return;
-    }
-
-    // Reset level filter to "all"
-    currentLevelFilter = 'all';
-
-    const surveyResults = await loadSurveyData();
-    const managerEvaluations = await loadManagerEvaluations();
-
-    if (surveyResults.length === 0) {
-        alert('No survey responses yet. Please complete a survey first or load demo data.');
-        // Still show dashboard even if empty, so they can load demo data
-    }
-
-    renderDashboard(surveyResults, managerEvaluations);
-    showScreen('dashboardScreen');
-}
-
-async function loadManagerEvaluations() {
-    try {
-        const { data, error } = await supabaseClient
-            .from('manager_evaluations')
-            .select('*')
-            .order('evaluation_date', { ascending: false });
-
-        if (error) {
-            console.error('Error loading manager evaluations:', error);
-            return [];
-        }
-
-        // Transform data to match expected format
-        return (data || []).map(evaluation => ({
-            id: evaluation.id,
-            name: evaluation.report_name,
-            role: evaluation.report_level,
-            responses: evaluation.responses,
-            notes: evaluation.notes || {},
-            evaluationDate: evaluation.evaluation_date,
-            managerEmail: evaluation.manager_email,
-            isManagerEvaluation: true
-        }));
-    } catch (error) {
-        console.error('Error in loadManagerEvaluations:', error);
-        return [];
-    }
-}
-
-function viewResults() {
-    viewDashboard();
-}
-
-function renderDashboard(surveyResults, managerEvaluations = []) {
-    // Populate designer filter
-    const filterSelect = document.getElementById('designerFilter');
-    filterSelect.innerHTML = '<option value="all">All Designers</option>';
-    surveyResults.forEach(result => {
-        const option = document.createElement('option');
-        option.value = result.name;
-        option.textContent = `${result.name} (${competencies[result.role].role})`;
-        filterSelect.appendChild(option);
-    });
-
-    // Update level filter counts
-    updateLevelFilterCounts(surveyResults);
-
-    // Render summary
-    renderDashboardSummary(surveyResults);
-
-    // Render detailed results with manager evaluations
-    renderDetailedResults(surveyResults, managerEvaluations);
-}
-
-// Global variable to store current level filter
-let currentLevelFilter = 'all';
-
-function updateLevelFilterCounts(surveyResults) {
-    const levelCounts = {
-        all: surveyResults.length,
-        ux4: 0,
-        ux3: 0,
-        ux2: 0,
-        ux1: 0,
-        intern: 0
-    };
-
-    surveyResults.forEach(result => {
-        if (levelCounts.hasOwnProperty(result.role)) {
-            levelCounts[result.role]++;
-        }
-    });
-
-    // Update the counts in the UI
-    const buttons = document.querySelectorAll('.level-filter-btn');
-    buttons.forEach(btn => {
-        const level = btn.getAttribute('data-level');
-        const countSpan = btn.querySelector('.level-count');
-        if (countSpan && levelCounts.hasOwnProperty(level)) {
-            countSpan.textContent = `(${levelCounts[level]})`;
-        }
-    });
-}
-
-function filterByLevel(level) {
-    currentLevelFilter = level;
-
-    // Update active state of buttons
-    const buttons = document.querySelectorAll('.level-filter-btn');
-    buttons.forEach(btn => {
-        if (btn.getAttribute('data-level') === level) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
-    });
-
-    // Refilter the dashboard
-    filterDashboard();
-}
-
-async function filterDashboard() {
-    const selectedDesigner = document.getElementById('designerFilter').value;
-    const allResults = await loadSurveyData();
-
-    let filteredResults = allResults;
-
-    // Filter by designer
-    if (selectedDesigner !== 'all') {
-        filteredResults = filteredResults.filter(r => r.name === selectedDesigner);
-    }
-
-    // Filter by level
-    if (currentLevelFilter !== 'all') {
-        filteredResults = filteredResults.filter(r => r.role === currentLevelFilter);
-    }
-
-    renderDashboardSummary(filteredResults);
-    renderDetailedResults(filteredResults);
-}
-
-function renderDashboardSummary(surveyResults) {
-    const summaryDiv = document.getElementById('dashboardSummary');
-
-    if (surveyResults.length === 0) {
-        summaryDiv.innerHTML = '<p class="text-center text-muted-foreground py-10">No data to display</p>';
-        return;
-    }
-
-    // Calculate statistics
-    let totalResponses = 0;
-    const ratingCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-
-    surveyResults.forEach(result => {
-        const responses = Object.values(result.responses);
-        totalResponses += responses.length;
-
-        // Count ratings by level
-        responses.forEach(rating => {
-            if (ratingCounts.hasOwnProperty(rating)) {
-                ratingCounts[rating]++;
-            }
-        });
-    });
-
-    // Calculate percentages for each rating
-    const ratingPercentages = {};
-    for (let i = 1; i <= 5; i++) {
-        ratingPercentages[i] = totalResponses > 0 ? ((ratingCounts[i] / totalResponses) * 100).toFixed(1) : 0;
-    }
-
-    const ratingColors = {
-        1: '#FF666C',
-        2: '#FF8B16',
-        3: '#00D794',
-        4: '#46A8FF',
-        5: '#CA82FF'
-    };
-
-    const ratingLabels = {
-        1: 'Developing',
-        2: 'Emerging',
-        3: 'Proficient',
-        4: 'Advanced',
-        5: 'Expert'
-    };
-
-    summaryDiv.innerHTML = `
-        <div class="rounded-lg border border-input bg-card p-6">
-            <h3 class="text-lg font-semibold mb-4">Rating Distribution</h3>
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                ${[1, 2, 3, 4, 5].map(rating => `
-                    <div class="text-center">
-                        <div class="flex items-center justify-center gap-1.5 mb-2">
-                            <div class="rounded-full" style="width: 10px; height: 10px; background-color: ${ratingColors[rating]};"></div>
-                            <span class="text-xs font-medium" style="color: #A0A0A0;">${rating} - ${ratingLabels[rating]}</span>
-                        </div>
-                        <div class="text-2xl font-bold text-white/90">${ratingCounts[rating]}</div>
-                        <div class="text-xs" style="color: #A0A0A0;">${ratingPercentages[rating]}%</div>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
-}
-
-function renderCompetencyCards(surveyResults) {
-    const improve = [];
-    const growing = [];
-    const excelling = [];
-
-    surveyResults.forEach(result => {
-        const questions = competencies[result.role].questions;
-
-        questions.forEach(question => {
-            // Check if question has sub-competencies
-            if (question.subCompetencies && question.subCompetencies.length > 0) {
-                // Handle sub-competency structure
-                question.subCompetencies.forEach(subComp => {
-                    const score = result.responses[subComp.id];
-                    if (score) {
-                        const item = {
-                            designer: result.name,
-                            competency: `${question.competency} - ${subComp.shortText}`,
-                            score: score
-                        };
-
-                        if (score <= 2) {
-                            improve.push(item);
-                        } else if (score === 3) {
-                            growing.push(item);
-                        } else {
-                            excelling.push(item);
-                        }
-                    }
-                });
-            } else {
-                // Handle old format without sub-competencies
-                const score = result.responses[question.id];
-                if (score) {
-                    const item = {
-                        designer: result.name,
-                        competency: question.competency,
-                        score: score
-                    };
-
-                    if (score <= 2) {
-                        improve.push(item);
-                    } else if (score === 3) {
-                        growing.push(item);
-                    } else {
-                        excelling.push(item);
-                    }
-                }
-            }
-        });
-    });
-
-    // Render Areas to Improve
-    const improveDiv = document.getElementById('areasToImprove');
-    if (improve.length === 0) {
-        improveDiv.innerHTML = '<p class="text-center text-muted-foreground py-10">No areas identified</p>';
-    } else {
-        improveDiv.innerHTML = improve.map(item => `
-            <div class="p-3 rounded-lg mb-3 border-l-4 border-destructive bg-destructive/10">
-                <div class="font-semibold text-sm">${item.competency}</div>
-                <div class="text-xs text-muted-foreground">${item.designer} - Rating: ${item.score}</div>
-            </div>
-        `).join('');
-    }
-
-    // Render Areas of Growth
-    const growingDiv = document.getElementById('areasGrowing');
-    if (growing.length === 0) {
-        growingDiv.innerHTML = '<p class="text-center text-muted-foreground py-10">No areas identified</p>';
-    } else {
-        growingDiv.innerHTML = growing.map(item => `
-            <div class="p-3 rounded-lg mb-3 border-l-4 border-blue-500 bg-blue-500/10">
-                <div class="font-semibold text-sm">${item.competency}</div>
-                <div class="text-xs text-muted-foreground">${item.designer} - Rating: ${item.score}</div>
-            </div>
-        `).join('');
-    }
-
-    // Render Areas Excelling
-    const excellingDiv = document.getElementById('areasExcelling');
-    if (excelling.length === 0) {
-        excellingDiv.innerHTML = '<p class="text-center text-muted-foreground py-10">No areas identified</p>';
-    } else {
-        excellingDiv.innerHTML = excelling.map(item => `
-            <div class="p-3 rounded-lg mb-3 border-l-4 border-green-500 bg-green-500/10">
-                <div class="font-semibold text-sm">${item.competency}</div>
-                <div class="text-xs text-muted-foreground">${item.designer} - Rating: ${item.score}</div>
-            </div>
-        `).join('');
-    }
-}
-
-function renderDetailedResults(surveyResults, managerEvaluations = []) {
-    const detailsDiv = document.getElementById('dashboardDetails');
-
-    if (surveyResults.length === 0) {
-        detailsDiv.innerHTML = '<p class="text-center text-muted-foreground py-10">No data to display</p>';
-        return;
-    }
-
-    let html = '<h2 class="text-2xl font-bold mb-6">Detailed Results by Designer</h2>';
-
-    surveyResults.forEach((result, index) => {
-        // Check if there's a manager evaluation for this person
-        const managerEvaluation = managerEvaluations.find(evaluation =>
-            evaluation.name === result.name && evaluation.role === result.role
-        );
-        const hasManagerEval = managerEvaluation !== undefined;
-        const questions = competencies[result.role].questions;
-        const roleName = competencies[result.role].role;
-
-        // Calculate average for this designer
-        const scores = Object.values(result.responses);
-        const avgScore = scores.length > 0
-            ? (scores.reduce((sum, val) => sum + val, 0) / scores.length).toFixed(2)
-            : 0;
-
-        // Calculate manager average if exists
-        let managerAvgScore = 0;
-        let managerEvalDate = '';
-        if (hasManagerEval) {
-            const managerScores = Object.values(managerEvaluation.responses);
-            managerAvgScore = managerScores.length > 0
-                ? (managerScores.reduce((sum, val) => sum + val, 0) / managerScores.length).toFixed(2)
-                : 0;
-            managerEvalDate = new Date(managerEvaluation.evaluationDate).toLocaleDateString();
-        }
-
-        const uniqueId = `designer-${index}-${result.name.replace(/\s+/g, '-')}`;
-
-        html += `
-            <div class="mb-6 rounded-lg border border-input bg-card overflow-hidden">
-                <!-- Header Section -->
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="text-2xl font-bold mb-1">${result.name}</h3>
-                            <p class="text-sm text-muted-foreground">${roleName}</p>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="deleteSurvey(\`${result.name}\`)"
-                                    class="inline-flex items-center gap-1 rounded-md text-sm font-medium transition-colors border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                </svg>
-                                Delete
-                            </button>
-                            <button onclick="toggleDetails('${uniqueId}')"
-                                    class="inline-flex items-center gap-1 rounded-md text-sm font-medium transition-colors border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
-                                <span>View Details</span>
-                                <svg id="${uniqueId}-chevron" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Two Column Score Display -->
-                    <div class="grid ${hasManagerEval ? 'grid-cols-2' : 'grid-cols-1'} gap-6">
-                        <!-- Self Assessment Column -->
-                        <div class="rounded-lg border border-input bg-background/50 p-4">
-                            <div class="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Self Assessment</div>
-                            <div class="text-3xl font-bold text-primary mb-1">${avgScore}</div>
-                            <div class="text-xs text-muted-foreground">Completed: ${new Date(result.completionTime).toLocaleDateString()}</div>
-                        </div>
-
-                        <!-- Manager Evaluation Column (if exists) -->
-                        ${hasManagerEval ? `
-                        <div class="rounded-lg border border-input bg-background/50 p-4">
-                            <div class="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Manager Evaluation</div>
-                            <div class="text-3xl font-bold text-primary mb-1">${managerAvgScore}</div>
-                            <div class="text-xs text-muted-foreground">Completed: ${managerEvalDate}</div>
-                        </div>
-                        ` : ''}
-                    </div>
-                </div>
-
-                <!-- Collapsible Details Section -->
-                <div id="${uniqueId}" class="hidden border-t border-input">
-                    <div class="p-6">
-        `;
-
-        questions.forEach(question => {
-            const badgeColors = {
-                1: 'bg-red-500/20 text-red-700 dark:text-red-400',
-                2: 'bg-orange-500/20 text-orange-700 dark:text-orange-400',
-                3: 'bg-blue-500/20 text-blue-700 dark:text-blue-400',
-                4: 'bg-purple-500/20 text-purple-700 dark:text-purple-400',
-                5: 'bg-green-500/20 text-green-700 dark:text-green-400'
-            };
-
-            // Check if question has sub-competencies
-            if (question.subCompetencies && question.subCompetencies.length > 0) {
-                // Display main competency header
-                html += `<div class="mb-4"><h4 class="font-bold text-sm mb-3 text-primary">${question.competency}</h4>`;
-
-                // Handle sub-competency structure
-                question.subCompetencies.forEach(subComp => {
-                    const selfScore = result.responses[subComp.id];
-                    const managerScore = hasManagerEval ? managerEvaluation.responses[subComp.id] : null;
-                    const selfRating = ratingScale.find(r => r.value === selfScore);
-                    const managerRating = managerScore ? ratingScale.find(r => r.value === managerScore) : null;
-
-                    if (selfScore || managerScore) {
-                        const scoreDiff = hasManagerEval && managerScore ? managerScore - selfScore : 0;
-                        const diffColor = scoreDiff > 0 ? 'text-green-500' : (scoreDiff < 0 ? 'text-red-500' : 'text-muted-foreground');
-
-                        html += `
-                            <div class="p-4 bg-muted rounded-lg mb-3 ml-4">
-                                <div class="mb-2">
-                                    <strong class="text-sm">${subComp.shortText}</strong>
-                                </div>
-                                <div class="grid ${hasManagerEval ? 'grid-cols-2' : 'grid-cols-1'} gap-4 mt-3">
-                        `;
-
-                        // Self-assessment score
-                        if (selfScore && selfRating) {
-                            html += `
-                                <div>
-                                    <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${badgeColors[selfScore]}">
-                                        ${selfScore} - ${selfRating.label}
-                                    </span>
-                                </div>
-                            `;
-                        }
-
-                        // Manager evaluation score
-                        if (hasManagerEval && managerScore && managerRating) {
-                            html += `
-                                <div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${badgeColors[managerScore]}">
-                                            ${managerScore} - ${managerRating.label}
-                                        </span>
-                                        ${scoreDiff !== 0 ? `<span class="text-xs font-semibold ${diffColor}">${scoreDiff > 0 ? '+' : ''}${scoreDiff}</span>` : ''}
-                                    </div>
-                                </div>
-                            `;
-                        }
-
-                        html += `
-                                </div>
-                            </div>
-                        `;
-                    }
-                });
-                html += '</div>';
-            } else {
-                // Handle old format without sub-competencies
-                const score = result.responses[question.id];
-                const rating = ratingScale.find(r => r.value === score);
-
-                if (score && rating) {
-                    html += `
-                        <div class="p-4 bg-muted rounded-lg mb-3">
-                            <div class="flex justify-between items-center mb-2">
-                                <strong class="text-sm">${question.competency}</strong>
-                                <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${badgeColors[score]}">
-                                    ${score} - ${rating.label}
-                                </span>
-                            </div>
-                            <p class="text-xs text-muted-foreground mt-1">
-                                ${rating.description}
-                            </p>
-                        </div>
-                    `;
-                }
-            }
-        });
-
-        html += `
-                    </div>
-                </div>
-            </div>
-        `;
-    });
-
-    detailsDiv.innerHTML = html;
-
-    // Render goals section
-    renderGoalsSection(surveyResults);
-}
-
-function toggleDetails(detailsId) {
-    const detailsSection = document.getElementById(detailsId);
-    const chevron = document.getElementById(`${detailsId}-chevron`);
-
-    if (detailsSection && chevron) {
-        const isHidden = detailsSection.classList.contains('hidden');
-
-        if (isHidden) {
-            detailsSection.classList.remove('hidden');
-            chevron.style.transform = 'rotate(180deg)';
-        } else {
-            detailsSection.classList.add('hidden');
-            chevron.style.transform = 'rotate(0deg)';
-        }
-    }
-}
-
-function renderGoalsSection(surveyResults) {
-    const goalsDiv = document.getElementById('dashboardGoals');
-
-    // Hide goals section - not displayed on dashboard
-    if (goalsDiv) {
-        goalsDiv.innerHTML = '';
-    }
-    return;
-
-    // Code below is commented out but preserved for future use
-    /*
-    if (surveyResults.length === 0) {
-        goalsDiv.innerHTML = '';
-        return;
-    }
-
-    let html = '<h2 class="text-2xl font-bold mb-6">2026 Goals by Designer</h2>';
-
-    surveyResults.forEach(result => {
-        if (result.goals && Object.keys(result.goals).length > 0) {
-            const goals = result.goals;
-            const roleName = competencies[result.role].role;
-
-            html += `
-                <div class="bg-card border border-border rounded-lg p-8 mb-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-bold">${result.name} - ${roleName}</h3>
-                        <button onclick="deleteSurvey('${result.name}')"
-                                class="inline-flex items-center gap-1 rounded-md text-sm font-medium transition-colors border border-destructive bg-destructive/10 text-destructive hover:bg-destructive hover:text-white h-9 px-3">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                            </svg>
-                            Delete
-                        </button>
-                    </div>
-            `;
-
-            if (goals.goal1) {
-                html += `
-                    <div class="p-5 bg-muted rounded-lg mb-4 border-l-4 border-primary">
-                        <div class="font-semibold mb-2">Goal 1: ${goals.goal1}</div>
-                        ${goals.goal1Description ? `<div class="text-sm text-muted-foreground leading-relaxed">${goals.goal1Description}</div>` : ''}
-                    </div>
-                `;
-            }
-
-            if (goals.goal2) {
-                html += `
-                    <div class="p-5 bg-muted rounded-lg mb-4 border-l-4 border-primary">
-                        <div class="font-semibold mb-2">Goal 2: ${goals.goal2}</div>
-                        ${goals.goal2Description ? `<div class="text-sm text-muted-foreground leading-relaxed">${goals.goal2Description}</div>` : ''}
-                    </div>
-                `;
-            }
-
-            if (goals.goal3) {
-                html += `
-                    <div class="p-5 bg-muted rounded-lg mb-4 border-l-4 border-primary">
-                        <div class="font-semibold mb-2">Goal 3: ${goals.goal3}</div>
-                        ${goals.goal3Description ? `<div class="text-sm text-muted-foreground leading-relaxed">${goals.goal3Description}</div>` : ''}
-                    </div>
-                `;
-            }
-
-            html += '</div>';
-        }
-    });
-
-    goalsDiv.innerHTML = html;
-    */
-}
-
-// Export Functions
-async function exportToCSV() {
-    const surveyResults = await loadSurveyData();
-
-    if (surveyResults.length === 0) {
-        alert('No survey data to export');
-        return;
-    }
-
-    // Build CSV content
-    let csv = 'Name,Role,Competency,Rating,Completed Date\n';
-
-    surveyResults.forEach(result => {
-        const questions = competencies[result.role].questions;
-        const roleName = competencies[result.role].role;
-        const completedDate = new Date(result.completionTime).toLocaleDateString();
-
-        questions.forEach(question => {
-            const score = result.responses[question.id];
-            if (score) {
-                const rating = ratingScale.find(r => r.value === score);
-                csv += `"${result.name}","${roleName}","${question.competency}",${score} - ${rating.label},"${completedDate}"\n`;
-            }
-        });
-    });
-
-    // Download CSV
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `ux-survey-results-${new Date().toISOString().split('T')[0]}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
-}
-
-async function exportToPDF() {
-    const surveyResults = await loadSurveyData();
-
-    if (surveyResults.length === 0) {
-        alert('No survey data to export');
-        return;
-    }
-
-    // Create printable HTML
-    let html = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>UX Competency Survey Results - ${new Date().toLocaleDateString()}</title>
-            <style>
-                body { font-family: Arial, sans-serif; padding: 40px; line-height: 1.6; }
-                h1 { color: #3b5998; border-bottom: 3px solid #3b5998; padding-bottom: 10px; }
-                h2 { color: #333; margin-top: 30px; border-bottom: 2px solid #ccc; padding-bottom: 8px; }
-                h3 { color: #555; margin-top: 20px; }
-                table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-                th, td { padding: 12px; text-align: left; border: 1px solid #ddd; }
-                th { background-color: #3b5998; color: white; }
-                tr:nth-child(even) { background-color: #f9f9f9; }
-                .rating-1 { color: #ef4444; font-weight: bold; }
-                .rating-2 { color: #f59e0b; font-weight: bold; }
-                .rating-3 { color: #6366f1; font-weight: bold; }
-                .rating-4 { color: #8b5cf6; font-weight: bold; }
-                .rating-5 { color: #10b981; font-weight: bold; }
-                .goal { background: #f5f5f5; padding: 15px; margin: 10px 0; border-left: 4px solid #3b5998; }
-                .goal-title { font-weight: bold; margin-bottom: 5px; }
-                .summary-stats { display: flex; gap: 20px; margin: 20px 0; }
-                .stat-box { background: #f0f0f0; padding: 15px; border-radius: 8px; flex: 1; text-align: center; }
-                .stat-value { font-size: 32px; font-weight: bold; color: #3b5998; }
-                .stat-label { font-size: 14px; color: #666; }
-                @media print {
-                    body { padding: 20px; }
-                    .no-print { display: none; }
-                    h2 { page-break-before: always; }
-                }
-            </style>
-        </head>
-        <body>
-            <h1>UX Competency Survey Results 2026</h1>
-            <p><strong>Generated:</strong> ${new Date().toLocaleString()}</p>
-            <p><strong>FamilySearch UX Organization</strong></p>
-
-            <div class="summary-stats">
-                <div class="stat-box">
-                    <div class="stat-value">${surveyResults.length}</div>
-                    <div class="stat-label">Designers Surveyed</div>
-                </div>
-            </div>
-    `;
-
-    surveyResults.forEach(result => {
-        const questions = competencies[result.role].questions;
-        const roleName = competencies[result.role].role;
-        const completedDate = new Date(result.completionTime).toLocaleString();
-
-        // Calculate average
-        const scores = Object.values(result.responses);
-        const avgScore = scores.length > 0
-            ? (scores.reduce((sum, val) => sum + val, 0) / scores.length).toFixed(2)
-            : 0;
-
-        html += `
-            <h2>${result.name} - ${roleName}</h2>
-            <p><strong>Completed:</strong> ${completedDate}</p>
-            <p><strong>Average Rating:</strong> ${avgScore}</p>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Competency</th>
-                        <th>Rating</th>
-                        <th>Level</th>
-                    </tr>
-                </thead>
-                <tbody>
-        `;
-
-        questions.forEach(question => {
-            const score = result.responses[question.id];
-            if (score) {
-                const rating = ratingScale.find(r => r.value === score);
-                html += `
-                    <tr>
-                        <td>${question.competency}</td>
-                        <td class="rating-${score}">${score}</td>
-                        <td>${rating.label} - ${rating.description}</td>
-                    </tr>
-                `;
-            }
-        });
-
-        html += '</tbody></table>';
-
-        // Goals section hidden - not included in PDF export
-    });
-
-    html += `
-            <script>
-                window.onload = function() {
-                    window.print();
-                };
-            </script>
-        </body>
-        </html>
-    `;
-
-    // Open in new window for printing
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(html);
-    printWindow.document.close();
-}
-
-// Demo Data
-async function loadDemoData() {
-    if (!confirm('This will load sample survey data. Any existing data will be preserved. Continue?')) {
-        return;
-    }
-
-    const demoData = [
-        {
-            designer_name: "Sarah Chen",
-            role: "ux4",
-            responses: {
-                "ux4_product_strategy": 5,
-                "ux4_craft_quality": 4,
-                "ux4_communication": 5,
-                "ux4_action_impact": 4,
-                "ux4_leveling_up": 5,
-                "ux4_independence": 5,
-                "ux4_skill_development": 4
-            },
-            goals: {
-                goal1: "Establish design system governance framework",
-                goal1Description: "Create and implement a governance model for Zion UI that ensures consistency while empowering teams. Success measured by adoption rate across product lines.",
-                goal2: "Mentor 3 emerging design leaders",
-                goal2Description: "Develop leadership capabilities in UX 2 and UX 3 designers through 1:1 coaching and stretch project assignments.",
-                goal3: "Drive AI integration strategy for UX org",
-                goal3Description: "Define how we leverage AI tools to enhance designer productivity while maintaining quality standards."
-            },
-            start_time: "2026-01-15T09:00:00.000Z",
-            completion_time: "2026-01-15T09:25:00.000Z"
-        },
-        {
-            designer_name: "Marcus Rodriguez",
-            role: "ux4",
-            responses: {
-                "ux4_product_strategy": 4,
-                "ux4_craft_quality": 5,
-                "ux4_communication": 4,
-                "ux4_action_impact": 5,
-                "ux4_leveling_up": 4,
-                "ux4_independence": 4,
-                "ux4_skill_development": 5
-            },
-            goals: {
-                goal1: "Launch continuous discovery training program",
-                goal1Description: "Develop and deliver organization-wide training on Teresa Torres' continuous discovery practices. Track adoption through weekly touchpoint metrics.",
-                goal2: "Improve cross-product consistency",
-                goal2Description: "Audit all product lines for design consistency and create remediation roadmap. Success measured by user confusion reduction.",
-                goal3: "Establish outcome-based metrics framework",
-                goal3Description: "Work with leadership to shift from output to outcome metrics. Define standard KPIs for all design initiatives."
-            },
-            start_time: "2026-01-16T10:30:00.000Z",
-            completion_time: "2026-01-16T10:52:00.000Z"
-        },
-        {
-            designer_name: "Aisha Patel",
-            role: "ux2",
-            responses: {
-                "ux2_product_strategy": 3,
-                "ux2_craft_quality": 4,
-                "ux2_communication": 3,
-                "ux2_action_impact": 3,
-                "ux2_leveling_up": 2,
-                "ux2_independence": 3,
-                "ux2_skill_development": 3
-            },
-            goals: {
-                goal1: "Lead 10 user research sessions independently",
-                goal1Description: "Build confidence in moderating user interviews and usability tests. Success measured by completing sessions without supervision and delivering actionable insights.",
-                goal2: "Contribute 3 components to Zion UI",
-                goal2Description: "Design and validate new components for the design system. Focus on accessibility and mobile responsiveness.",
-                goal3: "Present at 5 design critiques",
-                goal3Description: "Build presentation skills and comfort receiving feedback. Present work-in-progress designs and incorporate feedback iterations."
-            },
-            start_time: "2026-01-18T14:15:00.000Z",
-            completion_time: "2026-01-18T14:38:00.000Z"
-        }
-    ];
-
-    try {
-        // Insert demo data into Supabase
-        for (const demo of demoData) {
-            // Check if already exists
-            const { data: existing } = await supabaseClient
-                .from('survey_responses')
-                .select('id')
-                .eq('designer_name', demo.designer_name)
-                .single();
-
-            if (existing) {
-                // Update existing
-                await supabaseClient
-                    .from('survey_responses')
-                    .update(demo)
-                    .eq('id', existing.id);
-            } else {
-                // Insert new
-                await supabaseClient
-                    .from('survey_responses')
-                    .insert([demo]);
-            }
-        }
-
-        alert('Demo data loaded successfully!');
-        viewDashboard();
-    } catch (error) {
-        console.error('Error loading demo data:', error);
-        alert('Error loading demo data. Please try again.');
-    }
-}
-
-// Export/Download Functions (Optional Enhancement)
-async function exportResults() {
-    const surveyResults = await loadSurveyData();
-    const dataStr = JSON.stringify(surveyResults, null, 2);
-    const dataBlob = new Blob([dataStr], {type: 'application/json'});
-
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `ux-survey-results-${new Date().toISOString().split('T')[0]}.json`;
-    link.click();
-}
-
-// Clear all data (for testing)
-async function clearAllData() {
-    if (confirm('Are you sure you want to delete all survey data? This cannot be undone.')) {
-        try {
-            const { error } = await supabaseClient
-                .from('survey_responses')
-                .delete()
-                .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all records
-
-            if (error) throw error;
-
-            alert('All survey data has been cleared.');
-            returnHome();
-        } catch (error) {
-            console.error('Error clearing data:', error);
-            alert('Error clearing data. Please try again.');
-        }
     }
 }

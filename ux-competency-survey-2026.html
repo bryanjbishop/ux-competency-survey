@@ -1,3 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UX Competency Survey 2026 | FamilySearch</title>
+
+    <!-- Google Fonts - DM Sans (foundry-aligned) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind Config — foundry shadcn/zinc dark tokens (OkLCH) -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['DM Sans', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        border: "var(--border)",
+                        input: "var(--input)",
+                        ring: "var(--ring)",
+                        background: "var(--background)",
+                        foreground: "var(--foreground)",
+                        primary: {
+                            DEFAULT: "var(--primary)",
+                            foreground: "var(--primary-foreground)",
+                        },
+                        secondary: {
+                            DEFAULT: "var(--secondary)",
+                            foreground: "var(--secondary-foreground)",
+                        },
+                        muted: {
+                            DEFAULT: "var(--muted)",
+                            foreground: "var(--muted-foreground)",
+                        },
+                        accent: {
+                            DEFAULT: "var(--accent)",
+                            foreground: "var(--accent-foreground)",
+                        },
+                        card: {
+                            DEFAULT: "var(--card)",
+                            foreground: "var(--card-foreground)",
+                        },
+                        popover: {
+                            DEFAULT: "var(--popover)",
+                            foreground: "var(--popover-foreground)",
+                        },
+                        destructive: {
+                            DEFAULT: "var(--destructive)",
+                            foreground: "var(--foreground)",
+                        },
+                        chart: {
+                            1: "var(--chart-1)",
+                            2: "var(--chart-2)",
+                            3: "var(--chart-3)",
+                            4: "var(--chart-4)",
+                            5: "var(--chart-5)",
+                        },
+                    },
+                    borderRadius: {
+                        sm: "calc(var(--radius) - 4px)",
+                        md: "calc(var(--radius) - 2px)",
+                        lg: "var(--radius)",
+                        xl: "calc(var(--radius) + 4px)",
+                        "2xl": "calc(var(--radius) + 8px)",
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* foundry shadcn/ui Zinc Dark Theme — dark-mode-only */
+        :root {
+            --radius: 0.625rem;
+            --background: oklch(0.141 0.005 285.823);
+            --foreground: oklch(0.985 0 0);
+            --card: oklch(0.21 0.006 285.885);
+            --card-foreground: oklch(0.985 0 0);
+            --popover: oklch(0.21 0.006 285.885);
+            --popover-foreground: oklch(0.985 0 0);
+            --primary: oklch(0.92 0.004 286.32);
+            --primary-foreground: oklch(0.21 0.006 285.885);
+            --secondary: oklch(0.274 0.006 286.033);
+            --secondary-foreground: oklch(0.985 0 0);
+            --muted: oklch(0.274 0.006 286.033);
+            --muted-foreground: oklch(0.705 0.015 286.067);
+            --accent: oklch(0.274 0.006 286.033);
+            --accent-foreground: oklch(0.985 0 0);
+            --destructive: oklch(0.704 0.191 22.216);
+            --border: oklch(1 0 0 / 10%);
+            --input: oklch(1 0 0 / 15%);
+            --ring: oklch(0.552 0.016 285.938);
+            --chart-1: oklch(0.488 0.243 264.376);
+            --chart-2: oklch(0.696 0.17 162.48);
+            --chart-3: oklch(0.769 0.188 70.08);
+            --chart-4: oklch(0.627 0.265 303.9);
+            --chart-5: oklch(0.645 0.246 16.439);
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .screen.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1 1 auto;
+            min-height: calc(100vh - 180px);
+        }
+
+        /* FSDG logo color treatment from foundry */
+        .fsdg-logo {
+            filter: brightness(0) saturate(100%) invert(44%) sepia(6%) saturate(213%) hue-rotate(202deg) brightness(92%) contrast(89%);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .rating-option.selected {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--primary-foreground);
+        }
+
+        .rating-option.selected .rating-number {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .rating-option.selected .rating-label,
+        .rating-option.selected .rating-description {
+            color: white;
+        }
+
+
+        /* Custom dropdown arrow positioning */
+        #designerFilter {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 1.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 3.5rem;
+        }
+
+        /* Transparent scrollbar for all browsers */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: transparent transparent;
+        }
+
+        /* Webkit browsers (Chrome, Safari, Edge) */
+        *::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        *::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        *::-webkit-scrollbar-thumb {
+            background: transparent;
+            border-radius: 4px;
+        }
+
+        *::-webkit-scrollbar-thumb:hover {
+            background: transparent;
+        }
+
+        /* Submit button custom colors */
+        #finishBtn {
+            background-color: #20293A;
+        }
+
+        #finishBtn:hover {
+            background-color: #4D81EE;
+        }
+
+        /* Level filter button active state */
+        .level-filter-btn.active {
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            border-color: var(--primary);
+        }
+
+        .level-filter-btn.active .level-count {
+            color: var(--primary-foreground);
+            opacity: 0.8;
+        }
+
+    </style>
+</head>
+<body class="min-h-screen bg-background text-foreground transition-colors duration-300 flex flex-col">
+    <!-- Top Left Home Icon -->
+    <div class="fixed top-4 left-4 z-50">
+        <button onclick="returnHome()"
+                class="inline-flex items-center justify-center rounded-md w-10 h-10 border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors shadow-sm"
+                title="Return to Home">
+            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+        </button>
+    </div>
+
+
+    <!-- Main Container -->
+    <div class="flex-1 flex flex-col" id="app">
+
+        <!-- Welcome Screen -->
+        <div class="screen active" id="welcomeScreen">
+            <div class="max-w-2xl w-full text-center p-4 md:p-6">
+            <div class="flex justify-center mb-12">
+                <svg class="h-9 w-auto" id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.38 36.59">
+  <g id="Layer_1-2" data-name="Layer 1">
+    <path d="M13.81,7.68h-5.06v-.68c0-.61.17-1.08.49-1.41s.8-.5,1.41-.5h2.85V0h-2.7c-2.79,0-4.89.6-6.31,1.81s-2.13,3.04-2.13,5.5v.38H0v5.02h2.36v15.52h6.39v-15.52h5.06v-5.02ZM87.73,9.97c-.59-.93-1.33-1.67-2.22-2.23-1.21-.75-2.66-1.12-4.35-1.12-1.47,0-2.8.27-3.99.82-1.19.55-2.21,1.31-3.04,2.28-.84.98-1.48,2.12-1.92,3.42-.44,1.31-.67,2.72-.67,4.24v-1.18c0-3.27-.65-5.7-1.96-7.28-1.31-1.58-3.15-2.38-5.53-2.38h-.3c-1.57,0-2.91.36-4.01,1.07s-1.93,1.78-2.49,3.21c-.22.58-.39,1.23-.53,1.93v-5.53h-6.92v12.28c0,.99-.29,1.78-.87,2.36-.58.58-1.34.88-2.28.88s-1.69-.29-2.24-.88c-.56-.58-.84-1.34-.84-2.28V7.23h-6.92v10.12c0-1.52-.27-2.94-.82-4.26-.55-1.32-1.33-2.47-2.34-3.46-1.01-.99-2.24-1.76-3.67-2.32-1.43-.56-3.05-.84-4.85-.84s-3.38.28-4.83.84c-1.45.56-2.68,1.33-3.69,2.32-1.01.99-1.79,2.14-2.34,3.46s-.82,2.74-.82,4.26v.91c0,1.47.26,2.85.78,4.15s1.28,2.43,2.28,3.42c1,.99,2.22,1.76,3.67,2.32s3.09.84,4.94.84,3.5-.28,4.94-.84,2.67-1.33,3.67-2.32c1-.99,1.76-2.13,2.28-3.42s.78-2.67.78-4.15v1.14c0,3.22.65,5.61,1.96,7.17,1.3,1.56,3.15,2.34,5.53,2.34h.3c1.57,0,2.89-.34,3.96-1.03,1.07-.68,1.87-1.73,2.42-3.14.18-.45.31-.96.43-1.49v4.97h6.92v-12.13c0-1.01.3-1.83.89-2.45.6-.62,1.39-.93,2.38-.93s1.77.31,2.34.93c.57.62.86,1.41.86,2.38v12.21h6.92v-9.93c0,1.52.23,2.93.7,4.22.47,1.29,1.14,2.42,2.02,3.37.87.95,1.91,1.69,3.12,2.22,1.2.53,2.54.8,4.01.8,1.72,0,3.21-.37,4.47-1.12,1.25-.75,2.24-1.81,2.95-3.19.14-.28.26-.58.38-.88v4.51h5.48V.46h-6.92v9.51ZM29.17,20.59c-.35.82-.88,1.46-1.58,1.92-.7.46-1.58.68-2.64.68s-1.92-.23-2.62-.68c-.71-.46-1.24-1.1-1.6-1.92-.36-.82-.53-1.76-.53-2.79,0-1.09.18-2.05.55-2.87.37-.82.91-1.48,1.62-1.96.71-.48,1.57-.72,2.59-.72s1.88.24,2.59.72c.71.48,1.25,1.13,1.62,1.96.37.82.55,1.78.55,2.87s-.18,1.97-.53,2.79ZM87.88,18.29c0,1.04-.22,1.93-.65,2.66-.43.74-1,1.29-1.69,1.67-.7.38-1.46.57-2.3.57-.91,0-1.73-.22-2.45-.67-.72-.44-1.29-1.06-1.71-1.86-.42-.8-.63-1.74-.63-2.83s.21-2.05.63-2.87c.42-.82.99-1.47,1.71-1.94.72-.47,1.54-.7,2.45-.7.81,0,1.56.18,2.26.55.7.37,1.27.89,1.71,1.58.44.68.67,1.53.67,2.55v1.29ZM123.84,7.23l-3.39,15.21h-.69l-4.25-15.21h-7.49c-2.31,0-4.08.53-5.31,2.21-.99,1.35-1.58,3.12-1.77,5.29v-7.5h-5.48v20.99h6.92v-10.5c0-1.57.42-2.78,1.27-3.61.85-.84,2.05-1.25,3.59-1.25h1.6v-4.73l5.86,19.64h4.55l-.14.65c-.13.61-.32,1.08-.57,1.43-.25.34-.58.59-.99.74-.41.15-.9.23-1.48.23h-4.83v5.78h4.07c2,0,3.63-.21,4.89-.63s2.24-1.13,2.97-2.13c.72-1,1.29-2.36,1.69-4.09l5.51-22.51h-6.54Z"/>
+  </g>
+</svg>
+            </div>
+            <div class="mb-10">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">UX Competency Survey 2026</h1>
+                <p class="text-muted-foreground text-lg">A self-assessment built into the Foundry framework.</p>
+            </div>
+
+            <div class="flex justify-center">
+                <button onclick="startSurvey()"
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8">
+                    Start Survey
+                </button>
+            </div>
+            </div>
+        </div>
+
+        <!-- Role Selection Screen -->
+        <div class="screen" id="roleScreen">
+            <div class="max-w-3xl w-full p-4 md:p-6">
+            <div class="text-center mb-10">
+                <h2 class="text-5xl font-bold tracking-tight mb-3">What is your current role?</h2>
+                <p class="text-muted-foreground">Select your role level to begin the assessment</p>
+            </div>
+
+            <div class="grid grid-cols-5 gap-3 items-start">
+                <button onclick="selectRole('intern')"
+                        class="rounded-xl border border-input bg-card p-4 text-left transition-all shadow-sm hover:shadow-lg hover:border-primary hover:-translate-y-1 flex flex-col h-full">
+                    <div class="mb-2">
+                        <span class="text-xs font-semibold text-primary tracking-wide uppercase">Intern</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Intern</h3>
+                    <p class="text-xs text-muted-foreground leading-relaxed">Developing strategic thinking and learning to ask the right questions</p>
+                </button>
+
+                <button onclick="selectRole('ux1')"
+                        class="rounded-xl border border-input bg-card p-4 text-left transition-all shadow-sm hover:shadow-lg hover:border-primary hover:-translate-y-1 flex flex-col h-full">
+                    <div class="mb-2">
+                        <span class="text-xs font-semibold text-primary tracking-wide uppercase">UX 1</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Associate Designer</h3>
+                    <p class="text-xs text-muted-foreground leading-relaxed">Developing independence, actively shaping work, building conviction through evidence</p>
+                </button>
+
+                <button onclick="selectRole('ux2')"
+                        class="rounded-xl border border-input bg-card p-4 text-left transition-all shadow-sm hover:shadow-lg hover:border-primary hover:-translate-y-1 flex flex-col h-full">
+                    <div class="mb-2">
+                        <span class="text-xs font-semibold text-primary tracking-wide uppercase">UX 2</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Junior Designer</h3>
+                    <p class="text-xs text-muted-foreground leading-relaxed">Solid contributor on intermediate tasks, active partner in product trio</p>
+                </button>
+
+                <button onclick="selectRole('ux3')"
+                        class="rounded-xl border border-input bg-card p-4 text-left transition-all shadow-sm hover:shadow-lg hover:border-primary hover:-translate-y-1 flex flex-col h-full">
+                    <div class="mb-2">
+                        <span class="text-xs font-semibold text-primary tracking-wide uppercase">UX 3</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Mid-Level Designer</h3>
+                    <p class="text-xs text-muted-foreground leading-relaxed">Strategic intuition, guiding teams, leading discovery efforts</p>
+                </button>
+
+                <button onclick="selectRole('ux4')"
+                        class="rounded-xl border border-input bg-card p-4 text-left transition-all shadow-sm hover:shadow-lg hover:border-primary hover:-translate-y-1 flex flex-col h-full">
+                    <div class="mb-2">
+                        <span class="text-xs font-semibold text-primary tracking-wide uppercase">UX 4</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Senior Designer</h3>
+                    <p class="text-xs text-muted-foreground leading-relaxed">Organizational leader, shapes design culture and standards</p>
+                </button>
+            </div>
+            </div>
+        </div>
+
+        <!-- Name Input Screen -->
+        <div class="screen" id="nameScreen">
+            <div class="max-w-xl w-full p-4 md:p-6">
+            <div class="text-center mb-10">
+                <h2 class="text-5xl font-bold tracking-tight mb-3">What's your name?</h2>
+                <p class="text-muted-foreground">This helps us track your progress over time</p>
+            </div>
+
+            <div class="flex flex-col items-center space-y-4">
+                <input type="text" id="nameInput"
+                       placeholder="Enter your name"
+                       class="flex h-12 rounded-md border border-input bg-background px-4 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                       style="width: 400px;">
+
+                <button onclick="submitName()"
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8"
+                        style="width: 400px;">
+                    Continue
+                </button>
+            </div>
+            </div>
+        </div>
+
+        <!-- Survey Screen -->
+        <div class="screen" id="surveyScreen">
+            <div class="max-w-3xl w-full p-4 md:p-6">
+            <!-- Scrollable Content Area -->
+            <div id="surveyContent" class="mt-8 pb-96 overflow-y-auto" style="max-height: calc(100vh - 200px);">
+                <div id="roleTitle" class="text-sm mb-4">
+                    <span id="roleLevel" class="text-primary font-semibold uppercase"></span>
+                    <span class="text-white/30 font-semibold"></span>
+                </div>
+                <h2 id="questionTitle" class="text-5xl font-bold tracking-tight mb-8"></h2>
+                <div id="questionSubtitle" class="text-white/60 prose max-w-none [&>p]:mb-4 [&>p]:text-[16px] [&>p]:leading-relaxed [&>ul]:ml-5 [&>ul]:list-disc [&>ul>li]:mb-2 [&>ul>li]:text-[16px] [&>ul>li]:leading-relaxed"></div>
+            </div>
+
+            <!-- Sticky Navigation Section at Bottom -->
+            <div class="fixed bottom-0 left-0 right-0 bg-background border-t border-input shadow-2xl z-50">
+                <div class="max-w-3xl mx-auto px-4 py-6">
+                    <!-- Navigation -->
+                    <div>
+                        <!-- Segmented Progress Bar for All Roles -->
+                        <div id="internProgressBars" class="w-full mb-4">
+                            <div class="flex gap-1.5 w-full h-2 rounded-full p-0">
+                                <div class="flex-1 relative overflow-hidden rounded-l-full bg-muted border border-input">
+                                    <div id="progressSegment0" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                                <div class="flex-1 relative overflow-hidden bg-muted border border-input">
+                                    <div id="progressSegment1" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                                <div class="flex-1 relative overflow-hidden bg-muted border border-input">
+                                    <div id="progressSegment2" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                                <div class="flex-1 relative overflow-hidden bg-muted border border-input">
+                                    <div id="progressSegment3" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                                <div class="flex-1 relative overflow-hidden bg-muted border border-input">
+                                    <div id="progressSegment4" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                                <div class="flex-1 relative overflow-hidden bg-muted border border-input">
+                                    <div id="progressSegment5" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                                <div class="flex-1 relative overflow-hidden rounded-r-full bg-muted border border-input">
+                                    <div id="progressSegment6" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Single Progress Bar for Other Roles -->
+                        <div id="singleProgressBar" class="w-full h-1.5 bg-secondary rounded-full mb-4 overflow-hidden" style="display: none;">
+                            <div id="progressFill" class="h-full bg-primary transition-all duration-300 rounded-full"></div>
+                        </div>
+
+                        <!-- Navigation Buttons -->
+                        <div class="flex justify-between items-center">
+                            <button id="prevBtn" onclick="previousQuestion()"
+                                    class="inline-flex items-center gap-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-10 px-4">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                </svg>
+                                Previous
+                            </button>
+                            <div class="flex items-center gap-4">
+                                <span id="questionCounter" class="text-sm text-muted-foreground font-medium"></span>
+                                <button id="finishBtn" onclick="completeSurvey()" style="display: none;"
+                                        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 text-white h-10 px-6">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div class="screen" id="completionScreen">
+            <div class="max-w-2xl w-full text-center p-4 md:p-6">
+            <!-- Confetti Canvas -->
+            <canvas id="confettiCanvas" class="fixed inset-0 pointer-events-none z-40"></canvas>
+
+            <div class="mb-10">
+                <!-- Success Icon -->
+                <div class="relative mx-auto mb-8">
+                    <div class="w-32 h-32 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 text-white flex items-center justify-center mx-auto shadow-2xl">
+                        <svg class="w-20 h-20 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <h1 class="text-5xl md:text-6xl font-bold tracking-tight mb-6 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                    You're All Done!
+                </h1>
+                <p class="text-xl text-muted-foreground max-w-xl mx-auto mb-8">
+                    Great work reflecting on your skills and growth areas.
+                </p>
+
+                <!-- Manager handoff card -->
+                <div class="rounded-xl border border-input bg-card p-6 text-left mb-8">
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
+                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-base mb-2">Share your results with your manager</h3>
+                            <p class="text-sm text-muted-foreground leading-relaxed mb-4">Download your results as a JSON file and send it to your manager before your 1:1 review. This gives them everything they need to prepare a meaningful conversation about your growth and development.</p>
+                            <ol class="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
+                                <li>Click <span class="text-foreground font-medium">Download Results</span> below</li>
+                                <li>Email the file to your manager</li>
+                                <li>Use it as the starting point for your review conversation</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="downloadSurveyJSON()"
+                        class="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Download Results
+                </button>
+                <button onclick="returnHome()"
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 px-8">
+                    Return Home
+                </button>
+            </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- Footer (foundry BaseLayout pattern) -->
+    <footer class="mt-auto">
+        <div class="max-w-[1800px] mx-auto px-6 py-8">
+            <div class="flex flex-col items-center gap-4">
+                <svg class="fsdg-logo w-[120px] h-auto" id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 149.63 124.17">
+  <g id="Layer_1-2" data-name="Layer 1">
+    <g>
+      <path d="M102.93.07c-10.01,0-19.29,3.17-26.89,8.56-.39.27-.76.56-1.14.84-.38-.29-.75-.57-1.14-.84C65.91,3.02,56.53,0,46.69,0c-12.47,0-24.2,4.85-33.02,13.67C4.86,22.49,0,34.22,0,46.69s4.86,24.2,13.68,33.02c8.82,8.82,20.54,13.68,33.02,13.68,9.84,0,19.21-3.02,27.06-8.63.39-.27.76-.56,1.14-.85.38.28.75.57,1.14.85,7.6,5.39,16.89,8.56,26.9,8.56,12.86,0,24.51-5.23,32.95-13.67,8.44-8.44,13.67-20.1,13.67-32.95C149.55,20.99,128.64.07,102.93.07ZM78.79,10.76c2.91-1.96,6.05-3.57,9.4-4.79.47-.17.84.42.5.77-1.96,2.02-3.78,4.47-5.42,7.33-.05.09-.1.18-.15.27-.06.1-.12.2-.19.3-.33.47-.8.82-1.34,1.04-.31-.35-.62-.7-.94-1.04-.31-.33-.62-.65-.94-.97-.7-.7-1.43-1.37-2.17-2.02.42-.3.83-.6,1.26-.89ZM73.21,80.16c-.89.71-1.81,1.38-2.76,2.01-6.79,4.56-14.96,7.22-23.76,7.22-23.59,0-42.71-19.12-42.71-42.71S23.11,3.99,46.69,3.99c8.79,0,16.97,2.66,23.76,7.22.95.64,1.87,1.31,2.76,2.02,1.34,1.06,2.61,2.2,3.81,3.42,1.48,1.49,2.85,3.1,4.1,4.79,2.57,3.49,4.62,7.39,6.03,11.57.36,1.06.67,2.13.95,3.22.84,3.35,1.29,6.85,1.29,10.46s-.45,7.11-1.29,10.46c-.27,1.1-.59,2.17-.95,3.23-1.41,4.19-3.46,8.08-6.03,11.57-1.25,1.7-2.62,3.3-4.1,4.79-1.2,1.22-2.47,2.36-3.81,3.42ZM88.66,87.57c-3.51-1.23-6.83-2.9-9.86-4.95-.43-.29-.85-.58-1.26-.88.74-.65,1.47-1.32,2.18-2.03.32-.32.63-.64.93-.96.33-.34.64-.69.95-1.05.53.23.98.59,1.33,1.05.1.13.19.26.27.4.03.05.06.11.09.17,1.74,3.02,3.67,5.59,5.76,7.66.27.27,0,.73-.37.6ZM101.27,88.41c0,.79-.75,1.38-1.53,1.2-4.1-.99-7.98-3.88-11.31-8.42-.41-.56.09-1.32.77-1.16,3.33.77,6.81,1.26,10.41,1.45.93.05,1.66.82,1.66,1.75v5.19ZM101.27,76.17c0,1.12-.95,2.02-2.07,1.95-4.51-.28-8.82-1.07-12.84-2.28-.24-.07-.47-.17-.69-.29-.54-.31-.98-.77-1.27-1.32,3.03-4.13,5.34-8.7,6.85-13.54.02-.05.03-.1.04-.15.74.06,1.49.11,2.23.15,1.86.12,3.73.2,5.6.24,1.19.03,2.13,1,2.13,2.19v13.06ZM101.27,55.54c0,1.16-.96,2.1-2.12,2.07-1.59-.04-3.17-.1-4.73-.18-.76-.04-1.5-.09-2.25-.14.8-3.43,1.2-6.98,1.2-10.59s-.41-7.16-1.21-10.6c.74-.05,1.49-.1,2.25-.14,1.53-.08,3.1-.14,4.71-.18,1.17-.03,2.13.91,2.13,2.08v17.68ZM101.27,30.49c0,1.06-.84,1.93-1.9,1.96-1.95.05-3.9.13-5.83.25-.75.04-1.49.09-2.23.15-.02-.05-.03-.1-.04-.15-1.51-4.84-3.82-9.41-6.85-13.54.3-.56.74-1.02,1.27-1.33.22-.12.46-.23.71-.3,4.02-1.22,8.34-2,12.86-2.28,1.1-.07,2.03.81,2.03,1.91v13.33ZM101.27,9.94c0,1.05-.82,1.92-1.87,1.98-3.51.2-6.9.69-10.15,1.43-.69.16-1.2-.62-.78-1.2,3.19-4.34,6.89-7.17,10.8-8.26,1.01-.28,2.01.46,2.01,1.5v4.54ZM143.29,39.27c-3.09-1.62-7.17-2.96-11.84-4.01-1.18-.26-2.09-1.21-2.3-2.4-.7-3.89-1.7-7.6-2.97-11.04-.29-.78.52-1.5,1.27-1.13,8.22,4.12,14.39,10.27,17.16,17.43.31.8-.55,1.55-1.31,1.16ZM117.67,5.97c9.36,3.4,17.24,9.95,22.32,18.35.27.45-.3.93-.69.57-4.06-3.79-9.17-6.93-14.98-9.19-.67-.26-1.23-.74-1.58-1.37-.05-.09-.1-.18-.15-.27-1.64-2.86-3.46-5.31-5.42-7.33-.35-.35.03-.94.5-.77ZM104.59,5.4c0-1.04,1-1.78,2.01-1.5,3.91,1.09,7.61,3.92,10.8,8.26.42.57-.1,1.35-.79,1.2-3.25-.75-6.65-1.24-10.15-1.43-1.05-.06-1.88-.93-1.88-1.98v-4.54ZM104.59,17.16c0-1.1.93-1.98,2.03-1.91,4.52.27,8.83,1.06,12.86,2.28.92.28,1.69.94,2.09,1.82,1.68,3.66,3,7.72,3.91,12.06.29,1.35-.84,2.57-2.21,2.38-5.33-.75-11.05-1.2-16.77-1.33-1.06-.02-1.9-.89-1.9-1.96v-13.33ZM104.59,37.86c0-1.17.97-2.11,2.13-2.08,6.7.16,12.69.71,17.85,1.53,1.15.18,2.03,1.12,2.14,2.28.22,2.33.33,4.7.33,7.11s-.12,4.81-.33,7.15c-.11,1.14-.97,2.06-2.1,2.24-5.46.86-11.53,1.38-17.89,1.53-1.16.03-2.12-.9-2.12-2.07v-17.68ZM104.59,63.11c0-1.19.94-2.16,2.13-2.19,5.95-.15,11.9-.63,17.39-1.45.94-.14,1.73.69,1.55,1.63-.92,4.67-2.31,9.04-4.1,12.95-.4.86-1.15,1.51-2.06,1.79-4.01,1.22-8.32,2-12.84,2.28-1.12.07-2.07-.83-2.07-1.95v-13.06ZM106.12,89.61c-.78.19-1.53-.4-1.53-1.2v-5.19c0-.93.73-1.7,1.66-1.75,3.6-.19,7.08-.69,10.41-1.45.67-.16,1.18.61.77,1.16-3.33,4.55-7.21,7.44-11.31,8.42ZM140.13,68.83c-5.17,8.66-13.27,15.37-22.93,18.75-.37.13-.65-.33-.37-.6,2.09-2.08,4.02-4.65,5.76-7.66.03-.06.06-.12.09-.17.38-.67.97-1.21,1.69-1.49,5.87-2.28,11.02-5.48,15.11-9.34.35-.33.9.1.65.51ZM144.64,55.16c-2.7,7.05-8.66,13.09-16.63,17.24-.93.49-1.98-.43-1.63-1.43,1.17-3.27,2.09-6.77,2.75-10.42.22-1.21,1.14-2.16,2.34-2.43,4.71-1.06,8.81-2.42,11.91-4.06.73-.38,1.55.34,1.26,1.1ZM134.27,54.02c-.63.18-1.28.35-1.94.51-1.18.29-2.29-.65-2.2-1.86.15-1.96.23-3.96.23-5.98s-.08-3.94-.22-5.88c-.09-1.25,1.06-2.23,2.28-1.92,8.88,2.24,13.82,5.29,13.82,7.8,0,1.92-3.14,4.85-11.96,7.33ZM23.12,15.21c-.18.13-.35.27-.53.41-.96.75-1.89,1.54-2.78,2.38-.61.57-1.2,1.16-1.77,1.77-.84.89-1.63,1.82-2.38,2.78-.35.45-.69.9-1.02,1.36-.94,1.32-1.8,2.7-2.57,4.14-.19.35-.37.7-.55,1.06-.51,1-.96,2.03-1.38,3.08-.53,1.34-1,2.73-1.37,4.14-.37,1.35-.67,2.74-.89,4.14-.22,1.36-.36,2.74-.43,4.14-.04.69-.06,1.38-.06,2.07s.02,1.38.06,2.07c.07,1.4.22,2.79.43,4.14.22,1.41.52,2.79.89,4.14.38,1.41.84,2.8,1.37,4.14.41,1.05.88,2.08,1.38,3.09.18.36.36.71.55,1.06.77,1.44,1.63,2.82,2.57,4.14.33.46.67.92,1.02,1.37.75.96,1.54,1.89,2.38,2.78.57.61,1.16,1.2,1.77,1.77.88.84,1.81,1.63,2.77,2.38.18.14.36.28.54.41.34.26.83.02.83-.41h0v-4.22c-1.47-1.24-2.83-2.61-4.07-4.07h-.07v-.08c-1.08-1.28-2.07-2.63-2.96-4.06-.42-.67-.82-1.35-1.19-2.05-.37-.69-.71-1.38-1.04-2.1-.61-1.33-1.13-2.72-1.57-4.14-.41-1.35-.75-2.73-1-4.14-.24-1.35-.41-2.74-.49-4.14h-.05v-1.46c0-.2,0-.4,0-.61s0-.41,0-.61v-1.47h.05c.08-1.41.25-2.79.49-4.14.23-1.28.53-2.55.89-3.78.06-.22.27-.37.5-.37h2.21s3.63,0,3.63,0c.28,0,.51-.23.51-.51v-3.11c0-.28-.23-.51-.51-.51h-3.86c-.38,0-.63-.4-.46-.74.22-.45.45-.9.69-1.35.37-.7.77-1.38,1.19-2.05.88-1.42,1.87-2.78,2.95-4.05v-.09h.07c1.24-1.47,2.6-2.83,4.07-4.07v-4.22h0c0-.43-.49-.67-.83-.41ZM65.38,76.57V13.17c0-.72-.41-1.38-1.06-1.7-1-.51-2.03-.97-3.08-1.38-1.35-.53-2.73-1-4.14-1.37-1.35-.37-2.73-.67-4.14-.89-.55-.09-1.11-.17-1.67-.23-1.32-.15-2.47.88-2.47,2.2v1.68s0,.06,0,.06v71.83c0,1.45,1.26,2.58,2.7,2.4.48-.06.97-.13,1.44-.2,1.41-.22,2.79-.52,4.14-.89,1.41-.38,2.8-.84,4.14-1.37,1.05-.42,2.08-.88,3.09-1.39h.01c.64-.32,1.04-.97,1.04-1.68v-2.46s0-1.19,0-1.19ZM61.23,78.46c0,.2-.12.39-.31.47-1.24.55-2.52,1.02-3.84,1.43-1.15.35-2.33.65-3.53.89-.32.06-.61-.18-.61-.51v-2.98s0-4.14,0-4.14V12.64c0-.32.29-.57.61-.51,1.2.24,2.38.53,3.53.89,1.24.38,2.46.83,3.64,1.34.31.13.51.44.51.78v.48s0,4.14,0,4.14v58.7ZM81.95,64.28c.51-1,.97-2.04,1.38-3.09.53-1.34,1-2.73,1.37-4.14.37-1.35.67-2.74.89-4.14.14-.89.26-1.8.34-2.71.07-.77-.54-1.43-1.31-1.43h-6.3c-.28,0-.51.23-.51.51v3.12c0,.28.23.51.51.51h2.46c.32,0,.57.29.51.61-.24,1.2-.53,2.38-.89,3.53-.44,1.42-.96,2.81-1.57,4.14-.32.71-.67,1.41-1.03,2.09-.37.7-.77,1.38-1.19,2.05-.88,1.42-1.87,2.78-2.95,4.05v.09h-.07s.05-.06.07-.09V24s-.05-.06-.08-.09h.08v.09c1.08,1.28,2.07,2.63,2.95,4.05.42.67.82,1.35,1.19,2.06.37.68.71,1.38,1.03,2.09.55,1.22,1.04,2.49,1.45,3.78.07.21.26.36.49.36h1.17s2.08,0,2.08,0c.34,0,.59-.33.5-.65-.34-1.19-.74-2.35-1.19-3.49-.42-1.05-.88-2.08-1.38-3.08-.18-.36-.36-.71-.55-1.06-.77-1.44-1.63-2.82-2.57-4.14-.33-.46-.67-.92-1.02-1.36-.75-.96-1.54-1.89-2.38-2.78-.57-.61-1.16-1.2-1.77-1.77-.89-.84-1.82-1.63-2.78-2.38-.18-.14-.35-.28-.53-.41-.34-.26-.83-.02-.83.41h0v62.15h0c0,.43.49.67.83.42.18-.14.36-.28.54-.42.96-.75,1.88-1.54,2.77-2.38.61-.57,1.2-1.16,1.77-1.77.84-.89,1.63-1.81,2.38-2.78.35-.45.69-.9,1.02-1.37.94-1.32,1.8-2.7,2.57-4.14.19-.35.37-.7.55-1.06ZM41.05,7.74c-.18.03-.35.05-.53.08-1.41.22-2.79.52-4.14.89-1.41.38-2.8.84-4.14,1.37-1.05.41-2.08.88-3.09,1.38-.65.32-1.06.97-1.06,1.69v19.02c0,2.29,1.85,4.14,4.14,4.14h7.77c.28,0,.51.23.51.51v43.9c0,.32-.29.57-.61.51-1.2-.24-2.38-.53-3.53-.89-1.31-.4-2.59-.88-3.83-1.43-.19-.08-.31-.27-.31-.47v-29.19c0-.28-.23-.51-.51-.51h-3.12c-.28,0-.51.23-.51.51v30.94c0,.72.41,1.37,1.05,1.69h0c1.01.51,2.04.97,3.1,1.39,1.34.53,2.73,1,4.14,1.37,1.35.37,2.74.67,4.14.89.14.02.28.04.42.06,1.96.29,3.73-1.24,3.73-3.22v-46.67c0-1.95-1.58-3.54-3.54-3.54h-7.86c-.57,0-1.03-.46-1.03-1.03v-15.54h0c0-.64.39-1.21.98-1.46,1.03-.43,2.08-.81,3.16-1.14,1-.31,2.03-.57,3.07-.79.55-.12,1.07.3,1.07.87v14.44c0,.28.23.51.51.51h3.12c.28,0,.51-.23.51-.51V10.87c0-1.93-1.71-3.41-3.62-3.13Z"/>
+      <g>
+        <path d="M9.93,123.65v-18.83h4.8v18.83h-4.8ZM14.21,108.74v-3.92h7.27v3.92h-7.27ZM14.21,116.35v-3.92h6.99v3.92h-6.99Z"/>
+        <path d="M26.33,123.65v-5.11h5.06v5.11h-5.06Z"/>
+        <path d="M51.2,124.17c-1.75,0-3.23-.27-4.42-.82-1.2-.55-2.1-1.3-2.71-2.26-.61-.95-.92-2.05-.92-3.29h4.64c0,.45.12.86.37,1.23s.62.66,1.12.86c.5.21,1.14.31,1.91.31.67,0,1.24-.09,1.72-.26.47-.17.83-.41,1.08-.72s.37-.68.37-1.11c0-.55-.23-.98-.7-1.28-.46-.3-1.25-.49-2.35-.58l-1.21-.1c-1.94-.17-3.49-.78-4.64-1.83-1.15-1.05-1.73-2.44-1.73-4.18,0-1.24.29-2.3.86-3.17.58-.88,1.39-1.55,2.44-2.01,1.05-.46,2.29-.7,3.71-.7,1.55,0,2.86.26,3.93.77,1.07.52,1.9,1.24,2.46,2.18s.85,2.02.85,3.26h-4.64c0-.41-.1-.79-.31-1.13-.21-.34-.5-.61-.89-.81-.39-.2-.86-.3-1.41-.3-.52,0-.95.08-1.3.24-.35.16-.62.39-.8.68-.18.29-.27.62-.27.98,0,.48.16.9.49,1.24.33.34.89.55,1.7.62l1.21.1c1.41.12,2.66.43,3.74.92,1.08.49,1.93,1.16,2.55,2s.93,1.87.93,3.1-.31,2.29-.94,3.2c-.63.91-1.52,1.62-2.68,2.12s-2.56.75-4.19.75Z"/>
+        <path d="M63.55,123.65v-5.11h5.06v5.11h-5.06Z"/>
+        <path d="M81.87,123.76v-19.09h4.8v19.09h-4.8ZM86.15,123.76v-4.49h3.1c.81,0,1.53-.12,2.18-.35.64-.23,1.19-.57,1.64-1.01.45-.44.79-.97,1.03-1.6.24-.63.36-1.34.36-2.13s-.12-1.55-.36-2.18c-.24-.63-.58-1.15-1.03-1.57-.45-.42-.99-.74-1.64-.95-.64-.22-1.37-.32-2.18-.32h-3.1v-4.49h2.89c1.7,0,3.19.24,4.48.72,1.28.48,2.35,1.15,3.21,2,.86.85,1.5,1.84,1.93,2.95s.64,2.3.64,3.56v.57c0,1.15-.21,2.28-.64,3.39s-1.07,2.11-1.93,2.99c-.86.89-1.93,1.59-3.21,2.12-1.28.53-2.77.79-4.48.79h-2.89Z"/>
+        <path d="M103.79,123.65v-5.11h5.06v5.11h-5.06Z"/>
+        <path d="M130.33,124.17c-1.77,0-3.29-.3-4.57-.89-1.27-.59-2.31-1.37-3.12-2.34-.81-.96-1.4-2.01-1.78-3.15-.38-1.13-.57-2.24-.57-3.33v-.57c0-1.17.2-2.33.59-3.47s.99-2.18,1.79-3.11,1.8-1.67,3.01-2.23c1.2-.56,2.61-.84,4.23-.84,1.74,0,3.27.32,4.6.95,1.33.64,2.4,1.52,3.21,2.64.81,1.13,1.28,2.43,1.42,3.91h-4.8c-.1-.57-.35-1.08-.75-1.53-.4-.46-.91-.82-1.53-1.08-.63-.27-1.35-.4-2.15-.4s-1.46.13-2.05.4c-.59.27-1.09.64-1.5,1.13-.4.49-.71,1.07-.92,1.74-.21.67-.31,1.4-.31,2.19s.11,1.53.34,2.21c.22.68.55,1.27.98,1.78.43.51.97.9,1.62,1.17.65.28,1.4.41,2.24.41,1.07,0,1.99-.22,2.76-.67.77-.45,1.32-1.04,1.62-1.78l-.36,2.84v-4.1h4.38v3.87c-.79,1.36-1.91,2.4-3.37,3.13-1.45.73-3.13,1.1-5.04,1.1ZM129.82,117v-3.35h10.47v3.35h-10.47Z"/>
+        <path d="M144.57,123.65v-5.11h5.06v5.11h-5.06Z"/>
+      </g>
+    </g>
+  </g>
+</svg>
+                <p class="text-sm text-muted-foreground text-center">FSDG Foundry &copy;2026.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+// Supabase Configuration
+const SUPABASE_URL = 'https://wpsejjiqklhngnjeovwt.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indwc2Vqamlxa2xobmduamVvdnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNTUwMDIsImV4cCI6MjA4NTczMTAwMn0.yPoPTlj6ExpMEmxSp3NX6ScVlCJ-uKH31JLQvnwydTM';
+
+// Initialize Supabase client
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+</script>
+    <script>
 // UX Competency Framework v12 - Structured Edition
 // FamilySearch UX Organization
 
@@ -2434,3 +2933,554 @@ const competencies = {
         ]
     }
 };
+
+</script>
+    <script>
+// Application State
+let surveyState = {
+    role: null,
+    name: null,
+    currentQuestionIndex: 0,
+    responses: {},
+    startTime: null,
+    completionTime: null
+};
+
+// Initialize app
+document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+    loadSurveyData();
+
+    const nameInput = document.getElementById('nameInput');
+    if (nameInput) {
+        nameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') submitName();
+        });
+    }
+});
+
+// Theme Management - Dark mode only
+function initTheme() {
+    document.documentElement.classList.add('dark');
+}
+
+// Screen Navigation
+function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+    });
+    document.getElementById(screenId).classList.add('active');
+    window.scrollTo(0, 0);
+
+    const appContainer = document.getElementById('app');
+    if (appContainer) {
+        appContainer.classList.remove('items-start', 'justify-start');
+        appContainer.classList.add('items-center', 'justify-center', 'p-4', 'md:p-6');
+        appContainer.style.padding = '';
+        appContainer.style.margin = '';
+        appContainer.style.alignItems = '';
+        appContainer.style.justifyContent = '';
+    }
+
+    // Hide home icon on welcome screen
+    const topLeftControls = document.querySelector('.fixed.top-4.left-4');
+    if (topLeftControls) {
+        topLeftControls.style.display = screenId === 'welcomeScreen' ? 'none' : 'block';
+    }
+}
+
+function startSurvey() {
+    surveyState = {
+        role: null,
+        name: null,
+        currentQuestionIndex: 0,
+        responses: {},
+        startTime: new Date().toISOString(),
+        completionTime: null
+    };
+    showScreen('roleScreen');
+}
+
+function selectRole(role) {
+    surveyState.role = role;
+    showScreen('nameScreen');
+}
+
+function submitName() {
+    const nameInput = document.getElementById('nameInput');
+    const name = nameInput.value.trim();
+
+    if (!name) {
+        alert('Please enter your name to continue');
+        return;
+    }
+
+    surveyState.name = name;
+    surveyState.currentQuestionIndex = 0;
+    showScreen('surveyScreen');
+    renderQuestion();
+}
+
+function returnHome() {
+    showScreen('welcomeScreen');
+}
+
+// Survey Logic
+function renderQuestion() {
+    const questions = competencies[surveyState.role].questions;
+    const currentQuestion = questions[surveyState.currentQuestionIndex];
+    const isLastQuestion = surveyState.currentQuestionIndex === questions.length - 1;
+
+    const segmentedBars = document.getElementById('internProgressBars');
+    const singleBar = document.getElementById('singleProgressBar');
+    if (segmentedBars) segmentedBars.style.display = 'block';
+    if (singleBar) singleBar.style.display = 'none';
+    updateSegmentedProgressBars();
+
+    const roleInfo = competencies[surveyState.role].role;
+    const roleLevelElement = document.getElementById('roleLevel');
+    if (roleLevelElement) {
+        if (roleInfo.includes(' - ')) {
+            const [level, name] = roleInfo.split(' - ');
+            roleLevelElement.textContent = level.toUpperCase() + ': ';
+            roleLevelElement.nextElementSibling.textContent = name;
+        } else {
+            roleLevelElement.textContent = 'INTERN';
+            roleLevelElement.nextElementSibling.textContent = '';
+        }
+    }
+
+    const cleanTitle = currentQuestion.title.replace(/\s*\([^)]*\)\s*/g, '').trim();
+    document.getElementById('questionTitle').textContent = cleanTitle;
+
+    let subtitleHTML = `<p class="text-sm" style="margin-bottom: 64px;">${currentQuestion.description}</p>`;
+
+    if (currentQuestion.subCompetencies && currentQuestion.subCompetencies.length > 0) {
+        subtitleHTML += '<div>';
+        currentQuestion.subCompetencies.forEach((subComp, index) => {
+            const subCompNumber = `${surveyState.currentQuestionIndex + 1}.${index + 1}`;
+
+            if (currentQuestion.isEvidence) {
+                const textValue = surveyState.responses[subComp.id] || '';
+                const escapedValue = String(textValue)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+                const badgeHTML = subComp.promptType === '360'
+                    ? '<span class="inline-block px-3 py-1 text-xs font-semibold bg-amber-500/20 text-amber-300 rounded-full mb-3">Manager / 360 input — best assessed via peer feedback</span>'
+                    : '<span class="inline-block px-3 py-1 text-xs font-semibold bg-blue-500/20 text-blue-300 rounded-full mb-3">Evidence prompt — narrative, not scored</span>';
+                subtitleHTML += `
+                    <div class="mb-12">
+                        <div class="mb-4">
+                            <p class="text-sm font-semibold text-primary mb-3">${subCompNumber}</p>
+                            ${badgeHTML}
+                            <p class="text-2xl leading-relaxed text-white mt-2">${subComp.fullText}</p>
+                        </div>
+                        <textarea
+                            data-subcomp-id="${subComp.id}"
+                            oninput="updateEvidenceResponse('${subComp.id}', this.value)"
+                            rows="5"
+                            placeholder="Share your evidence here..."
+                            class="w-full p-4 rounded-lg bg-card text-foreground text-base border border-input focus:border-primary focus:outline-none resize-y"
+                        >${escapedValue}</textarea>
+                    </div>
+                `;
+                return;
+            }
+
+            const ratingValue = surveyState.responses[subComp.id] || 0;
+            const score4Block = subComp.score4Text
+                ? `<p class="text-sm text-muted-foreground italic mt-4"><span class="font-semibold not-italic text-primary">For example:</span> ${subComp.score4Text}</p>`
+                : '';
+
+            subtitleHTML += `
+                <div class="mb-12">
+                    <div class="mb-8">
+                        <p class="text-sm font-semibold text-primary mb-4">${subCompNumber}</p>
+                        <p class="text-2xl leading-relaxed text-white">${subComp.fullText}</p>
+                        ${score4Block}
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                        ${[1, 2, 3, 4, 5].map(rating => {
+                            const labels = ['Learning', 'Developing', 'Proficient', 'Advanced', 'Expert'];
+                            const descriptions = [
+                                "I'm still learning this; I rely on guidance and examples",
+                                "I can do this with some support, or on straightforward cases",
+                                "I can do this independently and reliably in typical situations",
+                                "I do this well even when it's complex, ambiguous, or unfamiliar, using sound judgment",
+                                "I consistently do this at a high level on the hardest, highest-stakes, or most novel problems, where there's no established playbook"
+                            ];
+                            return `
+                            <button onclick="selectSubCompRating('${subComp.id}', ${rating})"
+                                    data-subcomp-id="${subComp.id}"
+                                    data-rating="${rating}"
+                                    class="sub-rating-btn flex flex-col items-center justify-start gap-1 p-6 rounded-lg transition-all ${ratingValue === rating ? 'bg-primary text-primary-foreground' : 'bg-muted/50 hover:bg-muted'}">
+                                <span class="text-4xl font-bold text-white">${rating}</span>
+                                <span class="text-xs font-semibold text-center">${labels[rating - 1]}</span>
+                                <span class="text-xs opacity-70 text-center leading-tight">${descriptions[rating - 1]}</span>
+                            </button>
+                        `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        });
+        subtitleHTML += '</div>';
+    } else if (currentQuestion.bullets && currentQuestion.bullets.length > 0) {
+        subtitleHTML += '<ul class="list-disc ml-5 mb-4 space-y-2">';
+        currentQuestion.bullets.forEach(bullet => {
+            subtitleHTML += `<li>${bullet}</li>`;
+        });
+        subtitleHTML += '</ul>';
+    }
+
+    document.getElementById('questionSubtitle').innerHTML = subtitleHTML;
+
+    document.getElementById('questionCounter').textContent =
+        `Question ${surveyState.currentQuestionIndex + 1} of ${questions.length}`;
+
+    const previousResponse = surveyState.responses[currentQuestion.id];
+    document.querySelectorAll('.rating-option').forEach(option => {
+        option.classList.remove('selected', 'border-primary', 'bg-primary', 'text-primary-foreground', 'scale-105');
+        option.classList.add('border-input', 'bg-card');
+
+        if (previousResponse && parseInt(option.dataset.value) === previousResponse) {
+            option.classList.add('selected', 'border-primary', 'bg-primary', 'text-primary-foreground', 'scale-105');
+            option.classList.remove('border-input', 'bg-card');
+        }
+    });
+
+    const prevBtn = document.getElementById('prevBtn');
+    prevBtn.style.visibility = surveyState.currentQuestionIndex === 0 ? 'hidden' : 'visible';
+
+    const finishBtn = document.getElementById('finishBtn');
+    finishBtn.style.display = (isLastQuestion && previousResponse) ? 'inline-flex' : 'none';
+}
+
+function selectSubCompRating(subCompId, value) {
+    surveyState.responses[subCompId] = value;
+
+    const buttons = document.querySelectorAll(`[data-subcomp-id="${subCompId}"]`);
+    buttons.forEach(btn => {
+        const btnValue = parseInt(btn.getAttribute('data-rating'));
+        if (btnValue === value) {
+            btn.classList.add('bg-primary', 'text-primary-foreground');
+            btn.classList.remove('bg-muted/50');
+        } else {
+            btn.classList.remove('bg-primary', 'text-primary-foreground');
+            btn.classList.add('bg-muted/50');
+        }
+    });
+
+    updateProgressBar();
+
+    const questions = competencies[surveyState.role].questions;
+    const currentQuestion = questions[surveyState.currentQuestionIndex];
+    if (currentQuestion.subCompetencies) {
+        const allRated = currentQuestion.subCompetencies.every(sub => surveyState.responses[sub.id]);
+        const isLastQuestion = surveyState.currentQuestionIndex === questions.length - 1;
+        const currentSubIndex = currentQuestion.subCompetencies.findIndex(sub => sub.id === subCompId);
+        const hasNextSub = currentSubIndex < currentQuestion.subCompetencies.length - 1;
+
+        if (allRated && isLastQuestion) {
+            document.getElementById('finishBtn').style.display = 'inline-flex';
+        } else if (allRated && !isLastQuestion) {
+            setTimeout(() => nextQuestion(), 500);
+        } else if (hasNextSub && !allRated) {
+            setTimeout(() => {
+                const nextSubId = currentQuestion.subCompetencies[currentSubIndex + 1].id;
+                const nextSubButtons = document.querySelectorAll(`[data-subcomp-id="${nextSubId}"]`);
+                if (nextSubButtons.length > 0) {
+                    const nextSubElement = nextSubButtons[0].closest('.mb-12');
+                    if (nextSubElement) {
+                        nextSubElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            }, 300);
+        }
+    }
+}
+
+function updateEvidenceResponse(subCompId, value) {
+    if (value && value.trim().length > 0) {
+        surveyState.responses[subCompId] = value;
+    } else {
+        delete surveyState.responses[subCompId];
+    }
+
+    updateProgressBar();
+
+    const questions = competencies[surveyState.role].questions;
+    const currentQuestion = questions[surveyState.currentQuestionIndex];
+    const isLastQuestion = surveyState.currentQuestionIndex === questions.length - 1;
+
+    if (currentQuestion.subCompetencies) {
+        const allCompleted = currentQuestion.subCompetencies.every(sub => Boolean(surveyState.responses[sub.id]));
+        const finishBtn = document.getElementById('finishBtn');
+        if (allCompleted && isLastQuestion) {
+            finishBtn.style.display = 'inline-flex';
+        } else if (isLastQuestion) {
+            finishBtn.style.display = 'none';
+        }
+    }
+}
+
+function updateProgressBar() {
+    updateSegmentedProgressBars();
+}
+
+function updateSegmentedProgressBars() {
+    const questions = competencies[surveyState.role].questions;
+
+    questions.forEach((question, index) => {
+        let totalSubComps = question.subCompetencies ? question.subCompetencies.length : 0;
+        let completedSubComps = 0;
+
+        if (question.subCompetencies) {
+            question.subCompetencies.forEach(subComp => {
+                if (surveyState.responses[subComp.id]) completedSubComps++;
+            });
+        }
+
+        const progress = totalSubComps > 0 ? (completedSubComps / totalSubComps) * 100 : 0;
+        const progressSegment = document.getElementById(`progressSegment${index}`);
+        if (progressSegment) progressSegment.style.width = `${progress}%`;
+    });
+}
+
+function selectRating(value) {
+    const questions = competencies[surveyState.role].questions;
+    const currentQuestion = questions[surveyState.currentQuestionIndex];
+    const isLastQuestion = surveyState.currentQuestionIndex === questions.length - 1;
+
+    surveyState.responses[currentQuestion.id] = value;
+
+    document.querySelectorAll('.rating-option').forEach(option => {
+        option.classList.remove('selected', 'border-primary', 'bg-primary', 'text-primary-foreground', 'scale-105');
+        option.classList.add('border-input', 'bg-card');
+
+        if (parseInt(option.dataset.value) === value) {
+            option.classList.add('selected', 'border-primary', 'bg-primary', 'text-primary-foreground', 'scale-105');
+            option.classList.remove('border-input', 'bg-card');
+        }
+    });
+
+    if (isLastQuestion) {
+        document.getElementById('finishBtn').style.display = 'inline-flex';
+    } else {
+        setTimeout(() => nextQuestion(), 500);
+    }
+}
+
+function previousQuestion() {
+    if (surveyState.currentQuestionIndex > 0) {
+        surveyState.currentQuestionIndex--;
+        renderQuestion();
+        const surveyContent = document.getElementById('surveyContent');
+        if (surveyContent) surveyContent.scrollTop = 0;
+    }
+}
+
+function nextQuestion() {
+    const questions = competencies[surveyState.role].questions;
+
+    if (surveyState.currentQuestionIndex < questions.length - 1) {
+        surveyState.currentQuestionIndex++;
+        renderQuestion();
+        const surveyContent = document.getElementById('surveyContent');
+        if (surveyContent) surveyContent.scrollTop = 0;
+    } else {
+        completeSurvey();
+    }
+}
+
+function completeSurvey() {
+    surveyState.completionTime = new Date().toISOString();
+    saveSurveyData();
+    showScreen('completionScreen');
+    setTimeout(() => launchConfetti(), 100);
+}
+
+// Confetti Animation
+function launchConfetti() {
+    const canvas = document.getElementById('confettiCanvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const confettiPieces = [];
+    const confettiCount = 150;
+    const colors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
+
+    class ConfettiPiece {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = -10;
+            this.size = Math.random() * 8 + 4;
+            this.speedY = Math.random() * 3 + 2;
+            this.speedX = Math.random() * 2 - 1;
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            this.rotation = Math.random() * 360;
+            this.rotationSpeed = Math.random() * 10 - 5;
+        }
+
+        update() {
+            this.y += this.speedY;
+            this.x += this.speedX;
+            this.rotation += this.rotationSpeed;
+            this.speedY += 0.05;
+        }
+
+        draw() {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.rotation * Math.PI / 180);
+            ctx.fillStyle = this.color;
+            ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+            ctx.restore();
+        }
+    }
+
+    for (let i = 0; i < confettiCount; i++) {
+        confettiPieces.push(new ConfettiPiece());
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let stillAnimating = false;
+
+        confettiPieces.forEach(piece => {
+            piece.update();
+            piece.draw();
+            if (piece.y < canvas.height + 10) stillAnimating = true;
+        });
+
+        if (stillAnimating) {
+            requestAnimationFrame(animate);
+        } else {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    }
+
+    animate();
+}
+
+// Download survey results as JSON
+function downloadSurveyJSON() {
+    const roleData = competencies[surveyState.role];
+    const ratingLabels = ['', 'Learning', 'Developing', 'Proficient', 'Advanced', 'Expert'];
+
+    const sections = roleData.questions.map(question => {
+        const subCompetencies = (question.subCompetencies || []).map(subComp => {
+            const raw = surveyState.responses[subComp.id];
+            const isNarrative = !!subComp.promptType;
+            return {
+                id: subComp.id,
+                text: subComp.shortText || subComp.fullText,
+                type: isNarrative ? (subComp.promptType === '360' ? 'manager_360' : 'evidence') : 'rating',
+                ...(isNarrative
+                    ? { response: raw || null }
+                    : { rating: raw || null, ratingLabel: raw ? ratingLabels[raw] : null }
+                )
+            };
+        });
+
+        return {
+            competency: question.competency || question.title,
+            subCompetencies
+        };
+    });
+
+    const numericScores = Object.values(surveyState.responses).filter(v => typeof v === 'number');
+    const averageRating = numericScores.length > 0
+        ? parseFloat((numericScores.reduce((sum, v) => sum + v, 0) / numericScores.length).toFixed(2))
+        : null;
+
+    const payload = {
+        survey: 'UX Competency Self-Assessment 2026',
+        name: surveyState.name,
+        role: surveyState.role,
+        roleLabel: roleData.role,
+        completedAt: surveyState.completionTime,
+        averageRating,
+        sections
+    };
+
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    const safeName = (surveyState.name || 'results').toLowerCase().replace(/\s+/g, '-');
+    link.download = `ux-competency-${safeName}-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+}
+
+// Data Management
+async function saveSurveyData() {
+    try {
+        const surveyData = {
+            designer_name: surveyState.name,
+            role: surveyState.role,
+            responses: surveyState.responses,
+            goals: {},
+            start_time: surveyState.startTime,
+            completion_time: surveyState.completionTime
+        };
+
+        const { data: existing, error: fetchError } = await supabaseClient
+            .from('survey_responses')
+            .select('id')
+            .eq('designer_name', surveyState.name)
+            .single();
+
+        if (fetchError && fetchError.code !== 'PGRST116') throw fetchError;
+
+        if (existing) {
+            const { error: updateError } = await supabaseClient
+                .from('survey_responses')
+                .update(surveyData)
+                .eq('id', existing.id);
+            if (updateError) throw updateError;
+        } else {
+            const { error: insertError } = await supabaseClient
+                .from('survey_responses')
+                .insert([surveyData]);
+            if (insertError) throw insertError;
+        }
+
+        console.log('Survey data saved successfully to Supabase');
+    } catch (error) {
+        console.error('Error saving survey data:', error);
+    }
+}
+
+async function loadSurveyData() {
+    try {
+        const { data, error } = await supabaseClient
+            .from('survey_responses')
+            .select('*')
+            .order('completion_time', { ascending: false });
+
+        if (error) throw error;
+
+        return data.map(record => ({
+            name: record.designer_name,
+            role: record.role,
+            responses: record.responses,
+            goals: record.goals || {},
+            startTime: record.start_time,
+            completionTime: record.completion_time
+        }));
+    } catch (error) {
+        console.error('Error loading survey data:', error);
+        return [];
+    }
+}
+
+</script>
+</body>
+</html>

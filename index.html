@@ -5,53 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UX Competency Survey 2026 | FamilySearch</title>
 
-    <!-- Google Fonts - Sora -->
+    <!-- Google Fonts - DM Sans (foundry-aligned) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Tailwind Config with shadcn/ui colors -->
+    <!-- Tailwind Config — foundry shadcn/zinc dark tokens (OkLCH) -->
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Sora', 'system-ui', 'sans-serif'],
+                        sans: ['DM Sans', 'system-ui', 'sans-serif'],
                     },
                     colors: {
-                        border: "hsl(var(--border))",
-                        input: "hsl(var(--input))",
-                        ring: "hsl(var(--ring))",
-                        background: "hsl(var(--background))",
-                        foreground: "hsl(var(--foreground))",
+                        border: "var(--border)",
+                        input: "var(--input)",
+                        ring: "var(--ring)",
+                        background: "var(--background)",
+                        foreground: "var(--foreground)",
                         primary: {
-                            DEFAULT: "hsl(var(--primary))",
-                            foreground: "hsl(var(--primary-foreground))",
+                            DEFAULT: "var(--primary)",
+                            foreground: "var(--primary-foreground)",
                         },
                         secondary: {
-                            DEFAULT: "hsl(var(--secondary))",
-                            foreground: "hsl(var(--secondary-foreground))",
+                            DEFAULT: "var(--secondary)",
+                            foreground: "var(--secondary-foreground)",
                         },
                         muted: {
-                            DEFAULT: "hsl(var(--muted))",
-                            foreground: "hsl(var(--muted-foreground))",
+                            DEFAULT: "var(--muted)",
+                            foreground: "var(--muted-foreground)",
                         },
                         accent: {
-                            DEFAULT: "hsl(var(--accent))",
-                            foreground: "hsl(var(--accent-foreground))",
+                            DEFAULT: "var(--accent)",
+                            foreground: "var(--accent-foreground)",
                         },
                         card: {
-                            DEFAULT: "hsl(var(--card))",
-                            foreground: "hsl(var(--card-foreground))",
+                            DEFAULT: "var(--card)",
+                            foreground: "var(--card-foreground)",
+                        },
+                        popover: {
+                            DEFAULT: "var(--popover)",
+                            foreground: "var(--popover-foreground)",
                         },
                         destructive: {
-                            DEFAULT: "hsl(var(--destructive))",
-                            foreground: "hsl(var(--destructive-foreground))",
+                            DEFAULT: "var(--destructive)",
+                            foreground: "var(--foreground)",
                         },
+                        chart: {
+                            1: "var(--chart-1)",
+                            2: "var(--chart-2)",
+                            3: "var(--chart-3)",
+                            4: "var(--chart-4)",
+                            5: "var(--chart-5)",
+                        },
+                    },
+                    borderRadius: {
+                        sm: "calc(var(--radius) - 4px)",
+                        md: "calc(var(--radius) - 2px)",
+                        lg: "var(--radius)",
+                        xl: "calc(var(--radius) + 4px)",
+                        "2xl": "calc(var(--radius) + 8px)",
                     },
                 }
             }
@@ -59,24 +77,32 @@
     </script>
 
     <style>
+        /* foundry shadcn/ui Zinc Dark Theme — dark-mode-only */
         :root {
-            --background: 222.2 84% 4.9%;
-            --foreground: 210 40% 98%;
-            --card: 222.2 84% 4.9%;
-            --card-foreground: 210 40% 98%;
-            --primary: 217.2 91.2% 59.8%;
-            --primary-foreground: 222.2 47.4% 11.2%;
-            --secondary: 217.2 32.6% 17.5%;
-            --secondary-foreground: 210 40% 98%;
-            --muted: 217.2 32.6% 17.5%;
-            --muted-foreground: 215 20.2% 65.1%;
-            --accent: 217.2 32.6% 17.5%;
-            --accent-foreground: 210 40% 98%;
-            --border: 217.2 32.6% 17.5%;
-            --input: 217.2 32.6% 17.5%;
-            --ring: 224.3 76.3% 48%;
-            --destructive: 38 62.8% 30.6%;
-            --destructive-foreground: 210 40% 98%;
+            --radius: 0.625rem;
+            --background: oklch(0.141 0.005 285.823);
+            --foreground: oklch(0.985 0 0);
+            --card: oklch(0.21 0.006 285.885);
+            --card-foreground: oklch(0.985 0 0);
+            --popover: oklch(0.21 0.006 285.885);
+            --popover-foreground: oklch(0.985 0 0);
+            --primary: oklch(0.92 0.004 286.32);
+            --primary-foreground: oklch(0.21 0.006 285.885);
+            --secondary: oklch(0.274 0.006 286.033);
+            --secondary-foreground: oklch(0.985 0 0);
+            --muted: oklch(0.274 0.006 286.033);
+            --muted-foreground: oklch(0.705 0.015 286.067);
+            --accent: oklch(0.274 0.006 286.033);
+            --accent-foreground: oklch(0.985 0 0);
+            --destructive: oklch(0.704 0.191 22.216);
+            --border: oklch(1 0 0 / 10%);
+            --input: oklch(1 0 0 / 15%);
+            --ring: oklch(0.552 0.016 285.938);
+            --chart-1: oklch(0.488 0.243 264.376);
+            --chart-2: oklch(0.696 0.17 162.48);
+            --chart-3: oklch(0.769 0.188 70.08);
+            --chart-4: oklch(0.627 0.265 303.9);
+            --chart-5: oklch(0.645 0.246 16.439);
         }
 
         .screen {
@@ -88,7 +114,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
+            flex: 1 1 auto;
+            min-height: calc(100vh - 180px);
+        }
+
+        /* FSDG logo color treatment from foundry */
+        .fsdg-logo {
+            filter: brightness(0) saturate(100%) invert(44%) sepia(6%) saturate(213%) hue-rotate(202deg) brightness(92%) contrast(89%);
         }
 
         @keyframes fadeIn {
@@ -97,9 +129,9 @@
         }
 
         .rating-option.selected {
-            background: hsl(var(--primary));
-            border-color: hsl(var(--primary));
-            color: hsl(var(--primary-foreground));
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--primary-foreground);
         }
 
         .rating-option.selected .rating-number {
@@ -159,45 +191,19 @@
 
         /* Level filter button active state */
         .level-filter-btn.active {
-            background-color: hsl(var(--primary));
-            color: hsl(var(--primary-foreground));
-            border-color: hsl(var(--primary));
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            border-color: var(--primary);
         }
 
         .level-filter-btn.active .level-count {
-            color: hsl(var(--primary-foreground));
+            color: var(--primary-foreground);
             opacity: 0.8;
-        }
-
-        /* Center dashboard content */
-        #dashboardScreen.active {
-            display: block !important;
-            align-items: flex-start !important;
-            justify-content: flex-start !important;
-            min-height: 100vh !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-
-        #dashboardScreen .sticky {
-            max-width: 1280px !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
-            width: 100% !important;
-        }
-
-        #dashboardScreen .space-y-6 {
-            max-width: 1280px !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
-            width: 100% !important;
         }
 
     </style>
 </head>
-<body class="min-h-screen bg-background text-foreground transition-colors duration-300">
+<body class="min-h-screen bg-background text-foreground transition-colors duration-300 flex flex-col">
     <!-- Top Left Home Icon -->
     <div class="fixed top-4 left-4 z-50">
         <button onclick="returnHome()"
@@ -209,23 +215,19 @@
         </button>
     </div>
 
-    <!-- Top Right Controls -->
-    <div class="fixed top-4 right-4 z-50 flex items-center gap-2">
-        <!-- Manager Button -->
-        <button onclick="showSignIn()"
-                class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4">
-            Manager
-        </button>
-    </div>
 
     <!-- Main Container -->
-    <div class="min-h-screen" id="app">
+    <div class="flex-1 flex flex-col" id="app">
 
         <!-- Welcome Screen -->
         <div class="screen active" id="welcomeScreen">
             <div class="max-w-2xl w-full text-center p-4 md:p-6">
+            <div class="flex justify-center mb-12">
+                <img src="foundry-logo.svg" alt="Foundry" class="h-9 w-auto" />
+            </div>
             <div class="mb-10">
                 <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">UX Competency Survey 2026</h1>
+                <p class="text-muted-foreground text-lg">A self-assessment built into the Foundry framework.</p>
             </div>
 
             <div class="flex justify-center">
@@ -233,43 +235,6 @@
                         class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8">
                     Start Survey
                 </button>
-            </div>
-
-            <p class="text-2xl font-semibold tracking-wider uppercase text-white opacity-30" style="margin-top: 80px;">FSDG</p>
-            </div>
-        </div>
-
-        <!-- Sign In Screen -->
-        <div class="screen" id="signInScreen">
-            <div class="max-w-md w-full p-4 md:p-6">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-3">Manager Sign In</h2>
-                <p class="text-muted-foreground">Enter your credentials to view the dashboard</p>
-            </div>
-
-            <div class="space-y-4">
-                <div>
-                    <label for="adminUsername" class="block text-sm font-medium mb-2">Email</label>
-                    <input type="email" id="adminUsername"
-                           placeholder="Enter email"
-                           class="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-                </div>
-
-                <div>
-                    <label for="adminPassword" class="block text-sm font-medium mb-2">Password</label>
-                    <input type="password" id="adminPassword"
-                           placeholder="Enter password"
-                           class="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-                </div>
-
-                <div id="signInError" class="text-sm text-red-600 dark:text-red-400 hidden"></div>
-
-                <div class="flex flex-col gap-3 pt-4">
-                    <button onclick="attemptSignIn()"
-                            class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8 w-full">
-                        Sign In
-                    </button>
-                </div>
             </div>
             </div>
         </div>
@@ -284,7 +249,7 @@
 
             <div class="grid grid-cols-5 gap-3 items-start">
                 <button onclick="selectRole('intern')"
-                        class="rounded-lg border-2 border-input bg-card p-4 text-left transition-all hover:shadow-lg hover:border-primary hover:-translate-y-1 flex flex-col h-full">
+                        class="rounded-xl border border-input bg-card p-4 text-left transition-all shadow-sm hover:shadow-lg hover:border-primary hover:-translate-y-1 flex flex-col h-full">
                     <div class="mb-2">
                         <span class="text-xs font-semibold text-primary tracking-wide uppercase">Intern</span>
                     </div>
@@ -293,7 +258,7 @@
                 </button>
 
                 <button onclick="selectRole('ux1')"
-                        class="rounded-lg border-2 border-input bg-card p-4 text-left transition-all hover:shadow-lg hover:border-primary hover:-translate-y-1 flex flex-col h-full">
+                        class="rounded-xl border border-input bg-card p-4 text-left transition-all shadow-sm hover:shadow-lg hover:border-primary hover:-translate-y-1 flex flex-col h-full">
                     <div class="mb-2">
                         <span class="text-xs font-semibold text-primary tracking-wide uppercase">UX 1</span>
                     </div>
@@ -302,7 +267,7 @@
                 </button>
 
                 <button onclick="selectRole('ux2')"
-                        class="rounded-lg border-2 border-input bg-card p-4 text-left transition-all hover:shadow-lg hover:border-primary hover:-translate-y-1 flex flex-col h-full">
+                        class="rounded-xl border border-input bg-card p-4 text-left transition-all shadow-sm hover:shadow-lg hover:border-primary hover:-translate-y-1 flex flex-col h-full">
                     <div class="mb-2">
                         <span class="text-xs font-semibold text-primary tracking-wide uppercase">UX 2</span>
                     </div>
@@ -311,7 +276,7 @@
                 </button>
 
                 <button onclick="selectRole('ux3')"
-                        class="rounded-lg border-2 border-input bg-card p-4 text-left transition-all hover:shadow-lg hover:border-primary hover:-translate-y-1 flex flex-col h-full">
+                        class="rounded-xl border border-input bg-card p-4 text-left transition-all shadow-sm hover:shadow-lg hover:border-primary hover:-translate-y-1 flex flex-col h-full">
                     <div class="mb-2">
                         <span class="text-xs font-semibold text-primary tracking-wide uppercase">UX 3</span>
                     </div>
@@ -320,7 +285,7 @@
                 </button>
 
                 <button onclick="selectRole('ux4')"
-                        class="rounded-lg border-2 border-input bg-card p-4 text-left transition-all hover:shadow-lg hover:border-primary hover:-translate-y-1 flex flex-col h-full">
+                        class="rounded-xl border border-input bg-card p-4 text-left transition-all shadow-sm hover:shadow-lg hover:border-primary hover:-translate-y-1 flex flex-col h-full">
                     <div class="mb-2">
                         <span class="text-xs font-semibold text-primary tracking-wide uppercase">UX 4</span>
                     </div>
@@ -446,235 +411,59 @@
                 <h1 class="text-5xl md:text-6xl font-bold tracking-tight mb-6 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
                     You're All Done!
                 </h1>
-                <p class="text-xl text-muted-foreground max-w-xl mx-auto mb-4">
-                    Amazing work reflecting on your skills and growth areas.
+                <p class="text-xl text-muted-foreground max-w-xl mx-auto mb-8">
+                    Great work reflecting on your skills and growth areas.
                 </p>
-                <p class="text-lg text-muted-foreground max-w-lg mx-auto">
-                    Your responses have been saved securely. Your self-assessment is an important step in your development journey this year!
-                </p>
-            </div>
 
-            <button onclick="returnHome()"
-                    class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8">
-                Return Home
-            </button>
-            </div>
-        </div>
-
-        <!-- Goal Setting Screen -->
-        <div class="screen" id="goalSettingScreen">
-            <div class="max-w-3xl w-full p-4 md:p-6">
-            <div class="text-center mb-10">
-                <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">Set Your 2026 Goals</h1>
-                <p class="text-lg text-muted-foreground max-w-2xl mx-auto">Based on your self-assessment, identify 2-3 specific goals for your development this year</p>
-            </div>
-
-            <div class="space-y-6">
-                <div class="rounded-lg border border-input bg-card p-6">
-                    <label class="block text-sm font-semibold mb-3">Goal 1 <span class="text-destructive">*</span></label>
-                    <input type="text" id="goal1"
-                           placeholder="e.g., Lead user research sessions independently"
-                           class="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm mb-3 placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-                    <textarea id="goal1Description"
-                              placeholder="Why this matters and how you'll measure success..."
-                              rows="3"
-                              class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-y"></textarea>
-                </div>
-
-                <div class="rounded-lg border border-input bg-card p-6">
-                    <label class="block text-sm font-semibold mb-3">Goal 2</label>
-                    <input type="text" id="goal2"
-                           placeholder="e.g., Contribute 3 components to Zion UI design system"
-                           class="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm mb-3 placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-                    <textarea id="goal2Description"
-                              placeholder="Why this matters and how you'll measure success..."
-                              rows="3"
-                              class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-y"></textarea>
-                </div>
-
-                <div class="rounded-lg border border-input bg-card p-6">
-                    <label class="block text-sm font-semibold mb-3">Goal 3</label>
-                    <input type="text" id="goal3"
-                           placeholder="e.g., Mentor a UX 1 designer"
-                           class="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm mb-3 placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-                    <textarea id="goal3Description"
-                              placeholder="Why this matters and how you'll measure success..."
-                              rows="3"
-                              class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-y"></textarea>
-                </div>
-
-                <div class="flex flex-col sm:flex-row gap-3 justify-center pt-4">
-                    <button onclick="saveGoals()"
-                            class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8">
-                        Save Goals
-                    </button>
-                    <button onclick="skipGoals()"
-                            class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 px-8">
-                        Skip for Now
-                    </button>
-                </div>
-            </div>
-            </div>
-        </div>
-
-        <!-- Evaluate Direct Reports Screen -->
-        <div class="screen" id="evaluateReportsScreen">
-            <div class="max-w-4xl w-full p-4 md:p-6">
-            <div class="text-center mb-10">
-                <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-3">Evaluate Direct Reports</h2>
-                <p class="text-muted-foreground">Select a team member to evaluate</p>
-            </div>
-
-            <div id="directReportsList" class="space-y-4">
-                <!-- Direct reports will be loaded here dynamically -->
-                <div class="text-center text-muted-foreground py-12">
-                    Loading your direct reports...
+                <!-- Manager handoff card -->
+                <div class="rounded-xl border border-input bg-card p-6 text-left mb-8">
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
+                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-base mb-2">Share your results with your manager</h3>
+                            <p class="text-sm text-muted-foreground leading-relaxed mb-4">Download your results as a JSON file and send it to your manager before your 1:1 review. This gives them everything they need to prepare a meaningful conversation about your growth and development.</p>
+                            <ol class="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
+                                <li>Click <span class="text-foreground font-medium">Download Results</span> below</li>
+                                <li>Email the file to your manager</li>
+                                <li>Use it as the starting point for your review conversation</li>
+                            </ol>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="text-center mt-8">
-                <button onclick="viewDashboard()"
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="downloadSurveyJSON()"
+                        class="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Download Results
+                </button>
+                <button onclick="returnHome()"
                         class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 px-8">
-                    Back to Dashboard
+                    Return Home
                 </button>
             </div>
             </div>
         </div>
 
-        <!-- Dashboard Screen -->
-        <div class="screen" id="dashboardScreen">
-            <!-- Sticky Header Container -->
-            <div class="sticky top-0 z-50 bg-background pb-6 space-y-6 pt-8 px-6">
-                <!-- Header -->
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <h1 class="text-3xl md:text-4xl font-bold tracking-tight">Results</h1>
-                    <div class="flex items-center gap-2">
-                        <!-- Evaluate Direct Reports -->
-                        <button onclick="showEvaluateReports()"
-                                class="inline-flex items-center gap-2 justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                            </svg>
-                            Evaluate Direct Reports
-                        </button>
-                        <!-- Sign Out -->
-                        <button onclick="signOut()"
-                                class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4">
-                            Sign Out
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Toolbar -->
-                <div class="rounded-lg border border-input bg-card p-4 shadow-sm space-y-4">
-                    <!-- Designer Filter and Export Buttons -->
-                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-                        <div class="w-full lg:w-auto">
-                            <select id="designerFilter" onchange="filterDashboard()"
-                                    class="flex h-10 w-full lg:w-64 rounded-md border border-input bg-background pl-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
-                                <option value="all">All Designers</option>
-                            </select>
-                        </div>
-
-                        <div class="flex flex-wrap gap-2 w-full lg:w-auto">
-                            <button onclick="exportToCSV()"
-                                    class="inline-flex items-center gap-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-10 px-4 border border-input">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                </svg>
-                                Export CSV
-                            </button>
-                            <button onclick="exportToPDF()"
-                                    class="inline-flex items-center gap-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-10 px-4 border border-input">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                                </svg>
-                                Export PDF
-                            </button>
-                            <button onclick="loadDemoData()"
-                                    class="inline-flex items-center gap-2 rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                                Load Demo Data
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Level Filter -->
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-4 mt-4 border-t border-input">
-                        <div class="flex items-center gap-3">
-                            <span class="uppercase" style="font-size: 11px; color: #A0A0A0; font-family: 'Segoe UI', sans-serif;">Filter By:</span>
-                            <div class="inline-flex" id="levelFilter">
-                                <button onclick="filterByLevel('all')" data-level="all"
-                                        class="level-filter-btn active inline-flex items-center gap-1.5 text-xs font-medium transition-colors px-3 border border-input hover:bg-accent" style="height: 32px; border-radius: 4px 0 0 4px;">
-                                    All <span class="level-count text-xs text-muted-foreground">(0)</span>
-                                </button>
-                                <button onclick="filterByLevel('ux4')" data-level="ux4"
-                                        class="level-filter-btn inline-flex items-center gap-1.5 text-xs font-medium transition-colors px-3 border border-input hover:bg-accent" style="height: 32px; border-radius: 0; border-left: none;">
-                                    UX4 <span class="level-count text-xs text-muted-foreground">(0)</span>
-                                </button>
-                                <button onclick="filterByLevel('ux3')" data-level="ux3"
-                                        class="level-filter-btn inline-flex items-center gap-1.5 text-xs font-medium transition-colors px-3 border border-input hover:bg-accent" style="height: 32px; border-radius: 0; border-left: none;">
-                                    UX3 <span class="level-count text-xs text-muted-foreground">(0)</span>
-                                </button>
-                                <button onclick="filterByLevel('ux2')" data-level="ux2"
-                                        class="level-filter-btn inline-flex items-center gap-1.5 text-xs font-medium transition-colors px-3 border border-input hover:bg-accent" style="height: 32px; border-radius: 0; border-left: none;">
-                                    UX2 <span class="level-count text-xs text-muted-foreground">(0)</span>
-                                </button>
-                                <button onclick="filterByLevel('ux1')" data-level="ux1"
-                                        class="level-filter-btn inline-flex items-center gap-1.5 text-xs font-medium transition-colors px-3 border border-input hover:bg-accent" style="height: 32px; border-radius: 0; border-left: none;">
-                                    UX1 <span class="level-count text-xs text-muted-foreground">(0)</span>
-                                </button>
-                                <button onclick="filterByLevel('intern')" data-level="intern"
-                                        class="level-filter-btn inline-flex items-center gap-1.5 text-xs font-medium transition-colors px-3 border border-input hover:bg-accent" style="height: 32px; border-radius: 0 4px 4px 0; border-left: none;">
-                                    INTERN <span class="level-count text-xs text-muted-foreground">(0)</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Rating Scale Legend -->
-                        <div class="flex items-center gap-3">
-                            <span class="uppercase" style="font-size: 11px; color: #A0A0A0; font-family: 'Segoe UI', sans-serif;">Scale:</span>
-                            <div class="flex flex-wrap gap-3 text-xs">
-                                <div class="flex items-center gap-1.5">
-                                    <div class="rounded-full" style="width: 10px; height: 10px; background-color: #FF666C;"></div>
-                                    <span style="color: #A0A0A0;">1-Developing</span>
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    <div class="rounded-full" style="width: 10px; height: 10px; background-color: #FF8B16;"></div>
-                                    <span style="color: #A0A0A0;">2-Emerging</span>
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    <div class="rounded-full" style="width: 10px; height: 10px; background-color: #00D794;"></div>
-                                    <span style="color: #A0A0A0;">3-Proficient</span>
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    <div class="rounded-full" style="width: 10px; height: 10px; background-color: #46A8FF;"></div>
-                                    <span style="color: #A0A0A0;">4-Advanced</span>
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    <div class="rounded-full" style="width: 10px; height: 10px; background-color: #CA82FF;"></div>
-                                    <span style="color: #A0A0A0;">5-Expert</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="space-y-6 pb-12 px-6">
-
-                <!-- Summary -->
-                <div id="dashboardSummary"></div>
-
-                <!-- Detailed Results -->
-                <div id="dashboardDetails"></div>
-            </div>
-        </div>
 
     </div>
+
+    <!-- Footer (foundry BaseLayout pattern) -->
+    <footer class="mt-auto">
+        <div class="max-w-[1800px] mx-auto px-6 py-8">
+            <div class="flex flex-col items-center gap-4">
+                <img src="fsdg-logo.svg" alt="FamilySearch" class="fsdg-logo w-[120px] h-auto" />
+                <p class="text-sm text-muted-foreground text-center">FSDG Foundry &copy;2026.</p>
+            </div>
+        </div>
+    </footer>
 
     <!-- Supabase Client Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
